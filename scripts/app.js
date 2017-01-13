@@ -10,11 +10,21 @@ var app = new Vue({
     formatPrefix: '?format=',
     format: 'rss',
     sortPrefix: '&sort=',
-    sort: 'rel'
+    sort: 'rel',
+    fogbugzUrl: 'https://altsource.fogbugz.com/f/api/0/jsonapi',
+    username: '',
+    password: ''
   },
   methods: {
     pingCraig: function () {
-        this.$http.get(this.baseUrl + this.formatPrefix + this.format + this.queryPrefix + this.query + this.sortPrefix + this.sort)
+      var body = {
+            'cmd': 'logon',
+            'username': this.username,
+            'password': this.password
+        };
+      
+        // this.$http.get(this.baseUrl + this.formatPrefix + this.format + this.queryPrefix + this.query + this.sortPrefix + this.sort)
+        this.$http.post(this.fogbugzUrl )
         .then(function(resp){
             if(typeof resp.data == 'string') {
                resp.data = JSON.parse(resp.data);

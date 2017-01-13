@@ -15,7 +15,7 @@
 
   <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
 
 
@@ -37,14 +37,17 @@
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container" id="app">
-    <div class="row buffer">
-      <div class="one-half column">
-        <input v-model="query" class="u-full-width" type="text" placeholder="what do ya want?">
+    <form class="row buffer" v-on:submit.prevent="pingCraig(username, password)">
+      <div class="four columns">
+        <input v-model="username" class="button u-full-width" type="text" placeholder="username">
       </div>
-      <div class="one-half column">
-          <button v-on:click="pingCraig" class="button-primary u-full-width">Ping Craig</button>
+      <div class="four columns">
+        <input v-model="password" class="button u-full-width" type="password" placeholder="password">
       </div>
-    </div>
+      <div class="four columns">
+          <button v-on:click="pingCraig" class="button-primary u-full-width" type="submit">Access</button>
+      </div>
+    </form>
     <div class="row">
       <table class="u-full-width">
         <thead>
