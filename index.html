@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Lister 2</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+
+
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container" id="app">
+    <div class="row buffer">
+      <div class="one-half column">
+        <input v-model="query" class="u-full-width" type="text" placeholder="what do ya want?">
+      </div>
+      <div class="one-half column">
+          <button v-on:click="pingCraig" class="button-primary u-full-width">Ping Craig</button>
+      </div>
+    </div>
+    <div class="row">
+      <table class="u-full-width">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Sex</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-show="results.length > 0">
+            <td>Dave Gamache</td>
+            <td>26</td>
+            <td>Male</td>
+            <td>San Francisco</td>
+          </tr>
+          <tr v-show="results.length === 0">
+            <td colspan="4" class="centered-text">
+                We got nothin'
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+<!-- Javascript
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script type="text/javascript" src="scripts/vue.js"></script>
+<script type="text/javascript" src="scripts/vue-resource.js"></script>
+<script type="text/javascript" src="scripts/app.js"></script>
+</body>
+</html>
