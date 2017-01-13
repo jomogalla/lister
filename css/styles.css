@@ -1,5 +1,6 @@
-
-
+.half-hidden {
+    opacity: 0.25;
+}
 
 .centered-text {
     text-align: center;
@@ -7,4 +8,17 @@
 
 .buffer {
     margin-top: 4rem;
+}
+
+#loader {
+    color:#ccc;
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    margin: 15px;
+}
+
+.split-date h5 {
+    margin-bottom: 0px;
 }

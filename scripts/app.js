@@ -1,8 +1,9 @@
 (function(){
+
+
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello Vue!',
     query: '',
     results: [],
     baseUrl: 'https://portland.craigslist.org/search/sss=',
@@ -14,40 +15,69 @@ var app = new Vue({
     fogbugzUrl: 'https://altsource.fogbugz.com/f/api/0/jsonapi',
     username: '',
     password: '',
-    token: ''
+    token: null,
+    hasToken: false,
+    searchQuery: '',
+    searchResults: {},
+    timeIntervals: {},
+    fogbugzLinkUrl: 'https://altsource.fogbugz.com/f/cases/',
   },
   http: {
 
   },
   methods: {
-    pingCraig: function () {
-      // var body = {
-      //       'cmd': 'logon',
-      //       'username': this.username,
-      //       'password': this.password
-      //   };
+    addToken: function() {
+      if(this.token) {
+        utilities.authenticator.addToken(this.token)
+        this.hasToken = true;
+      }
+    },
+    search: function() {
       var search =  {
         "cmd": "search",
-        "token": this.token,
-        "q": this.query,
-        "max": 2,
+        "token": utilities.authenticator.getToken(),
+        "q": this.searchQuery,
+        "max": 5,
         "cols": ["sTitle", "sStatus"]
       };
 
-      Vue.http.headers.common['Content-Type'] = 'text/plain';
+      utilities.loader.start();
+      utilities.api(search).then(this.handleResponse);
+    },
+    startWork: function(bug) {
+      var startWork = {
+        "cmd": "startWork",
+        "token": utilities.authenticator.getToken(),
+        "ixBug": this.searchQuery
+      };
 
-      debugger;
-      
-        // this.$http.get(this.baseUrl + this.formatPrefix + this.format + this.queryPrefix + this.query + this.sortPrefix + this.sort)
-        this.$http.post(this.fogbugzUrl, { body: search } )
-        .then(function(resp){
-            if(typeof resp.data == 'string') {
-               resp.data = JSON.parse(resp.data);
-            }
-            this.posts=resp.data.data.children;
-        });
-    }
+      utilities.loader.start('loading...');
+      utilities.api(startWork).then(this.handleResponse);
+    },
 
+    getTimeSheet: function() {
+      var listIntervals = {
+        "cmd": "listIntervals",
+        "token": utilities.authenticator.getToken()
+      };
+
+      utilities.loader.start();
+      utilities.api(listIntervals).then(this.handleResponse2);
+
+    },
+    handleResponse: function (response) {
+      this.searchResults =  $.parseJSON(response).data;
+      utilities.loader.stop();
+    },
+    handleResponse2: function (response) {
+      this.timeIntervals =  $.parseJSON(response).data;
+      utilities.loader.stop();
+    },
   }
-})
+});
+Vue.filter('formatDate', function(value, format = 'MM/DD/YYYY hh:mm') {
+  if (value) {
+    return moment(String(value)).format(format)
+  }
+});
 })();

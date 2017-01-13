@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Lister 2</title>
+  <title>Lister</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -37,31 +37,129 @@
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container" id="app">
-    <form class="row buffer" v-on:submit.prevent="pingCraig(username, password)">
-      <!--<div class="four columns">-->
-        <!--<input v-model="username" class="button u-full-width" type="text" placeholder="username">
+    <!--<form class="row buffer" v-on:submit.prevent="logon">
+      <div class="four columns">
+        <input v-model="username" class="button u-full-width" type="text" placeholder="username">
       </div>
       <div class="four columns">
         <input v-model="password" class="button u-full-width" type="password" placeholder="password">
-      </div>-->
+      </div>
+      <div class="four columns">
+          <button class="button-primary u-full-width" type="submit">Login</button>
+      </div>
+    </form>-->
+
+    <!--<h4 class="centered-text">OR </h4>-->
+
+     <form class="row buffer" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
       <div class="six columns">
-        <input v-model="token" class="button u-full-width" type="text" placeholder="api token">
+        <input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
       </div>
       <div class="six columns">
-          <button v-on:click="pingCraig" class="button-primary u-full-width" type="submit">Access</button>
+          <button :disabled="hasToken" class="button-primary u-full-width" type="submit">
+            <span v-show="hasToken">token accepted</span>
+            <span v-show="!hasToken">insert token</span>
+          </button>
       </div>
     </form>
-    <div class="row">
+    
+
+    <!-- SEARCH -->
+    <div class="search" v-show="hasToken">
+
+      <h2> Search </h2>
+      <form class="row buffer" v-on:submit.prevent="search">
+        <div class="six columns">
+          <input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
+        </div>
+        <div class="six columns">
+            <button class="button-primary u-full-width" type="submit">
+                search
+            </button>
+        </div>
+      </form>
+
+      <table class="u-full-width" v-show="hasToken">
+        <thead>
+          <tr>
+            <th> &nbsp; </th>
+            <th>Case # </th>
+            <th>Title</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="fcase of searchResults.cases">
+            <td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
+            <td> 
+              {{fcase.ixBug}} 
+              <a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+              </td>
+            <td>{{fcase.sTitle}}</td>
+            <td>{{fcase.sStatus}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+
+  <!-- TIME TABLE -->
+  <div class="time-entries"  v-show="hasToken">
+      <h2> Time Entries </h2>
+      <form class="row buffer" v-on:submit.prevent="getTimeSheet">
+      <div class="twelve columns">
+          <button class="button-primary u-full-width" type="submit">
+             time entries?
+          </button>
+      </div>
+    </form>
+    <table class="u-full-width" v-show="hasToken">
+      <thead>
+        <tr>
+          <th> </th>
+          <th width="10%">Case # </th>
+          <th width="50%">Title</th>
+          <th width="20%">Start</th>
+          <th width="20%">End</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="interval of timeIntervals.intervals">
+          <td> </td>
+          <td> {{interval.ixBug}} </td>
+          <td> {{interval.sTitle}}</td>
+          <td class="centered-text split-date">
+            <h5>{{interval.dtStart | formatDate('hh:mm a')}}</h5>
+            {{interval.dtStart | formatDate('MM/DD/YYYY')}}
+
+          </td>
+          <td class="centered-text split-date">
+            <h5>{{interval.dtEnd | formatDate('hh:mm a')}}</h5>
+            {{interval.dtEnd | formatDate('MM/DD/YYYY')}}
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+
+    <h4 id="loader" class="centered-text"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+  </div>
+  
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
 <!-- Javascript
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="scripts/moment.js"></script>
 <script type="text/javascript" src="scripts/vue.js"></script>
+<script type="text/javascript" src="scripts/utilities.js"></script>
+<script type="text/javascript" src="scripts/vuex.js"></script>
 <script type="text/javascript" src="scripts/vue-resource.js"></script>
 <script type="text/javascript" src="scripts/app.js"></script>
+<script src="https://use.fontawesome.com/b1cd5b96e6.js"></script>
 </body>
 </html>
