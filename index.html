@@ -38,40 +38,20 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container" id="app">
     <form class="row buffer" v-on:submit.prevent="pingCraig(username, password)">
-      <div class="four columns">
-        <input v-model="username" class="button u-full-width" type="text" placeholder="username">
+      <!--<div class="four columns">-->
+        <!--<input v-model="username" class="button u-full-width" type="text" placeholder="username">
       </div>
       <div class="four columns">
         <input v-model="password" class="button u-full-width" type="password" placeholder="password">
+      </div>-->
+      <div class="six columns">
+        <input v-model="token" class="button u-full-width" type="text" placeholder="api token">
       </div>
-      <div class="four columns">
+      <div class="six columns">
           <button v-on:click="pingCraig" class="button-primary u-full-width" type="submit">Access</button>
       </div>
     </form>
     <div class="row">
-      <table class="u-full-width">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Sex</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-show="results.length > 0">
-            <td>Dave Gamache</td>
-            <td>26</td>
-            <td>Male</td>
-            <td>San Francisco</td>
-          </tr>
-          <tr v-show="results.length === 0">
-            <td colspan="4" class="centered-text">
-                We got nothin'
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 
