@@ -21,6 +21,9 @@ var app = new Vue({
     searchResults: {},
     timeIntervals: {},
     fogbugzLinkUrl: 'https://altsource.fogbugz.com/f/cases/',
+    listView: true,
+    caseView: false,
+    searchView: false,
   },
   http: {
 
@@ -73,6 +76,21 @@ var app = new Vue({
       this.timeIntervals =  $.parseJSON(response).data;
       utilities.loader.stop();
     },
+    showList: function () {
+      this.listView = true;
+      this.caseView = false;
+      this.searchView = false;
+    },
+    showSearch: function () {
+      this.listView = false;
+      this.caseView = false;
+      this.searchView = true;
+    },
+    showCase: function () {
+      this.listView = false;
+      this.caseView = true;
+      this.searchView = false;
+    }
   }
 });
 Vue.filter('formatDate', function(value, format = 'MM/DD/YYYY hh:mm') {

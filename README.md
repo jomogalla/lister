@@ -14,3 +14,4 @@
 - hide html before vue renders
 - clean out unused scripts/styles (ongoing)
 - figure out the ux mess we currently have
+- add token validation/ajax check

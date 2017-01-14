@@ -37,114 +37,131 @@
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container" id="app">
-    <!--<form class="row buffer" v-on:submit.prevent="logon">
-      <div class="four columns">
+  <div class="login row buffer" v-show="!hasToken">
+    <div class="one column">&nbsp;</div>
+    <form class="four columns" v-on:submit.prevent="logon">
+      <div class="">
         <input v-model="username" class="button u-full-width" type="text" placeholder="username">
       </div>
-      <div class="four columns">
+      <div class="">
         <input v-model="password" class="button u-full-width" type="password" placeholder="password">
       </div>
-      <div class="four columns">
-          <button class="button-primary u-full-width" type="submit">Login</button>
+      <div class="">
+          <button class="button-primary u-full-width" type="submit">Logon</button>
       </div>
-    </form>-->
-
+    </form>
     <!--<h4 class="centered-text">OR </h4>-->
+    <div class="two columns">&nbsp;</div>
 
-     <form class="row buffer" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
-      <div class="six columns">
+     <form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
+      <div class="">
         <input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
       </div>
-      <div class="six columns">
+      <div class="">
           <button :disabled="hasToken" class="button-primary u-full-width" type="submit">
             <span v-show="hasToken">token accepted</span>
             <span v-show="!hasToken">insert token</span>
           </button>
       </div>
     </form>
-    
+    <div class="one column">&nbsp;</div>
+  </div> 
 
     <!-- SEARCH -->
-    <div class="search" v-show="hasToken">
+    <div class="everything-else buffer" v-show="hasToken">
 
-      <h2> Search </h2>
-      <form class="row buffer" v-on:submit.prevent="search">
-        <div class="six columns">
-          <input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
-        </div>
-        <div class="six columns">
+      <div class="tabs row">
+        <h5 class="four columns"><a href="" v-on:click.prevent="showList">List</a></h5>
+        <h5 class="four columns"><a href="" v-on:click.prevent="showCase">Case</a></h5>
+        <h5 class="four columns"><a href="" v-on:click.prevent="showSearch">Search</a></h5>
+      </div>
+
+      
+      <div class="search" v-show="searchView">
+
+        <!--<h2> Search </h2>-->
+        <form class="row buffer" v-on:submit.prevent="search">
+          <div class="six columns">
+            <input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
+          </div>
+          <div class="six columns">
+              <button class="button-primary u-full-width" type="submit">
+                  search
+              </button>
+          </div>
+        </form>
+
+        <table class="u-full-width" v-show="hasToken">
+          <thead>
+            <tr>
+              <th> &nbsp; </th>
+              <th>Case # </th>
+              <th>Title</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="fcase of searchResults.cases">
+              <td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
+              <td> 
+                {{fcase.ixBug}} 
+                <a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                </td>
+              <td>{{fcase.sTitle}}</td>
+              <td>{{fcase.sStatus}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    <!-- List View -->
+    <div class="time-entries"  v-show="listView">
+
+        <form class="row buffer" v-on:submit.prevent="getTimeSheet">
+        <div class="twelve columns">
             <button class="button-primary u-full-width" type="submit">
-                search
+              time entries?
             </button>
+            <!--<h2> Tuesday, June 24 </h2>-->
         </div>
       </form>
-
       <table class="u-full-width" v-show="hasToken">
         <thead>
           <tr>
-            <th> &nbsp; </th>
-            <th>Case # </th>
-            <th>Title</th>
-            <th>Status</th>
+            <th> </th>
+            <th width="10%">Case # </th>
+            <th width="50%">Title</th>
+            <th width="20%">Start</th>
+            <th width="20%">End</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="fcase of searchResults.cases">
-            <td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
-            <td> 
-              {{fcase.ixBug}} 
-              <a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
-              </td>
-            <td>{{fcase.sTitle}}</td>
-            <td>{{fcase.sStatus}}</td>
+          <tr v-for="interval of timeIntervals.intervals">
+            <td> </td>
+            <td> {{interval.ixBug}} </td>
+            <td> {{interval.sTitle}}</td>
+            <td class="centered-text split-date">
+              <h5>{{interval.dtStart | formatDate('hh:mm a')}}</h5>
+              {{interval.dtStart | formatDate('MM/DD/YYYY')}}
+
+            </td>
+            <td class="centered-text split-date">
+              <h5>{{interval.dtEnd | formatDate('hh:mm a')}}</h5>
+              {{interval.dtEnd | formatDate('MM/DD/YYYY')}}
+
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-
-
-  <!-- TIME TABLE -->
-  <div class="time-entries"  v-show="hasToken">
-      <h2> Time Entries </h2>
-      <form class="row buffer" v-on:submit.prevent="getTimeSheet">
-      <div class="twelve columns">
-          <button class="button-primary u-full-width" type="submit">
-             time entries?
-          </button>
-      </div>
-    </form>
-    <table class="u-full-width" v-show="hasToken">
-      <thead>
-        <tr>
-          <th> </th>
-          <th width="10%">Case # </th>
-          <th width="50%">Title</th>
-          <th width="20%">Start</th>
-          <th width="20%">End</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="interval of timeIntervals.intervals">
-          <td> </td>
-          <td> {{interval.ixBug}} </td>
-          <td> {{interval.sTitle}}</td>
-          <td class="centered-text split-date">
-            <h5>{{interval.dtStart | formatDate('hh:mm a')}}</h5>
-            {{interval.dtStart | formatDate('MM/DD/YYYY')}}
-
-          </td>
-          <td class="centered-text split-date">
-            <h5>{{interval.dtEnd | formatDate('hh:mm a')}}</h5>
-            {{interval.dtEnd | formatDate('MM/DD/YYYY')}}
-
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
-
-    <h4 id="loader" class="centered-text"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+  <div class="status-bar">
+    <span class="has-token"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+    <span id="loader" class="centered-text"><i class="fa fa-cog fa-spin fa-fw"></i></span>
+  </div>
+    
   </div>
   
 

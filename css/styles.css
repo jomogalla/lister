@@ -7,18 +7,29 @@
 }
 
 .buffer {
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 
-#loader {
-    color:#ccc;
-    display: none;
+.status-bar {
     position: fixed;
     top: 0px;
     left: 0px;
     margin: 15px;
 }
 
+#loader {
+    color:#ccc;
+    display: none;
+}
+
 .split-date h5 {
     margin-bottom: 0px;
+}
+
+.tabs > .columns {
+    border-bottom: 2px solid #eee;
+}
+
+.tabs a {
+    text-decoration: none;
 }
