@@ -7,4 +7,3 @@
 - add routing
 - make case detail page
 - paginate time entry list
-- 
