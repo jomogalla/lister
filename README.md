@@ -11,3 +11,4 @@
 - save token in cookie
 - logout
 - add comment editing.
+- hide html before vue renders.
