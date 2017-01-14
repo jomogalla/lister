@@ -12,3 +12,4 @@
 - logout
 - add comment editing.
 - hide html before vue renders.
+- clean out unused scripts/styles (ongoing)
