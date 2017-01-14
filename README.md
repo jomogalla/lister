@@ -7,3 +7,7 @@
 - add routing
 - make case detail page
 - paginate time entry list
+- add start/stop on every case entry, everywhere
+- save token in cookie
+- logout
+- add comment editing.
