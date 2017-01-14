@@ -11,5 +11,6 @@
 - save token in cookie
 - logout
 - add comment editing.
-- hide html before vue renders.
+- hide html before vue renders
 - clean out unused scripts/styles (ongoing)
+- figure out the ux mess we currently have
