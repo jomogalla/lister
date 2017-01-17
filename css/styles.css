@@ -33,3 +33,15 @@
 .tabs a {
     text-decoration: none;
 }
+
+.tabs .active {
+    border-bottom-color: #aaa;
+}
+
+.tabs .active a{
+    color: inherit;
+}
+
+.case-controls {
+    color: #ccc;
+}

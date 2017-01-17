@@ -24,6 +24,8 @@ var app = new Vue({
     listView: true,
     caseView: false,
     searchView: false,
+    caseActive: false,
+    currentCase: {}
   },
   http: {
 
@@ -34,6 +36,14 @@ var app = new Vue({
         utilities.authenticator.addToken(this.token)
         this.hasToken = true;
       }
+    },
+    setActiveCase: function(caseId) {
+      var case = {
+
+      };
+
+      utilities.loader.start();
+      utilites.api(case).then(this.setCase);
     },
     search: function() {
       var search =  {

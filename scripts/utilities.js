@@ -54,7 +54,7 @@ var utilities = {
             if(message) {
                 $('#loader').text(message);
             } else {
-                 $('#loader').html('<i class="fa fa-cog fa-spin fa-fw"></i>');
+                 $('#loader').html('<i class="fa fa-asterisk fa-spin fa-fw"></i>');
             }
             $('#loader').fadeIn();
 

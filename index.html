@@ -67,13 +67,19 @@
     <div class="one column">&nbsp;</div>
   </div> 
 
-    <!-- SEARCH -->
+    <!-- SEARCH VIEW -->
     <div class="everything-else buffer" v-show="hasToken">
 
       <div class="tabs row">
-        <h5 class="four columns"><a href="" v-on:click.prevent="showList">List</a></h5>
-        <h5 class="four columns"><a href="" v-on:click.prevent="showCase">Case</a></h5>
-        <h5 class="four columns"><a href="" v-on:click.prevent="showSearch">Search</a></h5>
+        <h5 class="four columns" v-bind:class="{ 'active': listView }"><a href="" v-on:click.prevent="showList">List</a></h5>
+        <h5 class="four columns" v-bind:class="{ 'active': caseView }">
+          <a href="" v-on:click.prevent="showCase">Case 32507</a>
+          <span class="u-pull-right case-controls">
+            <i v-show="!caseActive" class="fa fa-play" aria-hidden="true"></i>
+            <i v-show="caseActive" class="fa fa-pause" aria-hidden="true"></i>
+          </span>
+        </h5>
+        <h5 class="four columns" v-bind:class="{ 'active': searchView }"><a href="" v-on:click.prevent="showSearch">Search</a></h5>
       </div>
 
       
@@ -114,14 +120,19 @@
         </table>
       </div>
 
+    <!-- CASE VIEW -->
+    <div class="case-wrapper" v-show="caseView">
+      <h4> Release QA - 6.0 </h4>
+    </div>
 
-    <!-- List View -->
+
+    <!-- LIST VIEW -->
     <div class="time-entries"  v-show="listView">
 
         <form class="row buffer" v-on:submit.prevent="getTimeSheet">
         <div class="twelve columns">
             <button class="button-primary u-full-width" type="submit">
-              time entries?
+              get time entries
             </button>
             <!--<h2> Tuesday, June 24 </h2>-->
         </div>
@@ -158,8 +169,8 @@
   </div>
 
   <div class="status-bar">
-    <span class="has-token"><i class="fa fa-id-card" aria-hidden="true"></i></span>
-    <span id="loader" class="centered-text"><i class="fa fa-cog fa-spin fa-fw"></i></span>
+    <a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
+    <span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
   </div>
     
   </div>
@@ -177,6 +188,6 @@
 <script type="text/javascript" src="scripts/vuex.js"></script>
 <script type="text/javascript" src="scripts/vue-resource.js"></script>
 <script type="text/javascript" src="scripts/app.js"></script>
-<script src="https://use.fontawesome.com/b1cd5b96e6.js"></script>
+<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
 </body>
 </html>
