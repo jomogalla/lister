@@ -25,7 +25,9 @@ var app = new Vue({
     caseView: false,
     searchView: false,
     caseActive: false,
-    currentCase: {}
+    currentCase: {},
+    dayToShow: moment(),
+    timeWorked: 0
   },
   http: {
 
@@ -68,15 +70,42 @@ var app = new Vue({
       utilities.api(startWork).then(this.handleResponse);
     },
 
-    getTimeSheet: function() {
+    getTimeSheet: function(date) {
+      var startTime = moment(date).startOf('day');
+      var endTime = moment(date).endOf('day');
+
       var listIntervals = {
         "cmd": "listIntervals",
         "token": utilities.authenticator.getToken()
       };
 
-      utilities.loader.start();
-      utilities.api(listIntervals).then(this.handleResponse2);
+      var listIntervalsForDate = {
+        "cmd": "listIntervals",
+        "token": utilities.authenticator.getToken(),
+        "dtStart": startTime.toJSON(),
+        "dtEnd": endTime.toJSON()
+      }
 
+      utilities.loader.start();
+      utilities.api(listIntervalsForDate).then(this.handleResponse2);
+
+    },
+    showPreviousDay: function () {
+      this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
+    },
+    showNextDay: function () {
+      this.getTimeSheet(this.dayToShow.add(1, 'days'));
+    },
+    calculateTimeWorked: function () {
+      this.timeWorked = 0;
+      if(!this.timeIntervals.intervals) {
+        return;
+      }
+      debugger;
+      // http://stackoverflow.com/questions/25150570/get-hours-difference-between-two-dates-in-moment-js
+      for (var i = 0; i < this.timeIntervals.intervals.length; i ++) {
+        console.log(this.timeIntervals.intervals[i]);
+      }
     },
     handleResponse: function (response) {
       this.searchResults =  $.parseJSON(response).data;

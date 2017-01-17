@@ -128,15 +128,19 @@
 
     <!-- LIST VIEW -->
     <div class="time-entries"  v-show="listView">
-
-        <form class="row buffer" v-on:submit.prevent="getTimeSheet">
+        <form class="row buffer" v-on:submit.prevent="getTimeSheet(dayToShow)">
         <div class="twelve columns">
-            <button class="button-primary u-full-width" type="submit">
+            <!--<button class="button-primary u-full-width" type="submit">
               get time entries
-            </button>
+            </button>-->
             <!--<h2> Tuesday, June 24 </h2>-->
         </div>
       </form>
+      <div class="row centered-text">
+        <button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
+        <span class="four columns">{{dayToShow | formatDate('dddd - MM/DD/YYYY')}}</span>
+        <button class="button four columns" v-on:click="showNextDay">Next Day</button>
+      </div>
       <table class="u-full-width" v-show="hasToken">
         <thead>
           <tr>
@@ -152,20 +156,22 @@
             <td> </td>
             <td> {{interval.ixBug}} </td>
             <td> {{interval.sTitle}}</td>
-            <td class="centered-text split-date">
-              <h5>{{interval.dtStart | formatDate('hh:mm a')}}</h5>
-              {{interval.dtStart | formatDate('MM/DD/YYYY')}}
+            <td class="split-date">
+              <span>{{interval.dtStart | formatDate('hh:mm a')}}</span>
+              <!--{{interval.dtStart | formatDate('MM/DD/YYYY')}}-->
 
             </td>
-            <td class="centered-text split-date">
-              <h5>{{interval.dtEnd | formatDate('hh:mm a')}}</h5>
-              {{interval.dtEnd | formatDate('MM/DD/YYYY')}}
+            <td class="split-date">
+              <span>{{interval.dtEnd | formatDate('hh:mm a')}}</span>
+              <!--{{interval.dtEnd | formatDate('MM/DD/YYYY')}}-->
 
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+    <h3 class="centered-text" v-on:click="calculateTimeWorked">{{timeWorked}}</h3>
+    
   </div>
 
   <div class="status-bar">
