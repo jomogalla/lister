@@ -17,6 +17,10 @@
     margin: 15px;
 }
 
+.hour-donut {
+    width: 80px;
+}
+
 #loader {
     color:#ccc;
     display: none;
