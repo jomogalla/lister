@@ -40,12 +40,12 @@ var app = new Vue({
       }
     },
     setActiveCase: function(caseId) {
-      var case = {
+      var bugcase = {
 
       };
 
       utilities.loader.start();
-      utilites.api(case).then(this.setCase);
+      utilites.api(bugcase).then(this.setCase);
     },
     search: function() {
       var search =  {
