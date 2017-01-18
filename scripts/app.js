@@ -36,14 +36,16 @@ var app = new Vue({
       ],
       datasets: [
           {
-            data: [5, 3],
+            data: [0, 480],
             backgroundColor: [
                 "#FF6384",
-                "#FFCE56"
+                "#FFCE56",
+                "#36A2EB"
             ],
             hoverBackgroundColor: [
                 "#FF6384",
-                "#FFCE56"
+                "#FFCE56",
+                "#36A2EB"
             ]
           }
       ]
@@ -63,6 +65,9 @@ var app = new Vue({
         this.getTimeSheet(this.dayToShow);
       }
 
+    },
+    logon: function() {
+      utilities.authenticator.logon(this.username, this.password);
     },
     setActiveCase: function(caseId) {
       var bugcase = {
@@ -127,9 +132,6 @@ var app = new Vue({
         return;
       }
 
-
-
-      // http://stackoverflow.com/questions/25150570/get-hours-difference-between-two-dates-in-moment-js
       for (var i = 0; i < this.timeIntervals.intervals.length; i ++) {
         var startMoment = moment(this.timeIntervals.intervals[i].dtStart)
         if(this.timeIntervals.intervals[i].dtEnd) {
@@ -184,6 +186,6 @@ Vue.filter('formatDate', function(value, format = 'MM/DD/YYYY hh:mm') {
   }
 });
 Vue.filter('humanize', function(value) {
-  return (moment.duration(value).hours() + ' hours ' + moment.duration(value).minutes() + ' minutes');
+  return (moment.duration(value).hours() + 'h ' + moment.duration(value).minutes() + 'm');
 });
 })();

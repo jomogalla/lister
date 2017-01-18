@@ -130,7 +130,7 @@
     <div class="time-entries"  v-show="listView">
       <div class="row centered-text pagination-controls">
         <button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
-        <span class="four columns">{{dayToShow | formatDate('dddd - MM/DD/YYYY')}}</span>
+        <span class="four columns">{{dayToShow | formatDate('dddd - MMM /DD')}}</span>
         <button class="button four columns" v-on:click="showNextDay">Next Day</button>
       </div>
       <table class="u-full-width" v-show="hasToken">
@@ -150,13 +150,9 @@
             <td> {{interval.sTitle}}</td>
             <td class="split-date">
               <span>{{interval.dtStart | formatDate('hh:mm a')}}</span>
-              <!--{{interval.dtStart | formatDate('MM/DD/YYYY')}}-->
-
             </td>
             <td class="split-date">
               <span>{{interval.dtEnd | formatDate('hh:mm a')}}</span>
-              <!--{{interval.dtEnd | formatDate('MM/DD/YYYY')}}-->
-
             </td>
           </tr>
         </tbody>
@@ -184,13 +180,11 @@
 <!-- Javascript
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <!-- Third Party -->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="scripts/moment.js"></script>
-<script type="text/javascript" src="scripts/Chart.js"></script>
-<script type="text/javascript" src="scripts/vue.js"></script>
-<script type="text/javascript" src="scripts/vue-router.js"></script>
-<!--<script type="text/javascript" src="scripts/vuex.js"></script>-->
-<!--<script type="text/javascript" src="scripts/vue-resource.js"></script>-->
+<script type="text/javascript" src="scripts/thirdparty/jquery.js"></script>
+<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
+<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
+<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
+<script type="text/javascript" src="scripts/thirdparty/vue-router.js"></script>
 <script src="https://use.fontawesome.com/d04f0d059a.js"></script>
 
 <!-- My Scripts -->
