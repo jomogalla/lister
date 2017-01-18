@@ -1,6 +1,4 @@
 (function(){
-
-
 var app = new Vue({
   el: '#app',
   data: {
@@ -27,17 +25,44 @@ var app = new Vue({
     caseActive: false,
     currentCase: {},
     dayToShow: moment(),
-    timeWorked: 0
+    timeWorked: moment.duration(0),
+    minutesWorked: 0
   },
-  http: {
-
+  mounted: function () {
+    var donutData = {
+      labels: [
+          "Minutes Worked",
+          "Minutes Left"
+      ],
+      datasets: [
+          {
+            data: [5, 3],
+            backgroundColor: [
+                "#FF6384",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#FFCE56"
+            ]
+          }
+      ]
+    };
+    var donutOptions = {
+      legend: {
+        display: false
+      }
+    };
+    utilities.donut.initialize(donutData, donutOptions);
   },
   methods: {
     addToken: function() {
       if(this.token) {
         utilities.authenticator.addToken(this.token)
         this.hasToken = true;
+        this.getTimeSheet(this.dayToShow);
       }
+
     },
     setActiveCase: function(caseId) {
       var bugcase = {
@@ -97,15 +122,34 @@ var app = new Vue({
       this.getTimeSheet(this.dayToShow.add(1, 'days'));
     },
     calculateTimeWorked: function () {
-      this.timeWorked = 0;
+      this.timeWorked = moment.duration(0);
       if(!this.timeIntervals.intervals) {
         return;
       }
-      debugger;
+
+
+
       // http://stackoverflow.com/questions/25150570/get-hours-difference-between-two-dates-in-moment-js
       for (var i = 0; i < this.timeIntervals.intervals.length; i ++) {
-        console.log(this.timeIntervals.intervals[i]);
+        var startMoment = moment(this.timeIntervals.intervals[i].dtStart)
+        if(this.timeIntervals.intervals[i].dtEnd) {
+          var endMoment = moment(this.timeIntervals.intervals[i].dtEnd)
+        } else {
+          var endMoment = moment();
+        }
+
+  
+        var duration = moment.duration(endMoment.diff(startMoment));
+
+        this.timeWorked = this.timeWorked.add(duration);
+        
       }
+
+      this.minutesWorked = Math.floor(this.timeWorked.asMinutes());
+
+
+
+      utilities.donut.update(this.minutesWorked);
     },
     handleResponse: function (response) {
       this.searchResults =  $.parseJSON(response).data;
@@ -114,6 +158,7 @@ var app = new Vue({
     handleResponse2: function (response) {
       this.timeIntervals =  $.parseJSON(response).data;
       utilities.loader.stop();
+      this.calculateTimeWorked();
     },
     showList: function () {
       this.listView = true;
@@ -132,9 +177,13 @@ var app = new Vue({
     }
   }
 });
+
 Vue.filter('formatDate', function(value, format = 'MM/DD/YYYY hh:mm') {
   if (value) {
-    return moment(String(value)).format(format)
+    return moment(String(value)).format(format);
   }
+});
+Vue.filter('humanize', function(value) {
+  return (moment.duration(value).hours() + ' hours ' + moment.duration(value).minutes() + ' minutes');
 });
 })();

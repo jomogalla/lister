@@ -49,3 +49,11 @@
 .case-controls {
     color: #ccc;
 }
+
+.chart-wrapper {
+    width: 100px;
+}
+
+.pagination-controls span{
+    font-size: 2rem;
+}
