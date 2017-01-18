@@ -45,3 +45,7 @@
 .case-controls {
     color: #ccc;
 }
+
+.chart-wrapper {
+    width: 100px;
+}

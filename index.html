@@ -170,13 +170,16 @@
         </tbody>
       </table>
     </div>
-    <h3 class="centered-text" v-on:click="calculateTimeWorked">{{timeWorked}}</h3>
     
   </div>
 
   <div class="status-bar">
     <a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
     <span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
+    <div class="chart-wrapper">
+      <canvas id="chartone"></canvas>
+      <div class="centered-text" v-on:click="calculateTimeWorked">{{timeWorked | humanize}}</div>
+    </div>
   </div>
     
   </div>
@@ -187,13 +190,17 @@
 
 <!-- Javascript
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="scripts/moment.js"></script>
+<!-- Third Party -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/moment.js"></script>
+<script type="text/javascript" src="scripts/Chart.js"></script>
 <script type="text/javascript" src="scripts/vue.js"></script>
-<script type="text/javascript" src="scripts/utilities.js"></script>
-<script type="text/javascript" src="scripts/vuex.js"></script>
-<script type="text/javascript" src="scripts/vue-resource.js"></script>
-<script type="text/javascript" src="scripts/app.js"></script>
+<!--<script type="text/javascript" src="scripts/vuex.js"></script>-->
+<!--<script type="text/javascript" src="scripts/vue-resource.js"></script>-->
 <script src="https://use.fontawesome.com/d04f0d059a.js"></script>
+
+<!-- My Scripts -->
+<script type="text/javascript" src="scripts/utilities.js"></script>
+<script type="text/javascript" src="scripts/app.js"></script>
 </body>
 </html>

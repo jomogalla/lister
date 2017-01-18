@@ -62,5 +62,51 @@ var utilities = {
         stop: function() {
              $('#loader').fadeOut();
         }
+    },
+    donut: {
+        chart: $('#chartone'),
+        initialize: function (data, options) {
+            var ctx = $('#chartone');
+
+            this.chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: options
+            });
+
+        },
+        update: function (minutesWorked) {
+            var eightHoursInMinutes = 60 * 8;
+            var timeLeft = eightHoursInMinutes - minutesWorked;
+
+            this.chart.data.datasets[0].data[0] = minutesWorked;
+            this.chart.data.datasets[0].data[1] = timeLeft;
+            
+            this.chart.update();
+        },
+        generateDataset: function (minutesWorked) {
+            var eightHoursInMinutes = 60 * 8;
+            var timeLeft = eightHoursInMinutes - minutesWorked;
+
+            return {
+                labels: [
+                    "Time Worked",
+                    "Time Left"
+                ],
+                datasets: [
+                    {
+                        data: [minutesWorked, timeLeft],
+                        backgroundColor: [
+                            "#FF6384",
+                            "#FFCE56"
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF6384",
+                            "#FFCE56"
+                        ]
+                    }
+                ]
+            };      
+        }
     }
 }
