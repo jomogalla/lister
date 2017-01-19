@@ -51,9 +51,16 @@
 }
 
 .chart-wrapper {
-    width: 100px;
+    width: 100%;
 }
 
 .pagination-controls span{
     font-size: 2rem;
+}
+.control-bar {
+    padding: 15px;
+}
+
+.main-content {
+    padding: 15px;
 }

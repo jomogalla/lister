@@ -1,194 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-  <!-- Basic Page Needs
+	<!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <title>Lister</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
+	<meta charset="utf-8">
+	<title>Lister</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-  <!-- Mobile Specific Metas
+	<!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- FONT
+	<!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+	<link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
 
 
 
-  <!-- CSS
+	<!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
+	<link rel="stylesheet" href="css/styles.css">
 
 
-  <!-- Favicon
+	<!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
+	<link rel="icon" type="image/png" href="images/favicon.png">
 
 </head>
 <body>
+	<div id="app">
+		<div class="one column control-bar">
+			<a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
+			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
+			<div class="chart-wrapper">
+				<canvas id="chartone"></canvas>
+				<div class="centered-text">{{timeWorked | humanize}}</div>
+			</div>
+		</div>
+		<div class="eleven columns main-content">
+			<div class="">
+				<!-- LOGIN VIEW -->
+				<div class="login row buffer" v-show="!hasToken">
+					<div class="one column">&nbsp;</div>
+					<form class="four columns" v-on:submit.prevent="logon">
+						<div class="">
+							<input v-model="username" class="button u-full-width" type="text" placeholder="username">
+						</div>
+						<div class="">
+							<input v-model="password" class="button u-full-width" type="password" placeholder="password">
+						</div>
+						<div class="">
+							<button class="button-primary u-full-width" type="submit">Logon</button>
+						</div>
+					</form>
+					<!--<h4 class="centered-text">OR </h4>-->
+					<div class="two columns">&nbsp;</div>
 
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container" id="app">
-  <div class="login row buffer" v-show="!hasToken">
-    <div class="one column">&nbsp;</div>
-    <form class="four columns" v-on:submit.prevent="logon">
-      <div class="">
-        <input v-model="username" class="button u-full-width" type="text" placeholder="username">
-      </div>
-      <div class="">
-        <input v-model="password" class="button u-full-width" type="password" placeholder="password">
-      </div>
-      <div class="">
-          <button class="button-primary u-full-width" type="submit">Logon</button>
-      </div>
-    </form>
-    <!--<h4 class="centered-text">OR </h4>-->
-    <div class="two columns">&nbsp;</div>
+					<form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
+						<div class="">
+							<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
+						</div>
+						<div class="">
+							<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
+								<span v-show="hasToken">token accepted</span>
+								<span v-show="!hasToken">insert token</span>
+          					</button>
+						</div>
+					</form>
+					<div class="one column">&nbsp;</div>
+				</div>
+				<div class="everything-else buffer" v-show="hasToken">
+					<!-- Tabs -->
+					<div class="tabs row">
+						<!-- Timesheet Header-->
+						<h5 class="four columns" v-bind:class="{ 'active': listView }"><a href="" v-on:click.prevent="showList">Timesheet</a></h5>
+						<!-- Case Header -->
+						<h5 class="four columns" v-bind:class="{ 'active': caseView }">
+							<a href="" v-on:click.prevent="showCase">Case 32507</a>
+							<span class="u-pull-right case-controls">
+								<i v-show="!caseActive" class="fa fa-play" aria-hidden="true"></i>
+								<i v-show="caseActive" class="fa fa-pause" aria-hidden="true"></i>
+							</span>
+						</h5>
+						<!-- Search Header-->
+						<h5 class="four columns" v-bind:class="{ 'active': searchView }"><a href="" v-on:click.prevent="showSearch">Search</a></h5>
+					</div>
 
-     <form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
-      <div class="">
-        <input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
-      </div>
-      <div class="">
-          <button :disabled="hasToken" class="button-primary u-full-width" type="submit">
-            <span v-show="hasToken">token accepted</span>
-            <span v-show="!hasToken">insert token</span>
-          </button>
-      </div>
-    </form>
-    <div class="one column">&nbsp;</div>
-  </div> 
+					<!-- SEARCH VIEW -->
+					<div class="search" v-show="searchView">
+						<form class="row buffer" v-on:submit.prevent="search">
+							<div class="six columns">
+								<input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
+							</div>
+							<div class="six columns">
+								<button class="button-primary u-full-width" type="submit">
+									search
+								</button>
+							</div>
+						</form>
 
-    <!-- SEARCH VIEW -->
-    <div class="everything-else buffer" v-show="hasToken">
+						<table class="u-full-width" v-show="hasToken">
+							<thead>
+								<tr>
+									<th> &nbsp; </th>
+									<th>Case # </th>
+									<th>Title</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="fcase of searchResults.cases">
+									<td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
+									<td>
+										{{fcase.ixBug}}
+										<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+									</td>
+									<td>{{fcase.sTitle}}</td>
+									<td>{{fcase.sStatus}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-      <div class="tabs row">
-        <h5 class="four columns" v-bind:class="{ 'active': listView }"><a href="" v-on:click.prevent="showList">Timesheet</a></h5>
-        <h5 class="four columns" v-bind:class="{ 'active': caseView }">
-          <a href="" v-on:click.prevent="showCase">Case 32507</a>
-          <span class="u-pull-right case-controls">
-            <i v-show="!caseActive" class="fa fa-play" aria-hidden="true"></i>
-            <i v-show="caseActive" class="fa fa-pause" aria-hidden="true"></i>
-          </span>
-        </h5>
-        <h5 class="four columns" v-bind:class="{ 'active': searchView }"><a href="" v-on:click.prevent="showSearch">Search</a></h5>
-      </div>
-
-      
-      <div class="search" v-show="searchView">
-
-        <!--<h2> Search </h2>-->
-        <form class="row buffer" v-on:submit.prevent="search">
-          <div class="six columns">
-            <input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
-          </div>
-          <div class="six columns">
-              <button class="button-primary u-full-width" type="submit">
-                  search
-              </button>
-          </div>
-        </form>
-
-        <table class="u-full-width" v-show="hasToken">
-          <thead>
-            <tr>
-              <th> &nbsp; </th>
-              <th>Case # </th>
-              <th>Title</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="fcase of searchResults.cases">
-              <td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
-              <td> 
-                {{fcase.ixBug}} 
-                <a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
-                </td>
-              <td>{{fcase.sTitle}}</td>
-              <td>{{fcase.sStatus}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    <!-- CASE VIEW -->
-    <div class="case-wrapper" v-show="caseView">
-      <h4> Release QA - 6.0 </h4>
-    </div>
+					<!-- CASE VIEW -->
+					<div class="case-wrapper" v-show="caseView">
+						<h4> Release QA - 6.0 </h4>
+					</div>
 
 
-    <!-- LIST VIEW -->
-    <div class="time-entries"  v-show="listView">
-      <div class="row centered-text pagination-controls">
-        <button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
-        <span class="four columns">{{dayToShow | formatDate('dddd - MMM /DD')}}</span>
-        <button class="button four columns" v-on:click="showNextDay">Next Day</button>
-      </div>
-      <table class="u-full-width" v-show="hasToken">
-        <thead>
-          <tr>
-            <th> </th>
-            <th width="10%">Case # </th>
-            <th width="50%">Title</th>
-            <th width="20%">Start</th>
-            <th width="20%">End</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="interval of timeIntervals.intervals">
-            <td> </td>
-            <td> {{interval.ixBug}} </td>
-            <td> {{interval.sTitle}}</td>
-            <td class="split-date">
-              <span>{{interval.dtStart | formatDate('hh:mm a')}}</span>
-            </td>
-            <td class="split-date">
-              <span>{{interval.dtEnd | formatDate('hh:mm a')}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-  </div>
+					<!-- LIST VIEW -->
+					<div class="time-entries" v-show="listView">
+						<div class="row centered-text pagination-controls">
+							<button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
+							<span class="four columns">{{dayToShow | formatDate('dddd - MMM /DD')}}</span>
+							<button class="button four columns" v-on:click="showNextDay">Next Day</button>
+						</div>
+						<table class="u-full-width" v-show="hasToken">
+							<thead>
+								<tr>
+									<th> </th>
+									<th width="10%">Case # </th>
+									<th width="50%">Title</th>
+									<th width="20%">Start</th>
+									<th width="20%">End</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="interval of timeIntervals.intervals">
+									<td> </td>
+									<td> {{interval.ixBug}} </td>
+									<td> {{interval.sTitle}}</td>
+									<td class="split-date">
+										<span>{{interval.dtStart | formatDate('hh:mm a')}}</span>
+									</td>
+									<td class="split-date">
+										<span>{{interval.dtEnd | formatDate('hh:mm a')}}</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-  <div class="status-bar">
-
-    <a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
-    <span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
-    <div class="chart-wrapper">
-      <canvas id="chartone"></canvas>
-      <div class="centered-text">{{timeWorked | humanize}}</div>
-    </div>
-  </div>
-    
-  </div>
-  
-
-<!-- End Document
+	<!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
-<!-- Javascript
+
+	<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+	<!-- Javascript
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<!-- Third Party -->
-<script type="text/javascript" src="scripts/thirdparty/jquery.js"></script>
-<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
-<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
-<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
-<script type="text/javascript" src="scripts/thirdparty/vue-router.js"></script>
-<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
+	<!-- Third Party -->
+	<script type="text/javascript" src="scripts/thirdparty/jquery.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
+	<!--<script type="text/javascript" src="scripts/thirdparty/vue-router.js"></script>-->
+	<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
 
-<!-- My Scripts -->
-<script type="text/javascript" src="scripts/utilities.js"></script>
-<script type="text/javascript" src="scripts/app.js"></script>
+	<!-- My Scripts -->
+	<script type="text/javascript" src="scripts/utilities.js"></script>
+	<script type="text/javascript" src="scripts/filters.js"></script>
+	<script type="text/javascript" src="scripts/app.js"></script>
 </body>
+
 </html>
