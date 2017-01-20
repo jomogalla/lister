@@ -35,16 +35,16 @@
 </head>
 <body>
 	<div id="app">
-		<div class="one column control-bar">
+		<div class="control-bar">
 			<a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
 			<div class="chart-wrapper">
 				<canvas id="chartone"></canvas>
-				<div class="centered-text">{{timeWorked | humanize}}</div>
+				<div class="centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
 			</div>
 		</div>
-		<div class="eleven columns main-content">
-			<div class="">
+		<div class="main-content">
+			<div class="container">
 				<!-- LOGIN VIEW -->
 				<div class="login row buffer" v-show="!hasToken">
 					<div class="one column">&nbsp;</div>
@@ -138,23 +138,26 @@
 					<div class="time-entries" v-show="listView">
 						<div class="row centered-text pagination-controls">
 							<button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
-							<span class="four columns">{{dayToShow | formatDate('dddd - MMM /DD')}}</span>
+							<span class="four columns">{{dayToShow | formatDate('dddd, MMM DD')}}</span>
 							<button class="button four columns" v-on:click="showNextDay">Next Day</button>
 						</div>
 						<table class="u-full-width" v-show="hasToken">
 							<thead>
 								<tr>
 									<th> </th>
-									<th width="10%">Case # </th>
+									<th width="20%">Case # </th>
 									<th width="50%">Title</th>
-									<th width="20%">Start</th>
-									<th width="20%">End</th>
+									<th width="15%">Start</th>
+									<th width="15%">End</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="interval of timeIntervals.intervals">
 									<td> </td>
-									<td> {{interval.ixBug}} </td>
+									<td> 
+										{{interval.ixBug}}
+										<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a> 
+									</td>
 									<td> {{interval.sTitle}}</td>
 									<td class="split-date">
 										<span>{{interval.dtStart | formatDate('hh:mm a')}}</span>
@@ -172,10 +175,6 @@
 	</div>
 
 	<!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-
-	<!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
 	<!-- Javascript

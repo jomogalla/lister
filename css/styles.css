@@ -59,8 +59,12 @@
 }
 .control-bar {
     padding: 15px;
+    width: 100px;
+    float: left;
 }
 
 .main-content {
     padding: 15px;
+    width: calc(100% - 160px);
+    float: left;
 }
