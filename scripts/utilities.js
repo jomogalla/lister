@@ -160,10 +160,10 @@ var utilities = {
 			data.datasets[0].data = [];
 			data.labels = [];
 
-			for (var i = 0; i < 24; i++) {
-				data.datasets[0].data.push(60);
-				data.labels.push(' ' + i + ' - ' + (i+1));
-			}
+			// for (var i = 0; i < 24; i++) {
+			// 	data.datasets[0].data.push(60);
+			// 	data.labels.push(' ' + i + ' - ' + (i+1));
+			// }
 
 			this.chart = new Chart(ctx, {
 				type: 'doughnut',
@@ -173,33 +173,13 @@ var utilities = {
 
 		},
 
-		update: function (minutesWorked) {
-			var timeLeft = (constants.eightHoursInMinutes - minutesWorked);
-
-			// Update Colors First
-			if (minutesWorked > constants.eightHoursInMinutes) {
-				this.chart.data.datasets[0].backgroundColor = constants.secondEight;
-				this.chart.data.datasets[0].hoverBackgroundColor = constants.secondEightHover;
-			} else if (minutesWorked === constants.eightHoursInMinutes) {
-				this.chart.data.datasets[0].backgroundColor = [constants.blue, constants.blue];
-				this.chart.data.datasets[0].hoverBackgroundColor = [constants.blue, constants.blue];
-			} else {
-
-				this.chart.data.datasets[0].backgroundColor = constants.firstEight;
-				this.chart.data.datasets[0].hoverBackgroundColor = constants.firstEightHover;
+		update: function (timeData) {
+			for (var i = 0; i < timeData.length; i++) {
+				this.chart.data.datasets[0].data[i] = timeData[i].time;
 			}
 
-			// Modify the data to match the first go around
-			if (timeLeft < 0) {
-				// timeLeft = (minutesWorked % constants.eightHoursInMinutes);
-				minutesWorked = minutesWorked % constants.eightHoursInMinutes;
-				timeLeft = constants.eightHoursInMinutes - (minutesWorked % constants.eightHoursInMinutes);
-
-				// timeLeft = constants.eightHoursInMinutes * 2 - minutesWorked % constants.eightHoursInMinutes;
-			}
-
-			this.chart.data.datasets[0].data[0] = minutesWorked;
-			this.chart.data.datasets[0].data[1] = timeLeft;
+			// this.chart.data.datasets[0].data[0] = minutesWorked;
+			// this.chart.data.datasets[0].data[1] = timeLeft;
 
 			this.chart.update();
 		},

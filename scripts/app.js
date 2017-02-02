@@ -158,6 +158,63 @@
 				utilities.api(listIntervalsForDate).then(this.handleResponse2);
 
 			},
+			prepareClockData: function (clockInputData) {
+				var date = clockInputData[0].dtStart;
+				var startOfDay = moment(date).startOf('day');
+				var endOfDay = moment(date).endOf('day');
+				var betterClockData = [];
+
+				// Strip the data to just be start & end
+				for (var i = 0; i < clockInputData.length; i++) {
+					var start = moment(clockInputData[i].dtStart);
+					var end = moment(clockInputData[i].dtEnd);
+
+					betterClockData.push({
+						'start': start,
+						'end': end
+					});
+				}
+
+				var startOfTimeData = [];
+
+
+				// Turn the data into a bunch of durations
+				var tempDuration = {
+					'time': moment.duration(startOfDay.diff(betterClockData[0].start)).asMinutes(),
+					'isWork': false
+				};
+				startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+
+				for (var i = 0; i < betterClockData.length; i++) {
+					tempDuration = {
+						'time': moment.duration(betterClockData[i].end.diff(betterClockData[i].start)).asMinutes(),
+						'isWork': true
+					};
+					// debugger;
+					startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+
+					if (i < betterClockData.length - 1) {
+						tempDuration.time = moment.duration(betterClockData[i + 1].start.diff(betterClockData[i].end)).asMinutes();
+						tempDuration.isWork = false;
+						startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+					}
+				}
+				debugger;
+				tempDuration.time = moment.duration(endOfDay.diff(betterClockData[betterClockData.length-1].end)).asMinutes();
+				tempDuration.isWork = false;
+				startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+
+				
+				// Clean it... Remove 0 values and convert MS to Minutes
+				var cleanedData = [];
+				
+				// for (var i = 0; i < startOfTimeData.length; i++) {
+					
+				// 	cleanedData.push(Math.floor(startOfTimeData[i].asMinutes()));
+					
+				// }
+				utilities.donutClock.update(startOfTimeData);
+			},
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
 			},
@@ -188,7 +245,6 @@
 				this.minutesWorked = Math.floor(this.timeWorked.asMinutes());
 
 
-
 				utilities.donut.update(this.minutesWorked);
 			},
 			handleResponse: function (response) {
@@ -199,6 +255,7 @@
 				this.timeIntervals = $.parseJSON(response).data;
 				utilities.loader.stop();
 				this.calculateTimeWorked();
+				this.prepareClockData(this.timeIntervals.intervals)
 			},
 			showList: function () {
 				this.listView = true;
