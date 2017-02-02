@@ -68,3 +68,8 @@
     width: calc(100% - 160px);
     float: left;
 }
+
+.clock-wrapper {
+    width: 50%;
+    margin: 15px auto;
+}

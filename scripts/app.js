@@ -32,6 +32,7 @@
 			minutesWorked: 0
 		},
 		mounted: function () {
+			// MAking 2days timer
 			var donutData = {
 				labels: [
 					"Minutes Worked",
@@ -59,6 +60,38 @@
 				}
 			};
 			utilities.donut.initialize(donutData, donutOptions);
+
+			//donut clock initializing
+
+			donutData = {
+				labels: [
+					"Minutes Worked",
+					"Minutes Left"
+				],
+				datasets: [
+					{
+						data: [0, constants.twentyFourHoursInMinutes],
+						backgroundColor: [
+							"#FF6384",
+							"#F9F9F9",
+							"#36A2EB"
+						],
+						hoverBackgroundColor: [
+							"#FF6384",
+							"#FFCE56",
+							"#36A2EB"
+						]
+					}
+				]
+			};
+			donutOptions = {
+				legend: {
+					display: false
+				}
+			};
+
+			utilities.donutClock.initialize(donutData, donutOptions)
+
 
 			utilities.router.initializeState();
 		},

@@ -23,7 +23,8 @@ const constants = {
 		"#FFCE56",
 		"#36A2EB"
 	],
-	eightHoursInMinutes: (60 * 8)
+	eightHoursInMinutes: (60 * 8),
+	twentyFourHoursInMinutes: (60 * 24)
 };
 
 var variables = {
@@ -87,6 +88,82 @@ var utilities = {
 		chart: $('#chartone'),
 		initialize: function (data, options) {
 			var ctx = $('#chartone');
+
+			this.chart = new Chart(ctx, {
+				type: 'doughnut',
+				data: data,
+				options: options
+			});
+
+		},
+
+		update: function (minutesWorked) {
+			var timeLeft = (constants.eightHoursInMinutes - minutesWorked);
+
+			// Update Colors First
+			if (minutesWorked > constants.eightHoursInMinutes) {
+				this.chart.data.datasets[0].backgroundColor = constants.secondEight;
+				this.chart.data.datasets[0].hoverBackgroundColor = constants.secondEightHover;
+			} else if (minutesWorked === constants.eightHoursInMinutes) {
+				this.chart.data.datasets[0].backgroundColor = [constants.blue, constants.blue];
+				this.chart.data.datasets[0].hoverBackgroundColor = [constants.blue, constants.blue];
+			} else {
+
+				this.chart.data.datasets[0].backgroundColor = constants.firstEight;
+				this.chart.data.datasets[0].hoverBackgroundColor = constants.firstEightHover;
+			}
+
+			// Modify the data to match the first go around
+			if (timeLeft < 0) {
+				// timeLeft = (minutesWorked % constants.eightHoursInMinutes);
+				minutesWorked = minutesWorked % constants.eightHoursInMinutes;
+				timeLeft = constants.eightHoursInMinutes - (minutesWorked % constants.eightHoursInMinutes);
+
+				// timeLeft = constants.eightHoursInMinutes * 2 - minutesWorked % constants.eightHoursInMinutes;
+			}
+
+			this.chart.data.datasets[0].data[0] = minutesWorked;
+			this.chart.data.datasets[0].data[1] = timeLeft;
+
+			this.chart.update();
+		},
+		generateDataset: function (minutesWorked) {
+			var eightHoursInMinutes = 60 * 8;
+			var timeLeft = eightHoursInMinutes - minutesWorked;
+
+			return {
+				labels: [
+					"Time Worked",
+					"Time Left"
+				],
+				datasets: [
+					{
+						data: [minutesWorked, timeLeft],
+						backgroundColor: [
+							"#FF6384",
+							"#FFCE56"
+						],
+						hoverBackgroundColor: [
+							"#FF6384",
+							"#FFCE56"
+						]
+					}
+				]
+			};
+		}
+	},
+	donutClock: {
+		chart: $('#chartclock'),
+		initialize: function (data, options) {
+			var ctx = $('#chartclock');
+
+			data.datasets[0].data = [];
+			data.labels = [];
+
+			for (var i = 0; i < 24; i++) {
+				data.datasets[0].data.push(60);
+				data.labels.push(' ' + i + ' - ' + (i+1));
+			}
 
 			this.chart = new Chart(ctx, {
 				type: 'doughnut',
