@@ -176,12 +176,24 @@ var utilities = {
 		update: function (timeData) {
 			for (var i = 0; i < timeData.length; i++) {
 				this.chart.data.datasets[0].data[i] = timeData[i].time;
+				if (timeData[i].bug) {
+					this.chart.data.datasets[0].backgroundColor[i] = '#D9E3D6';
+					this.chart.data.labels[i] = 'Case ' + timeData[i].bug;
+				} else {
+					this.chart.data.datasets[0].backgroundColor[i] = '#F9F9F9';
+					this.chart.data.labels[i] = 'Free time';
+				}
+				
 			}
 
 			// this.chart.data.datasets[0].data[0] = minutesWorked;
 			// this.chart.data.datasets[0].data[1] = timeLeft;
 
 			this.chart.update();
+		},
+
+		clear: function() {
+			this.chart.data.datasets[0].data = [];
 		},
 		generateDataset: function (minutesWorked) {
 			var eightHoursInMinutes = 60 * 8;

@@ -94,6 +94,8 @@
 
 
 			utilities.router.initializeState();
+			var self = this;
+			setInterval(function() {self.refresher()}, 60000);
 		},
 		methods: {
 			addToken: function () {
@@ -158,7 +160,9 @@
 				utilities.api(listIntervalsForDate).then(this.handleResponse2);
 
 			},
-			prepareClockData: function (clockInputData) {
+			prepareClockData: function () {
+				var clockInputData = this.timeIntervals.intervals;
+				if (!clockInputData.length) {return;}
 				var date = clockInputData[0].dtStart;
 				var startOfDay = moment(date).startOf('day');
 				var endOfDay = moment(date).endOf('day');
@@ -168,43 +172,49 @@
 				for (var i = 0; i < clockInputData.length; i++) {
 					var start = moment(clockInputData[i].dtStart);
 					var end = moment(clockInputData[i].dtEnd);
+					var bug = clockInputData[i].ixBug;
+
+					// Handle if there is no end time
+					if(!clockInputData[i].dtEnd) {
+						var end = moment();
+					}
 
 					betterClockData.push({
+						'bug': bug,
 						'start': start,
 						'end': end
 					});
 				}
-
+				
 				var startOfTimeData = [];
 
 
 				// Turn the data into a bunch of durations
-				var tempDuration = {
-					'time': moment.duration(startOfDay.diff(betterClockData[0].start)).asMinutes(),
-					'isWork': false
-				};
-				startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+				startOfTimeData.push({
+					'time': moment.duration(betterClockData[0].start.diff(startOfDay)).asMinutes(),
+					'bug': ''
+				});
 
 				for (var i = 0; i < betterClockData.length; i++) {
-					tempDuration = {
+					startOfTimeData.push({
 						'time': moment.duration(betterClockData[i].end.diff(betterClockData[i].start)).asMinutes(),
-						'isWork': true
-					};
-					// debugger;
-					startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+						'bug': betterClockData[i].bug
+					});
 
+					// Calculate the down time between this time entry and the next and add it.
 					if (i < betterClockData.length - 1) {
-						tempDuration.time = moment.duration(betterClockData[i + 1].start.diff(betterClockData[i].end)).asMinutes();
-						tempDuration.isWork = false;
-						startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
+						startOfTimeData.push({
+							'time': moment.duration(betterClockData[i + 1].start.diff(betterClockData[i].end)).asMinutes(),
+							'bug': ''
+						});
 					}
 				}
-				debugger;
-				tempDuration.time = moment.duration(endOfDay.diff(betterClockData[betterClockData.length-1].end)).asMinutes();
-				tempDuration.isWork = false;
-				startOfTimeData.push(JSON.parse(JSON.stringify(tempDuration)));
 
-				
+				startOfTimeData.push({
+					'time': moment.duration(endOfDay.diff(betterClockData[betterClockData.length-1].end)).asMinutes(),
+					'bug': ''
+				});
+
 				// Clean it... Remove 0 values and convert MS to Minutes
 				var cleanedData = [];
 				
@@ -213,6 +223,7 @@
 				// 	cleanedData.push(Math.floor(startOfTimeData[i].asMinutes()));
 					
 				// }
+				utilities.donutClock.clear();
 				utilities.donutClock.update(startOfTimeData);
 			},
 			showPreviousDay: function () {
@@ -255,7 +266,7 @@
 				this.timeIntervals = $.parseJSON(response).data;
 				utilities.loader.stop();
 				this.calculateTimeWorked();
-				this.prepareClockData(this.timeIntervals.intervals)
+				this.prepareClockData();
 			},
 			showList: function () {
 				this.listView = true;
@@ -271,6 +282,10 @@
 				this.listView = false;
 				this.caseView = true;
 				this.searchView = false;
+			},
+			refresher: function () {
+				this.calculateTimeWorked();
+				this.prepareClockData();
 			}
 		}
 	});
