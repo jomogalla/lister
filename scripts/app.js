@@ -27,6 +27,7 @@
 			searchView: false,
 			caseActive: false,
 			currentCase: {},
+			currentCaseId: null,
 			dayToShow: moment(),
 			timeWorked: moment.duration(0, 'minutes'),
 			minutesWorked: 0
@@ -139,7 +140,17 @@
 				utilities.loader.start('loading...');
 				utilities.api(startWork).then(this.handleResponse);
 			},
+			getCaseByNumber: function (caseNumber) {
+				var getCase = {
+					"cmd": "search",
+					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
+					"q": caseNumber,
+					"max": 1,
+					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts","hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
+				};
 
+				utilities.api(getCase).then(this.handleResponse3);
+			},
 			getTimeSheet: function (date) {
 				var startTime = moment(date).startOf('day');
 				var endTime = moment(date).endOf('day');
@@ -162,6 +173,14 @@
 			},
 			prepareClockData: function () {
 				var clockInputData = this.timeIntervals.intervals;
+
+				if (this.timeIntervals.intervals.length === 0) {
+					utilities.donutClock.clear();
+					utilities.donutClock.update([]);
+					// utilities.donutClock.clear();
+					return;
+				}
+
 				if (!clockInputData.length) {return;}
 				var date = clockInputData[0].dtStart;
 				var startOfDay = moment(date).startOf('day');
@@ -268,6 +287,10 @@
 				this.calculateTimeWorked();
 				this.prepareClockData();
 			},
+			handleResponse3: function (response) {
+				utilities.loader.stop();
+				this.currentCase = $.parseJSON(response).data.cases[0];
+			},
 			showList: function () {
 				this.listView = true;
 				this.caseView = false;
@@ -278,10 +301,13 @@
 				this.caseView = false;
 				this.searchView = true;
 			},
-			showCase: function () {
+			showCase: function (caseNumber) {
 				this.listView = false;
 				this.caseView = true;
 				this.searchView = false;
+
+				this.currentCaseId = caseNumber;
+				this.getCaseByNumber(caseNumber)
 			},
 			refresher: function () {
 				this.calculateTimeWorked();
