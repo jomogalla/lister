@@ -2,17 +2,22 @@
 ### making life with fogbugz easier
 
 ## todo:
-- separate different parts into components.
-- re add login with username/password
+- add start/stop on every case entry, everywhere (potentially make it a vue component)
+- fix utilities to actually build the donuts (potentially put in vue components), not the mess we have
+- Separate Login/Logout more in utilities, and less in vue
+- separate different pages into components.
 - add routing
-- make case detail page
-- paginate time entry list
-- add start/stop on every case entry, everywhere
-- save token in cookie
-- logout
-- add comment editing.
+- add token validation/ajax check
+- clean unused variables
+- pass parameters into function instead of using vue data
 - hide html before vue renders
 - clean out unused scripts/styles (ongoing)
-- figure out the ux mess we currently have
-- add token validation/ajax check
 - use route params to specify fogbugz subdomain
+- add comment editing.
+- re add login with username/password
+- add logout
+
+## todone: 
+- ~~paginate time entry list~~
+- ~~save token in cookie/localstorage~~
+- ~~make case detail page~~

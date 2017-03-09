@@ -33,6 +33,12 @@
 			minutesWorked: 0
 		},
 		mounted: function () {
+			// Check for token in storage
+			if(utilities.storage.load('token')){
+				this.token = utilities.storage.load('token');
+				this.addToken();
+			}
+
 			// MAking 2days timer
 			var donutData = {
 				labels: [
@@ -101,7 +107,8 @@
 		methods: {
 			addToken: function () {
 				if (this.token) {
-					utilities.authenticator.addToken(this.token)
+					utilities.authenticator.addToken(this.token);
+					utilities.storage.save('token', this.token);
 					this.hasToken = true;
 					this.getTimeSheet(this.dayToShow);
 				}
@@ -116,7 +123,7 @@
 				};
 
 				utilities.loader.start();
-				utilites.api(bugcase).then(this.setCase);
+				utilities.api(bugcase).then(this.setCase);
 			},
 			search: function () {
 				var search = {
@@ -306,6 +313,7 @@
 				this.caseView = true;
 				this.searchView = false;
 
+				utilities.loader.start();
 				this.currentCaseId = caseNumber;
 				this.getCaseByNumber(caseNumber)
 			},
