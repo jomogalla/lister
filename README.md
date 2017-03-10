@@ -3,7 +3,7 @@
 
 ## todo:
 - add start/stop on every case entry, everywhere (potentially make it a vue component)
-- fix utilities to actually build the donuts (potentially put in vue components), not the mess we have
+- Add a way to pass functions to update the donuts
 - Separate Login/Logout more in utilities, and less in vue
 - separate different pages into components.
 - add routing
@@ -18,7 +18,8 @@
 - re add login with username/password
 - add logout
 
-## todone: 
+## todone:
+- ~~fix utilities to actually build the donuts (potentially put in vue components), not the mess we have~~ 
 - ~~hide html before vue renders~~
 - ~~paginate time entry list~~
 - ~~save token in cookie/localstorage~~

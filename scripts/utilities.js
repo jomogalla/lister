@@ -84,20 +84,18 @@ var utilities = {
 			$('#loader').fadeOut();
 		}
 	},
-	donut: {
-		chart: $('#chartone'),
-		initialize: function (data, options) {
-			var ctx = $('#chartone');
+	donut: function(id, data, options, updateFunction) {
+		var ctx = $(id);
+		// this.chart = $(id);
 
-			this.chart = new Chart(ctx, {
-				type: 'doughnut',
-				data: data,
-				options: options
-			});
+		this.chart = new Chart(ctx, {
+			type: 'doughnut',
+			data: data,
+			options: options
+		});
 
-		},
-
-		update: function (minutesWorked) {
+		this.updateEight = function (timeData) {
+			var minutesWorked = timeData;
 			var timeLeft = (constants.eightHoursInMinutes - minutesWorked);
 
 			// Update Colors First
@@ -115,65 +113,17 @@ var utilities = {
 
 			// Modify the data to match the first go around
 			if (timeLeft < 0) {
-				// timeLeft = (minutesWorked % constants.eightHoursInMinutes);
 				minutesWorked = minutesWorked % constants.eightHoursInMinutes;
 				timeLeft = constants.eightHoursInMinutes - (minutesWorked % constants.eightHoursInMinutes);
-
-				// timeLeft = constants.eightHoursInMinutes * 2 - minutesWorked % constants.eightHoursInMinutes;
 			}
 
 			this.chart.data.datasets[0].data[0] = minutesWorked;
 			this.chart.data.datasets[0].data[1] = timeLeft;
 
 			this.chart.update();
-		},
-		generateDataset: function (minutesWorked) {
-			var eightHoursInMinutes = 60 * 8;
-			var timeLeft = eightHoursInMinutes - minutesWorked;
+		};
 
-			return {
-				labels: [
-					"Time Worked",
-					"Time Left"
-				],
-				datasets: [
-					{
-						data: [minutesWorked, timeLeft],
-						backgroundColor: [
-							"#FF6384",
-							"#FFCE56"
-						],
-						hoverBackgroundColor: [
-							"#FF6384",
-							"#FFCE56"
-						]
-					}
-				]
-			};
-		}
-	},
-	donutClock: {
-		chart: $('#chartclock'),
-		initialize: function (data, options) {
-			var ctx = $('#chartclock');
-
-			data.datasets[0].data = [];
-			data.labels = [];
-
-			// for (var i = 0; i < 24; i++) {
-			// 	data.datasets[0].data.push(60);
-			// 	data.labels.push(' ' + i + ' - ' + (i+1));
-			// }
-
-			this.chart = new Chart(ctx, {
-				type: 'doughnut',
-				data: data,
-				options: options
-			});
-
-		},
-
-		update: function (timeData) {
+		this.updateTwentyFour = function(timeData) {
 			for (var i = 0; i < timeData.length; i++) {
 				this.chart.data.datasets[0].data[i] = timeData[i].time;
 				if (timeData[i].bug) {
@@ -183,42 +133,14 @@ var utilities = {
 					this.chart.data.datasets[0].backgroundColor[i] = '#F9F9F9';
 					this.chart.data.labels[i] = 'Free time';
 				}
-				
 			}
 
-			// this.chart.data.datasets[0].data[0] = minutesWorked;
-			// this.chart.data.datasets[0].data[1] = timeLeft;
-
 			this.chart.update();
-		},
+		};
 
-		clear: function() {
+		this.clear = function() {
 			this.chart.data.datasets[0].data = [];
-		},
-		generateDataset: function (minutesWorked) {
-			var eightHoursInMinutes = 60 * 8;
-			var timeLeft = eightHoursInMinutes - minutesWorked;
-
-			return {
-				labels: [
-					"Time Worked",
-					"Time Left"
-				],
-				datasets: [
-					{
-						data: [minutesWorked, timeLeft],
-						backgroundColor: [
-							"#FF6384",
-							"#FFCE56"
-						],
-						hoverBackgroundColor: [
-							"#FF6384",
-							"#FFCE56"
-						]
-					}
-				]
-			};
-		}
+		};
 	},
 	router: {
 		routes: {

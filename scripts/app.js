@@ -30,78 +30,34 @@
 			currentCaseId: null,
 			dayToShow: moment(),
 			timeWorked: moment.duration(0, 'minutes'),
-			minutesWorked: 0
+			minutesWorked: 0,
+			eightHourDonut: null,
+			eightHourDonutData: {labels:["Minutes Worked","Minutes Left"],datasets: [{data: [0, 480],backgroundColor:["#FF6384","#FFCE56","#36A2EB"],hoverBackgroundColor: ["#FF6384","#FFCE56","#36A2EB"]}]},
+			eightHourDonutOptions: {type:'eight',legend:{display: false}},
+			twentyFourHourDonut : null,
+			twentyFourHourDonutData : {labels:["Minutes Worked","Minutes Left"],datasets:[{data: [0, constants.twentyFourHoursInMinutes],backgroundColor:["#F9F9F9"]}]},
+			twentyFourHourDonutOptions : {type:'twentyFour',legend:{display:false}}
 		},
 		mounted: function () {
+			var self = this;
+
 			// Check for token in storage
 			if(utilities.storage.load('token')){
 				this.token = utilities.storage.load('token');
 				this.addToken();
 			}
 
-			// MAking 2days timer
-			var donutData = {
-				labels: [
-					"Minutes Worked",
-					"Minutes Left"
-				],
-				datasets: [
-					{
-						data: [0, 480],
-						backgroundColor: [
-							"#FF6384",
-							"#FFCE56",
-							"#36A2EB"
-						],
-						hoverBackgroundColor: [
-							"#FF6384",
-							"#FFCE56",
-							"#36A2EB"
-						]
-					}
-				]
-			};
-			var donutOptions = {
-				legend: {
-					display: false
-				}
-			};
-			utilities.donut.initialize(donutData, donutOptions);
+			// Make Eight Hour Donut
+			this.eightHourDonut = new utilities.donut('#chartone', this.eightHourDonutData, this.eightHourDonutOptions);
+			console.log(this.eightHourDonut);
 
-			//donut clock initializing
+			//Make 24 hour donut
+			this.twentyFourHourDonut = new utilities.donut('#chartclock', this.twentyFourHourDonutData, this.twentyFourHourDonutOptions)
 
-			donutData = {
-				labels: [
-					"Minutes Worked",
-					"Minutes Left"
-				],
-				datasets: [
-					{
-						data: [0, constants.twentyFourHoursInMinutes],
-						backgroundColor: [
-							"#FF6384",
-							"#F9F9F9",
-							"#36A2EB"
-						],
-						hoverBackgroundColor: [
-							"#FF6384",
-							"#FFCE56",
-							"#36A2EB"
-						]
-					}
-				]
-			};
-			donutOptions = {
-				legend: {
-					display: false
-				}
-			};
-
-			utilities.donutClock.initialize(donutData, donutOptions)
-
-
+			// THIS DONT WORK
 			utilities.router.initializeState();
-			var self = this;
+			
+			// Refresh the charts every second
 			setInterval(function() {self.refresher()}, 60000);
 		},
 		methods: {
@@ -182,9 +138,8 @@
 				var clockInputData = this.timeIntervals.intervals;
 
 				if (this.timeIntervals.intervals.length === 0) {
-					utilities.donutClock.clear();
-					utilities.donutClock.update([]);
-					// utilities.donutClock.clear();
+					this.twentyFourHourDonut.clear();
+					this.twentyFourHourDonut.updateTwentyFour([]);
 					return;
 				}
 
@@ -249,8 +204,8 @@
 				// 	cleanedData.push(Math.floor(startOfTimeData[i].asMinutes()));
 					
 				// }
-				utilities.donutClock.clear();
-				utilities.donutClock.update(startOfTimeData);
+				this.twentyFourHourDonut.clear();
+				this.twentyFourHourDonut.updateTwentyFour(startOfTimeData);
 			},
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
@@ -282,7 +237,7 @@
 				this.minutesWorked = Math.floor(this.timeWorked.asMinutes());
 
 
-				utilities.donut.update(this.minutesWorked);
+				this.eightHourDonut.updateEight(this.minutesWorked);
 			},
 			handleResponse: function (response) {
 				this.searchResults = $.parseJSON(response).data;
