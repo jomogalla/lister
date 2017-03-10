@@ -36,12 +36,22 @@
 <body>
 	<div id="app" v-cloak>
 		<div class="control-bar">
+			
+
+			
 			<a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
 			<div class="chart-wrapper">
 				<canvas id="chartone"></canvas>
 				<div class="centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
 			</div>
+
+			<!--<div class="case-control active">
+				33842
+				<i v-show="!caseActive" class="fa fa-play" aria-hidden="true"></i>
+				<i v-show="caseActive" class="fa fa-pause" aria-hidden="true"></i>
+			</div>-->
+
 		</div>
 		<div class="main-content">
 			<div class="container">

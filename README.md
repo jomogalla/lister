@@ -8,6 +8,7 @@
 - separate different pages into components.
 - add routing
 - fix mobile styles
+- find solution for cases updated in Fogbugz not being displayed until data is pulled again
 - add token validation/ajax check
 - clean unused variables
 - pass parameters into function instead of using vue data

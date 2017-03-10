@@ -77,3 +77,18 @@
 [v-cloak] {
     display: none;
 }
+
+.case-control i {
+    margin-left: 5px;
+    color: #BFD0B0;
+}
+
+.case-control {
+    padding: 0 15px;
+}
+
+.case-control.active {
+    /*background-color: #BFD0B0;*/
+    /*color: #e0ffc4;*/
+    border-color: transparent;
+}
