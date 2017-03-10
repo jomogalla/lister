@@ -19,6 +19,7 @@
 - add logout
 
 ## todone:
+- ~~organize css~~
 - ~~fix utilities to actually build the donuts (potentially put in vue components), not the mess we have~~ 
 - ~~hide html before vue renders~~
 - ~~paginate time entry list~~

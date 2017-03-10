@@ -1,3 +1,7 @@
+/* ----------------------------------
+               Utility 
+-------------------------------------*/
+
 .half-hidden {
     opacity: 0.25;
 }
@@ -10,24 +14,18 @@
     margin-top: 2rem;
 }
 
-.status-bar {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    margin: 15px;
-}
-
-.hour-donut {
-    width: 80px;
-}
-
-#loader {
-    color:#ccc;
+[v-cloak] {
     display: none;
 }
 
-.split-date h5 {
-    margin-bottom: 0px;
+/* ----------------------------------
+               General  
+-------------------------------------*/
+
+.main-content {
+    padding: 15px;
+    width: calc(100% - 160px);
+    float: left;
 }
 
 .tabs > .columns {
@@ -46,35 +44,15 @@
     color: inherit;
 }
 
-.case-controls {
-    color: #ccc;
-}
-
+/* ----------------------------------
+               Controls 
+-------------------------------------*/
 .chart-wrapper {
     width: 100%;
 }
 
-.pagination-controls span{
-    font-size: 2rem;
-}
-.control-bar {
-    padding: 15px;
-    width: 100px;
-    float: left;
-}
-
-.main-content {
-    padding: 15px;
-    width: calc(100% - 160px);
-    float: left;
-}
-
-.clock-wrapper {
-    width: 50%;
-    margin: 15px auto;
-}
-
-[v-cloak] {
+#loader {
+    color:#ccc;
     display: none;
 }
 
@@ -92,3 +70,50 @@
     /*color: #e0ffc4;*/
     border-color: transparent;
 }
+
+
+
+
+/* ----------------------------------
+                Login 
+-------------------------------------*/
+/* There doesn't seem to be anything here*/
+
+
+
+
+
+/* ----------------------------------
+              Timesheet 
+-------------------------------------*/
+.control-bar {
+    padding: 15px;
+    width: 100px;
+    float: left;
+}
+
+.clock-wrapper {
+    width: 50%;
+    margin: 15px auto;
+}
+
+.pagination-controls span{
+    font-size: 2rem;
+}
+
+.split-date h5 {
+    margin-bottom: 0px;
+}
+
+
+
+/* ----------------------------------
+                Case
+-------------------------------------*/
+/* There doesn't seem to be anything here*/
+
+
+/* ----------------------------------
+               Search
+-------------------------------------*/
+/* There doesn't seem to be anything here*/

@@ -103,7 +103,7 @@
 					</div>
 
 					<!-- SEARCH VIEW -->
-					<div class="search" v-show="searchView">
+					<div class="search-wrapper" v-show="searchView">
 						<form class="row buffer" v-on:submit.prevent="search">
 							<div class="six columns">
 								<input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
@@ -159,7 +159,7 @@
 
 
 					<!-- LIST VIEW -->
-					<div class="time-entries" v-show="listView">
+					<div class="time-wrapper" v-show="listView">
 						<div class="row centered-text pagination-controls">
 							<button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
 							<span class="four columns">{{dayToShow | formatDate('dddd, MMM DD')}}</span>
