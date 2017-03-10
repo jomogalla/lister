@@ -30,16 +30,20 @@
 			currentCaseId: null,
 			dayToShow: moment(),
 			timeWorked: moment.duration(0, 'minutes'),
-			minutesWorked: 0
+			minutesWorked: 0,
+			eightHourDonut: null,
+			twentyFourHourDonut : null
 		},
 		mounted: function () {
+			var self = this;
+
 			// Check for token in storage
 			if(utilities.storage.load('token')){
 				this.token = utilities.storage.load('token');
 				this.addToken();
 			}
 
-			// MAking 2days timer
+			// Making eight hour donut
 			var donutData = {
 				labels: [
 					"Minutes Worked",
@@ -62,13 +66,15 @@
 				]
 			};
 			var donutOptions = {
+				type: 'eight',
 				legend: {
 					display: false
 				}
 			};
-			utilities.donut.initialize(donutData, donutOptions);
+			this.eightHourDonut = utilities.donut.initialize('#chartone', donutData, donutOptions);
+			console.log(this.eightHourDonut);
 
-			//donut clock initializing
+			//Making 24 hour donut
 
 			donutData = {
 				labels: [
@@ -79,29 +85,23 @@
 					{
 						data: [0, constants.twentyFourHoursInMinutes],
 						backgroundColor: [
-							"#FF6384",
-							"#F9F9F9",
-							"#36A2EB"
-						],
-						hoverBackgroundColor: [
-							"#FF6384",
-							"#FFCE56",
-							"#36A2EB"
+							"#F9F9F9"
 						]
 					}
 				]
 			};
 			donutOptions = {
+				type: 'twentyFour',
 				legend: {
 					display: false
 				}
 			};
 
-			utilities.donutClock.initialize(donutData, donutOptions)
-
+			// this.twentyFourHourDonut = utilities.donut.initialize('#chartclock', donutData, donutOptions)
+			// console.log(this.twentyFourHourDonut)
 
 			utilities.router.initializeState();
-			var self = this;
+			
 			setInterval(function() {self.refresher()}, 60000);
 		},
 		methods: {
