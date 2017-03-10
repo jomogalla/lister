@@ -32,7 +32,11 @@
 			timeWorked: moment.duration(0, 'minutes'),
 			minutesWorked: 0,
 			eightHourDonut: null,
-			twentyFourHourDonut : null
+			eightHourDonutData: {labels:["Minutes Worked","Minutes Left"],datasets: [{data: [0, 480],backgroundColor:["#FF6384","#FFCE56","#36A2EB"],hoverBackgroundColor: ["#FF6384","#FFCE56","#36A2EB"]}]},
+			eightHourDonutOptions: {type:'eight',legend:{display: false}},
+			twentyFourHourDonut : null,
+			twentyFourHourDonutData : {labels:["Minutes Worked","Minutes Left"],datasets:[{data: [0, constants.twentyFourHoursInMinutes],backgroundColor:["#F9F9F9"]}]},
+			twentyFourHourDonutOptions : {type:'twentyFour',legend:{display:false}}
 		},
 		mounted: function () {
 			var self = this;
@@ -43,65 +47,17 @@
 				this.addToken();
 			}
 
-			// Making eight hour donut
-			var donutData = {
-				labels: [
-					"Minutes Worked",
-					"Minutes Left"
-				],
-				datasets: [
-					{
-						data: [0, 480],
-						backgroundColor: [
-							"#FF6384",
-							"#FFCE56",
-							"#36A2EB"
-						],
-						hoverBackgroundColor: [
-							"#FF6384",
-							"#FFCE56",
-							"#36A2EB"
-						]
-					}
-				]
-			};
-			var donutOptions = {
-				type: 'eight',
-				legend: {
-					display: false
-				}
-			};
-			this.eightHourDonut = utilities.donut.initialize('#chartone', donutData, donutOptions);
+			// Make Eight Hour Donut
+			this.eightHourDonut = new utilities.donut('#chartone', this.eightHourDonutData, this.eightHourDonutOptions);
 			console.log(this.eightHourDonut);
 
-			//Making 24 hour donut
+			//Make 24 hour donut
+			this.twentyFourHourDonut = new utilities.donut('#chartclock', this.twentyFourHourDonutData, this.twentyFourHourDonutOptions)
 
-			donutData = {
-				labels: [
-					"Minutes Worked",
-					"Minutes Left"
-				],
-				datasets: [
-					{
-						data: [0, constants.twentyFourHoursInMinutes],
-						backgroundColor: [
-							"#F9F9F9"
-						]
-					}
-				]
-			};
-			donutOptions = {
-				type: 'twentyFour',
-				legend: {
-					display: false
-				}
-			};
-
-			// this.twentyFourHourDonut = utilities.donut.initialize('#chartclock', donutData, donutOptions)
-			// console.log(this.twentyFourHourDonut)
-
+			// THIS DONT WORK
 			utilities.router.initializeState();
 			
+			// Refresh the charts every second
 			setInterval(function() {self.refresher()}, 60000);
 		},
 		methods: {
@@ -182,9 +138,8 @@
 				var clockInputData = this.timeIntervals.intervals;
 
 				if (this.timeIntervals.intervals.length === 0) {
-					utilities.donutClock.clear();
-					utilities.donutClock.update([]);
-					// utilities.donutClock.clear();
+					this.twentyFourHourDonut.clear();
+					this.twentyFourHourDonut.updateTwentyFour([]);
 					return;
 				}
 
@@ -249,8 +204,8 @@
 				// 	cleanedData.push(Math.floor(startOfTimeData[i].asMinutes()));
 					
 				// }
-				utilities.donutClock.clear();
-				utilities.donutClock.update(startOfTimeData);
+				this.twentyFourHourDonut.clear();
+				this.twentyFourHourDonut.updateTwentyFour(startOfTimeData);
 			},
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
@@ -282,7 +237,7 @@
 				this.minutesWorked = Math.floor(this.timeWorked.asMinutes());
 
 
-				utilities.donut.update(this.minutesWorked);
+				this.eightHourDonut.updateEight(this.minutesWorked);
 			},
 			handleResponse: function (response) {
 				this.searchResults = $.parseJSON(response).data;
