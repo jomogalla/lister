@@ -2,6 +2,7 @@
 ### making life with fogbugz easier
 
 ## todo:
+- combine the http response handlers
 - add start/stop on every case entry, everywhere (potentially make it a vue component)
 - Add a way to pass functions to update the donuts
 - Separate Login/Logout more in utilities, and less in vue

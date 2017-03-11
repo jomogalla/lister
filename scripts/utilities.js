@@ -1,36 +1,3 @@
-// This const is worthless
-const constants = {
-	fogbugzUrl: 'https://altsource.fogbugz.com/f/api/0/jsonapi',
-	requestType: 'POST',
-	contentType: 'text/plain',
-	token: '',
-	yellow: '#FFCE56',
-	red: '#FF6384',
-	blue: '#36A2EB',
-	firstEight: [
-		"#FF6384",
-		"#FFCE56"
-	],
-	firstEightHover: [
-		"#FF6384",
-		"#FFCE56"
-	],
-	secondEight: [
-		"#FF6384",
-		"#36A2EB"
-	],
-	secondEightHover: [
-		"#FFCE56",
-		"#36A2EB"
-	],
-	eightHoursInMinutes: (60 * 8),
-	twentyFourHoursInMinutes: (60 * 24)
-};
-
-var variables = {
-	token: ''
-};
-
 var utilities = {
 	api: function (requestObject) {
 		return $.ajax({
@@ -41,6 +8,7 @@ var utilities = {
 		})
 	},
 	authenticator: {
+		token: '',
 		logon: function (email, password) {
 			var self = this;
 			var logonObject = {
@@ -63,11 +31,21 @@ var utilities = {
 
 		},
 		addToken: function (token) {
-			variables.token = token;
-			return variables.token;
+			this.token = token;
+			utilities.storage.save('token', token);
+			return this.token;
 		},
 		getToken: function () {
-			return variables.token;
+			if (this.token) {
+				return this.token;
+			} else {
+				var token = utilities.storage.load('token');
+				this.token = token;
+				return token;
+			}
+		},
+		hasToken: function () {
+			return (utilities.storage.load('token') || this.token);
 		}
 	},
 	loader: {

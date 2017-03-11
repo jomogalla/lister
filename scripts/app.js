@@ -5,15 +5,6 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
-			query: '',
-			results: [],
-			baseUrl: 'https://portland.craigslist.org/search/sss=',
-			queryPrefix: '&query=',
-			formatPrefix: '?format=',
-			format: 'rss',
-			sortPrefix: '&sort=',
-			sort: 'rel',
-			fogbugzUrl: 'https://altsource.fogbugz.com/f/api/0/jsonapi',
 			username: '',
 			password: '',
 			token: null,
@@ -21,7 +12,7 @@
 			searchQuery: '',
 			searchResults: {},
 			timeIntervals: {},
-			fogbugzLinkUrl: 'https://altsource.fogbugz.com/f/cases/',
+			fogbugzLinkUrl: constants.fogbugzExternalLinkUrl,
 			listView: true,
 			caseView: false,
 			searchView: false,
@@ -41,9 +32,9 @@
 		mounted: function () {
 			var self = this;
 
-			// Check for token in storage
-			if(utilities.storage.load('token')){
-				this.token = utilities.storage.load('token');
+			// Figure Out Token Situation
+			if(utilities.authenticator.hasToken()){
+				this.token = utilities.authenticator.getToken();
 				this.addToken();
 			}
 
@@ -64,77 +55,16 @@
 			addToken: function () {
 				if (this.token) {
 					utilities.authenticator.addToken(this.token);
-					utilities.storage.save('token', this.token);
 					this.hasToken = true;
 					this.getTimeSheet(this.dayToShow);
 				}
-
 			},
 			logon: function () {
 				utilities.authenticator.logon(this.username, this.password);
 			},
-			setActiveCase: function (caseId) {
-				var bugcase = {
-
-				};
-
-				utilities.loader.start();
-				utilities.api(bugcase).then(this.setCase);
-			},
-			search: function () {
-				var search = {
-					"cmd": "search",
-					"token": utilities.authenticator.getToken(),
-					"q": this.searchQuery,
-					"max": 5,
-					"cols": ["sTitle", "sStatus"]
-				};
-
-				utilities.loader.start();
-				utilities.api(search).then(this.handleResponse);
-			},
-			startWork: function (bug) {
-				var startWork = {
-					"cmd": "startWork",
-					"token": utilities.authenticator.getToken(),
-					"ixBug": this.searchQuery
-				};
-
-				utilities.loader.start('loading...');
-				utilities.api(startWork).then(this.handleResponse);
-			},
-			getCaseByNumber: function (caseNumber) {
-				var getCase = {
-					"cmd": "search",
-					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
-					"q": caseNumber,
-					"max": 1,
-					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts","hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
-				};
-
-				utilities.api(getCase).then(this.handleResponse3);
-			},
-			getTimeSheet: function (date) {
-				var startTime = moment(date).startOf('day');
-				var endTime = moment(date).endOf('day');
-
-				var listIntervals = {
-					"cmd": "listIntervals",
-					"token": utilities.authenticator.getToken()
-				};
-
-				var listIntervalsForDate = {
-					"cmd": "listIntervals",
-					"token": utilities.authenticator.getToken(),
-					"dtStart": startTime.toJSON(),
-					"dtEnd": endTime.toJSON()
-				}
-
-				utilities.loader.start();
-				utilities.api(listIntervalsForDate).then(this.handleResponse2);
-
-			},
+			/////////   Data Preparation Methods   /////////
 			prepareClockData: function () {
+				// This is for the 8 Hour clock.
 				var clockInputData = this.timeIntervals.intervals;
 
 				if (this.timeIntervals.intervals.length === 0) {
@@ -169,7 +99,6 @@
 				
 				var startOfTimeData = [];
 
-
 				// Turn the data into a bunch of durations
 				startOfTimeData.push({
 					'time': moment.duration(betterClockData[0].start.diff(startOfDay)).asMinutes(),
@@ -198,22 +127,12 @@
 
 				// Clean it... Remove 0 values and convert MS to Minutes
 				var cleanedData = [];
-				
-				// for (var i = 0; i < startOfTimeData.length; i++) {
-					
-				// 	cleanedData.push(Math.floor(startOfTimeData[i].asMinutes()));
-					
-				// }
+
 				this.twentyFourHourDonut.clear();
 				this.twentyFourHourDonut.updateTwentyFour(startOfTimeData);
 			},
-			showPreviousDay: function () {
-				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
-			},
-			showNextDay: function () {
-				this.getTimeSheet(this.dayToShow.add(1, 'days'));
-			},
 			calculateTimeWorked: function () {
+				//This is for The 24 Hour Clock
 				this.timeWorked = moment.duration(0);
 				if (!this.timeIntervals.intervals) {
 					return;
@@ -239,20 +158,80 @@
 
 				this.eightHourDonut.updateEight(this.minutesWorked);
 			},
-			handleResponse: function (response) {
+			/////////    HTTP Methods     /////////
+			setActiveCase: function (caseId) {
+				var bugcase = {
+
+				};
+
+				// utilities.loader.start();
+				// utilities.api(bugcase).then(this.setCase);
+			},
+			search: function () {
+				var search = {
+					"cmd": "search",
+					"token": utilities.authenticator.getToken(),
+					"q": this.searchQuery,
+					"max": 5,
+					"cols": ["sTitle", "sStatus"]
+				};
+
+				utilities.loader.start();
+				utilities.api(search).then(this.handleSearchRequest);
+			},
+			handleSearchRequest: function (response) {
 				this.searchResults = $.parseJSON(response).data;
 				utilities.loader.stop();
 			},
-			handleResponse2: function (response) {
+
+			startWork: function (bug) {
+				var startWork = {
+					"cmd": "startWork",
+					"token": utilities.authenticator.getToken(),
+					"ixBug": this.searchQuery
+				};
+
+				// utilities.loader.start('loading...');
+				// utilities.api(startWork).then(this.handleResponse);
+			},
+			getCaseByNumber: function (caseNumber) {
+				var getCase = {
+					"cmd": "search",
+					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
+					"q": caseNumber,
+					"max": 1,
+					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts","hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
+				};
+
+				utilities.api(getCase).then(this.handleCaseRequest);
+			},
+			handleCaseRequest: function (response) {
+				utilities.loader.stop();
+				this.currentCase = $.parseJSON(response).data.cases[0];
+			},
+
+			getTimeSheet: function (date) {
+				var startTime = moment(date).startOf('day');
+				var endTime = moment(date).endOf('day');
+
+				var listIntervalsForDate = {
+					"cmd": "listIntervals",
+					"token": utilities.authenticator.getToken(),
+					"dtStart": startTime.toJSON(),
+					"dtEnd": endTime.toJSON()
+				}
+
+				utilities.loader.start();
+				utilities.api(listIntervalsForDate).then(this.handleTimeSheetRequest);
+			},
+			handleTimeSheetRequest: function (response) {
 				this.timeIntervals = $.parseJSON(response).data;
 				utilities.loader.stop();
 				this.calculateTimeWorked();
 				this.prepareClockData();
 			},
-			handleResponse3: function (response) {
-				utilities.loader.stop();
-				this.currentCase = $.parseJSON(response).data.cases[0];
-			},
+
+			/////////   UI Methods   /////////
 			showList: function () {
 				this.listView = true;
 				this.caseView = false;
@@ -271,6 +250,12 @@
 				utilities.loader.start();
 				this.currentCaseId = caseNumber;
 				this.getCaseByNumber(caseNumber)
+			},
+			showPreviousDay: function () {
+				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
+			},
+			showNextDay: function () {
+				this.getTimeSheet(this.dayToShow.add(1, 'days'));
 			},
 			refresher: function () {
 				this.calculateTimeWorked();

@@ -14,6 +14,11 @@
     margin-top: 2rem;
 }
 
+.non-functioning button{
+    text-decoration: line-through !important;
+    cursor: not-allowed;
+}
+
 [v-cloak] {
     display: none;
 }
