@@ -158,9 +158,22 @@
 					<!-- LIST VIEW -->
 					<div class="time-wrapper" v-show="listView">
 						<div class="row centered-text pagination-controls">
-							<button class="button four columns" v-on:click="showPreviousDay">Previous Day</button>
+							<span class="four columns" v-if="dayToShow.day() !== 1">
+								<button class="button u-full-width" v-on:click="showPreviousDay">Previous Day</button>
+							</span>
+							<span class="four columns" v-if="dayToShow.day() === 1">
+								<button class="button button-bar" v-on:click="skipToFriday">Friday</button>
+								<button class="button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+							</span>
 							<span class="four columns">{{dayToShow | formatDate('dddd, MMM DD')}}</span>
-							<button class="button four columns" v-on:click="showNextDay">Next Day</button>
+							<span class="four columns" v-if="dayToShow.day() !== 5">
+								<button class="button u-full-width" v-on:click="showNextDay">Next Day</button>
+							</span>
+							<span class="four columns" v-if="dayToShow.day() === 5">
+								<button class="button button-bar" v-on:click="showNextDay">Next Day</button>
+								<button class="button button-bar" v-on:click="skipToMonday">Monday</button>
+							</span>
+							
 						</div>
 						<table class="u-full-width" v-show="hasToken">
 							<thead>

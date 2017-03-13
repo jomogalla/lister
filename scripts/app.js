@@ -50,6 +50,8 @@
 			
 			// Refresh the charts every second
 			setInterval(function() {self.refresher()}, 60000);
+
+			
 		},
 		methods: {
 			addToken: function () {
@@ -65,6 +67,8 @@
 			/////////   Data Preparation Methods   /////////
 			prepareClockData: function () {
 				// This is for the 8 Hour clock.
+				// Should these take an input and simply return something? I think so. 
+				// At the moment this uses Data from vue and updates donuts. All over the place;
 				var clockInputData = this.timeIntervals.intervals;
 
 				if (this.timeIntervals.intervals.length === 0) {
@@ -256,6 +260,12 @@
 			},
 			showNextDay: function () {
 				this.getTimeSheet(this.dayToShow.add(1, 'days'));
+			},
+			skipToMonday: function () {
+				this.getTimeSheet(this.dayToShow.add(3, 'days'));
+			},
+			skipToFriday: function () {
+				this.getTimeSheet(this.dayToShow.subtract(3, 'days'));
 			},
 			refresher: function () {
 				this.calculateTimeWorked();
