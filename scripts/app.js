@@ -240,6 +240,7 @@
 				this.currentCaseId = bugNumber;
 			},
 			handleStartWorkRequest: function () {
+				this.getPerson();
 				this.getTimeSheet(this.dayToShow);
 			},
 			getActiveCase: function () {
@@ -256,6 +257,7 @@
 			},
 			handleResponse: function() {
 				utilities.loader.stop();
+				this.getPerson();
 				this.getTimeSheet(this.dayToShow);
 				this.setActiveCase();
 			},
@@ -366,7 +368,8 @@
 				this.payPeriodView = false;
 
 				// if(caseNumber !== this.CurrentCaseId) {
-					this.currentCaseId = caseNumber;
+					//TODO - The Stop/play buttons are not using currentCaseId correctly. 
+					// this.currentCaseId = caseNumber;
 					this.getCaseByNumber(caseNumber);
 				// }
 				

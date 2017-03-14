@@ -60,8 +60,8 @@
 .no-padding td {
     padding: 0px;
 
-        padding: 5px 1px;
-    white-space: nowrap;
+    padding: 5px 1px;
+    /*white-space: nowrap;*/
 }
 
 [v-cloak] {
@@ -74,6 +74,13 @@
 .hover-icon:hover { 
     transform: scale(1.3); 
 }
+
+.button:hover .hover-icon { 
+    transform: scale(1.5); 
+}
+
+
+
 
 .hover-row {
     /*transition: all .1s ease-in-out; */
@@ -102,9 +109,9 @@ a:hover {
 
 
 .main-content {
-    padding: 15px;
-    width: calc(100% - 160px);
-    float: left;
+    /*padding: 15px;*/
+    width: calc(100% - 110px);
+    margin-left: 110px;
 }
 
 .tabs > .columns {
@@ -127,7 +134,12 @@ a:hover {
                Controls 
 -------------------------------------*/
 .control-bar {
-    z-index: 100;
+    padding: 5px;
+    width: 100px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 100;    
 }
 
 .chart-wrapper {
@@ -145,17 +157,27 @@ a:hover {
 
 .case-control i {
     margin-left: 5px;
-    color: #BFD0B0;
+    /*color: #BFD0B0;*/
 }
 
 .case-control {
-    padding: 0 15px;
+    padding: 0px;
+    border-radius: 0px;
+    width: 100%;
+    font-size: 1rem;
 }
 
 .case-control.active {
     /*background-color: #BFD0B0;*/
     /*color: #e0ffc4;*/
     /*border-color: transparent;*/
+}
+
+.info-bar {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    padding: 5px;
 }
 
 
@@ -173,11 +195,7 @@ a:hover {
 /* ----------------------------------
               Timesheet 
 -------------------------------------*/
-.control-bar {
-    padding: 15px;
-    width: 100px;
-    float: left;
-}
+
 
 .clock-wrapper {
     width: 50%;
@@ -185,7 +203,7 @@ a:hover {
 }
 
 .pagination-controls span{
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 
 .split-date h5 {
