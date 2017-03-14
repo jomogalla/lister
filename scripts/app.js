@@ -18,8 +18,8 @@
 			listView: true,
 			caseView: false,
 			searchView: false,
-			payPeriodTotal: moment.duration(0, 'minutes'),
 			payPeriodView: false,
+			payPeriodTotal: moment.duration(0, 'minutes'),
 			payPeriodStartDate: null,
 			payPeriodEndDate: null,
 			caseActive: false,
@@ -61,14 +61,14 @@
 			
 		},
 		methods: {
-			addToken: function () {
+			addToken: function (yolo) {
 				if (this.token) {
 					utilities.authenticator.addToken(this.token);
 					this.hasToken = true;
 					this.getTimeSheet(this.dayToShow);
 				}
 			},
-			logon: function () {
+			logon: function (yolo) {
 				utilities.authenticator.logon(this.username, this.password);
 			},
 

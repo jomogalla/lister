@@ -37,16 +37,15 @@
 	<div id="app" v-cloak>
 		<!-- CONTROLS -->
 		<div class="control-bar">
-			<button class="button case-control" v-on:click="stopWork()">
+			<button class="button case-control">
 				{{ currentPerson.ixBugWorkingOn || 'off the clock'}}
-				<i v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle stop hover-icon" aria-hidden="true"></i>
+				<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle stop hover-icon" aria-hidden="true"></i>
 			</button>
 		
 			<div class="chart-wrapper">
 				<canvas id="chartone"></canvas>
 				<div class="centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
 			</div>
-
 		</div>
 		<div class="info-bar">
 			<span href="" v-show="hasToken" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span>
@@ -58,34 +57,43 @@
 		<div class="main-content">
 			<div class="container">
 				<!-- LOGIN VIEW -->
-				<div class="login row buffer" v-show="!hasToken">
-					<div class="one column">&nbsp;</div>
-					<form class="four columns non-functioning" v-on:submit.prevent="logon">
-						<div class="">
-							<input v-model="username" class="button u-full-width" type="text" placeholder="username">
+				<div class="login buffer" v-show="!hasToken">
+					<div class="row">
+						<div class="one column">&nbsp;</div>
+						<div class="ten columns">
+							<input v-model="fogbugzSubdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain">
 						</div>
-						<div class="">
-							<input v-model="password" class="button u-full-width" type="password" placeholder="password">
+						<div class="one column">&nbsp;</div>
 						</div>
-						<div class="">
-							<button class="button-primary u-full-width" type="submit">Logon</button>
-						</div>
-					</form>
-					<div class="two columns">&nbsp;</div>
+					<div class="row">
+						<div class="one column">&nbsp;</div>
+						<form class="four columns non-functioning" v-on:submit.prevent="logon">
+							<div class="">
+								<input v-model="username" class="button u-full-width" type="text" placeholder="username">
+							</div>
+							<div class="">
+								<input v-model="password" class="button u-full-width" type="password" placeholder="password">
+							</div>
+							<div class="">
+								<button class="button-primary u-full-width" type="submit">Logon</button>
+							</div>
+						</form>
+						<div class="two columns">&nbsp;</div>
 
-					<form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
-						<div class="">
-							<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
-						</div>
-						<div class="">
-							<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
-								<span v-show="hasToken">token accepted</span>
-								<span v-show="!hasToken">insert token</span>
-          					</button>
-						</div>
-						<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
-					</form>
-					<div class="one column">&nbsp;</div>
+						<form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
+							<div class="">
+								<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
+							</div>
+							<div class="">
+								<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
+									<span v-show="hasToken">token accepted</span>
+									<span v-show="!hasToken">insert token</span>
+								</button>
+							</div>
+							<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
+						</form>
+						<div class="one column">&nbsp;</div>
+					</div>
 				</div>
 				<!-- END LOGIN VIEW -->
 

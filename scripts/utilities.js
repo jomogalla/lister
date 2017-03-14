@@ -9,6 +9,7 @@ var utilities = {
 	},
 	authenticator: {
 		token: '',
+		subDomain: '',
 		logon: function (email, password) {
 			var self = this;
 			var logonObject = {
@@ -43,6 +44,12 @@ var utilities = {
 				this.token = token;
 				return token;
 			}
+		},
+		addSubDomain: function (subDomain) {
+			this.subDomain = subDomain;
+		},
+		getSubDomain: function () {
+			return this.subDomain;
 		},
 		hasToken: function () {
 			return (utilities.storage.load('token') || this.token);
@@ -122,16 +129,41 @@ var utilities = {
 	},
 	router: {
 		routes: {
+			//takes a date?
 			'timesheet': {
-				name: 'Timesheet',
-				url: '/timesheet/'
+				'name': 'Timesheet',
+				'url': '/time',
 			},
-			'case': 'Case',
-			'search': 'case'
+			//Takes a case number
+			'case': {
+				'name': 'Case',
+				'url': '/case'
+			},
+			// takes a search parameter
+			'search': {
+				'name': 'Search',
+				'url': '/search'
+			},
+			// takes a Month and 1 or 2
+			'report': {
+				'name': 'Report',
+				'url': '/report',
+
+			},
+			// takes nothing
+			'logon': {
+				'name': 'logon',
+				'url': '/logon'
+			},
+			'otherwise': {
+				name: '',
+				url: '/'
+			}
 		},
 		state: {
-			title: 'welcome',
-			parameters: {}
+			title: '',
+			parameters: {},
+			
 		},
 		initializeState: function () {
 

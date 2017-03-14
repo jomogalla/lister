@@ -1,7 +1,10 @@
 // Need to slim down what is using this, doesn't seem necessary a lot of the time.
 const constants = {
 	fogbugzUrl: 'https://altsource.fogbugz.com/f/api/0/jsonapi',
+	httpsUrlPrefix: 'https://',
+	apiUrlSuffix: '.fogbugz.com/f/api/0/jsonapi',
     fogbugzExternalLinkUrl: 'https://altsource.fogbugz.com/f/cases/',
+	externalUrlSuffix: '.fogbugz.com/f/cases/',
 	requestType: 'POST',
 	contentType: 'text/plain',
 	token: '',
