@@ -38,7 +38,9 @@
 		<!-- CONTROLS -->
 		<div class="control-bar">
 			<a href="" v-on:click.prevent="" v-show="hasToken" title="token accepted"><i class="fa fa-id-card" aria-hidden="true"></i></a>
+			<span v-on:click="showPayPeriod"><i class="fa fa-clock-o"></i></span>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw"></i></span>
+		
 			<div class="chart-wrapper">
 				<canvas id="chartone"></canvas>
 				<div class="centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
@@ -154,6 +156,39 @@
 					</div>
 					<!-- END CASE VIEW -->
 
+
+					<!-- SECRET PAY PERIOD VIEW -->
+					<div class="pay-period-wrapper" v-show="payPeriodView">
+						<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
+							<span class="u-pull-right">{{ payPeriodTotal | humanize }} </span>
+						</h4>
+						<table class="u-full-width" v-show="hasToken">
+							<thead>
+								<tr>
+									<th width="10%"> Day </th>
+									<th width="10%"> Start </th>
+									<th width="10%"> End </th>
+									<th width="10%"> Duration </th>
+									<th width="10%"> Case </th>
+									<th width="50%"> Title </th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="interval of payPeriodIntervals">
+									<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
+									<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
+									<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
+									<td> {{ interval.duration | humanize }} </td>
+									<td>
+										{{ interval.ixBug }}
+										<!--<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>-->
+									</td>
+									<td>{{ interval.sTitle }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- END SECRET PAY PERIOD VIEW-->
 
 					<!-- LIST VIEW -->
 					<div class="time-wrapper" v-show="listView">

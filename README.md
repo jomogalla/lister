@@ -6,7 +6,7 @@
 - add start/stop on every case entry, everywhere (potentially make it a vue component)
 - Add a way to pass functions to update the donuts
 - Separate Login/Logout more in utilities, and less in vue
-- separate different pages into components.
+- separate different pages into components
 - add routing
 - fix mobile styles
 - find solution for cases updated in Fogbugz not being displayed until data is pulled again

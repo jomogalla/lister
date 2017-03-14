@@ -141,3 +141,13 @@
                Search
 -------------------------------------*/
 /* There doesn't seem to be anything here*/
+
+
+/* ----------------------------------
+            Pay Period
+-------------------------------------*/
+.pay-period-wrapper td {
+    padding: 4px 15px;
+    line-height: 1;
+}
+

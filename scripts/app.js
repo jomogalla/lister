@@ -12,10 +12,15 @@
 			searchQuery: '',
 			searchResults: {},
 			timeIntervals: {},
+			payPeriodIntervals: {},
 			fogbugzLinkUrl: constants.fogbugzExternalLinkUrl,
 			listView: true,
 			caseView: false,
 			searchView: false,
+			payPeriodTotal: moment.duration(0, 'minutes'),
+			payPeriodView: false,
+			payPeriodStartDate: null,
+			payPeriodEndDate: null,
 			caseActive: false,
 			currentCase: {},
 			currentCaseId: null,
@@ -40,7 +45,6 @@
 
 			// Make Eight Hour Donut
 			this.eightHourDonut = new utilities.donut('#chartone', this.eightHourDonutData, this.eightHourDonutOptions);
-			console.log(this.eightHourDonut);
 
 			//Make 24 hour donut
 			this.twentyFourHourDonut = new utilities.donut('#chartclock', this.twentyFourHourDonutData, this.twentyFourHourDonutOptions)
@@ -64,9 +68,11 @@
 			logon: function () {
 				utilities.authenticator.logon(this.username, this.password);
 			},
+
+
 			/////////   Data Preparation Methods   /////////
 			prepareClockData: function () {
-				// This is for the 8 Hour clock.
+				// This is for the 24 Hour clock.
 				// Should these take an input and simply return something? I think so. 
 				// At the moment this uses Data from vue and updates donuts. All over the place;
 				var clockInputData = this.timeIntervals.intervals;
@@ -135,8 +141,41 @@
 				this.twentyFourHourDonut.clear();
 				this.twentyFourHourDonut.updateTwentyFour(startOfTimeData);
 			},
+			sumDurations: function (intervals) {
+				// This method assumes that the intervals array objects have durations
+				var sum = moment.duration(0, 'minutes');
+
+				for(var i = 0; i < intervals.length; i++) {
+					if(intervals[i].duration) {
+						sum = sum.add(intervals[i].duration);
+					}
+				}
+							
+				return sum;
+			},
+			addDurations: function(intervals) {
+				for(var i = 0; i < intervals.length; i++) {
+					intervals[i].duration = this.getDuration(intervals[i].dtStart, intervals[i].dtEnd);
+				}
+
+				return intervals;
+			},
+			getDuration: function(start, end) {
+				if(start && end) {
+					var startMoment = moment(start);
+					var endMoment = moment(end);
+				} else if(start && !end) {
+					// Use the current time as end if we dont have one
+					var startMoment = moment(start);
+					var endMoment = moment();
+				} else {
+					return moment.duration(0, 'minutes');
+				}
+
+				return moment.duration(endMoment.diff(startMoment));
+			},
 			calculateTimeWorked: function () {
-				//This is for The 24 Hour Clock
+				//This is for The 8 Hour Clock
 				this.timeWorked = moment.duration(0);
 				if (!this.timeIntervals.intervals) {
 					return;
@@ -154,14 +193,14 @@
 					var duration = moment.duration(endMoment.diff(startMoment));
 
 					this.timeWorked = this.timeWorked.add(duration);
-
 				}
 
 				this.minutesWorked = Math.floor(this.timeWorked.asMinutes());
 
-
 				this.eightHourDonut.updateEight(this.minutesWorked);
 			},
+
+
 			/////////    HTTP Methods     /////////
 			setActiveCase: function (caseId) {
 				var bugcase = {
@@ -234,26 +273,66 @@
 				this.calculateTimeWorked();
 				this.prepareClockData();
 			},
+			getPayPeriod: function () {
+				var currentDay = new moment();
+				if (currentDay.date() <= 15) {
+					var startTime = new moment().startOf('month');
+					var endTime = new moment().date(15).endOf('day');
+				} else {
+					var startTime = new moment().date(1).startOf('day');
+					var endTime = new moment().endOf('month');
+				}
+
+				this.payPeriodStartDate = startTime;
+				this.payPeriodEndDate = endTime;
+
+				var listIntervalsForDate = {
+					"cmd": "listIntervals",
+					"token": utilities.authenticator.getToken(),
+					"dtStart": startTime.toJSON(),
+					"dtEnd": endTime.toJSON()
+				}
+
+				utilities.loader.start();
+				utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
+			},
+			handlePayPeriodRequest: function (response) {
+				this.payPeriodIntervals = $.parseJSON(response).data.intervals;
+				this.payPeriodIntervals = this.addDurations(this.payPeriodIntervals);
+				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
+				utilities.loader.stop();
+			},
+			
 
 			/////////   UI Methods   /////////
 			showList: function () {
 				this.listView = true;
 				this.caseView = false;
 				this.searchView = false;
+				this.payPeriodView = false;
 			},
 			showSearch: function () {
 				this.listView = false;
 				this.caseView = false;
 				this.searchView = true;
+				this.payPeriodView = false;
 			},
 			showCase: function (caseNumber) {
 				this.listView = false;
 				this.caseView = true;
 				this.searchView = false;
+				this.payPeriodView = false;
 
 				utilities.loader.start();
 				this.currentCaseId = caseNumber;
-				this.getCaseByNumber(caseNumber)
+				this.getCaseByNumber(caseNumber);
+			},
+			showPayPeriod: function () {
+				this.listView = false;
+				this.caseView = false;
+				this.searchView = false;
+				this.payPeriodView = true;
+				this.getPayPeriod();
 			},
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));

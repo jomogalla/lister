@@ -12,6 +12,10 @@
 	Vue.filter('humanize', function (value) {
 		if (!value) return '';
 
-		return (moment.duration(value).hours() + 'h ' + moment.duration(value).minutes() + 'm');
+		if(moment.duration(value).asHours() > 24 ) {
+			return (Math.floor(moment.duration(value).asHours()) + 'h ' + moment.duration(value).minutes() + 'm');
+		} else {
+			return (moment.duration(value).hours() + 'h ' + moment.duration(value).minutes() + 'm');
+		}
 	});
 })();
