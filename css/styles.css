@@ -37,14 +37,69 @@
     border-left-color: #e1e1e1;
 }
 
+.stop {
+    color: #AD4D32;
+}
+/*rename to green & red */
+.go {
+    color: #9cc3b1;
+}
+
+.green-bg {
+    background-color: #f4f5f4;
+}
+
+.dark-red {
+    color: #5E261D;
+}
+
+.gray {
+    color: #808080;
+}
+/* todo - rename */
+.no-padding td {
+    padding: 0px;
+
+        padding: 5px 1px;
+    white-space: nowrap;
+}
 
 [v-cloak] {
     display: none;
 }
 
+.hover-icon, animate { 
+    transition: all .1s ease-in-out; 
+}
+.hover-icon:hover { 
+    transform: scale(1.3); 
+}
+
+.hover-row {
+    /*transition: all .1s ease-in-out; */
+}
+
+.hover-row:hover {
+    /*transform: scale(1.005); */
+}
+
+.no-overflow {
+    overflow: hidden;
+}
+
+
 /* ----------------------------------
                General  
 -------------------------------------*/
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1A1406;
+    font-weight: 300;
+}
+a:hover {
+    cursor: pointer;
+}
+
 
 .main-content {
     padding: 15px;
@@ -71,6 +126,10 @@
 /* ----------------------------------
                Controls 
 -------------------------------------*/
+.control-bar {
+    z-index: 100;
+}
+
 .chart-wrapper {
     width: 100%;
 }
@@ -78,6 +137,10 @@
 #loader {
     color:#ccc;
     display: none;
+    /*position: fixed;
+    bottom: 0px;
+    left: 0px;
+    padding: 10px;*/
 }
 
 .case-control i {
@@ -92,7 +155,7 @@
 .case-control.active {
     /*background-color: #BFD0B0;*/
     /*color: #e0ffc4;*/
-    border-color: transparent;
+    /*border-color: transparent;*/
 }
 
 
@@ -122,11 +185,19 @@
 }
 
 .pagination-controls span{
-    font-size: 2rem;
+    font-size: 2.5rem;
 }
 
 .split-date h5 {
     margin-bottom: 0px;
+}
+
+.time-wrapper tr td.controls i {
+    visibility: hidden;
+}
+
+.time-wrapper tr:hover td.controls i {
+    visibility: visible;
 }
 
 
@@ -134,7 +205,13 @@
 /* ----------------------------------
                 Case
 -------------------------------------*/
-/* There doesn't seem to be anything here*/
+.copy {
+    max-width: 500px;
+}
+
+.case-wrapper li {
+    margin-bottom: 0px;
+}
 
 
 /* ----------------------------------

@@ -5,6 +5,7 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
+			currentPerson: {},
 			username: '',
 			password: '',
 			token: null,
@@ -51,6 +52,8 @@
 
 			// THIS DONT WORK
 			utilities.router.initializeState();
+
+			this.getPerson();
 			
 			// Refresh the charts every second
 			setInterval(function() {self.refresher()}, 60000);
@@ -187,6 +190,7 @@
 						var endMoment = moment(this.timeIntervals.intervals[i].dtEnd)
 					} else {
 						var endMoment = moment();
+						this.setActiveCase(this.timeIntervals.intervals[i].ixBug);
 					}
 
 
@@ -202,13 +206,8 @@
 
 
 			/////////    HTTP Methods     /////////
-			setActiveCase: function (caseId) {
-				var bugcase = {
-
-				};
-
-				// utilities.loader.start();
-				// utilities.api(bugcase).then(this.setCase);
+			setActiveCase: function (ixBug) {
+				this.currentCaseId = ixBug;
 			},
 			search: function () {
 				var search = {
@@ -227,17 +226,45 @@
 				utilities.loader.stop();
 			},
 
-			startWork: function (bug) {
+			startWork: function (bugNumber) {
 				var startWork = {
 					"cmd": "startWork",
 					"token": utilities.authenticator.getToken(),
-					"ixBug": this.searchQuery
+					"ixBug": bugNumber
 				};
 
-				// utilities.loader.start('loading...');
-				// utilities.api(startWork).then(this.handleResponse);
+				utilities.loader.start('loading...');
+				utilities.api(startWork).then(this.handleStartWorkRequest);
+
+				//TODO - update these to have consistent naming
+				this.currentCaseId = bugNumber;
+			},
+			handleStartWorkRequest: function () {
+				this.getTimeSheet(this.dayToShow);
+			},
+			getActiveCase: function () {
+				
+			},
+			stopWork: function () {
+				var stopWork = {
+					"cmd": "stopWork",
+					"token": utilities.authenticator.getToken()
+				};
+
+				utilities.loader.start('loading...');
+				utilities.api(stopWork).then(this.handleResponse);
+			},
+			handleResponse: function() {
+				utilities.loader.stop();
+				this.getTimeSheet(this.dayToShow);
+				this.setActiveCase();
 			},
 			getCaseByNumber: function (caseNumber) {
+				// if (this.currentCaseId === caseNumber) {
+				// 	return;
+				// } 
+
+				// this.currentCase = {};
 				var getCase = {
 					"cmd": "search",
 					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
@@ -246,6 +273,7 @@
 					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts","hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
 				};
 
+				utilities.loader.start();
 				utilities.api(getCase).then(this.handleCaseRequest);
 			},
 			handleCaseRequest: function (response) {
@@ -262,7 +290,7 @@
 					"token": utilities.authenticator.getToken(),
 					"dtStart": startTime.toJSON(),
 					"dtEnd": endTime.toJSON()
-				}
+				};
 
 				utilities.loader.start();
 				utilities.api(listIntervalsForDate).then(this.handleTimeSheetRequest);
@@ -291,7 +319,7 @@
 					"token": utilities.authenticator.getToken(),
 					"dtStart": startTime.toJSON(),
 					"dtEnd": endTime.toJSON()
-				}
+				};
 
 				utilities.loader.start();
 				utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
@@ -300,6 +328,20 @@
 				this.payPeriodIntervals = $.parseJSON(response).data.intervals;
 				this.payPeriodIntervals = this.addDurations(this.payPeriodIntervals);
 				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
+				utilities.loader.stop();
+			},
+
+			getPerson: function () {
+				var viewPerson = {
+					"cmd": "viewPerson",
+					"token": utilities.authenticator.getToken()
+				};
+
+				utilities.loader.start();
+				utilities.api(viewPerson).then(this.handlePersonRequest);
+			},
+			handlePersonRequest: function (response) {
+				this.currentPerson = $.parseJSON(response).data.person;
 				utilities.loader.stop();
 			},
 			
@@ -323,9 +365,11 @@
 				this.searchView = false;
 				this.payPeriodView = false;
 
-				utilities.loader.start();
-				this.currentCaseId = caseNumber;
-				this.getCaseByNumber(caseNumber);
+				// if(caseNumber !== this.CurrentCaseId) {
+					this.currentCaseId = caseNumber;
+					this.getCaseByNumber(caseNumber);
+				// }
+				
 			},
 			showPayPeriod: function () {
 				this.listView = false;
