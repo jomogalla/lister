@@ -1,5 +1,6 @@
 // Need to slim down what is using this, doesn't seem necessary a lot of the time.
 const constants = {
+	// HTTP
 	fogbugzUrl: 'https://altsource.fogbugz.com/f/api/0/jsonapi',
 	httpsUrlPrefix: 'https://',
 	apiUrlSuffix: '.fogbugz.com/f/api/0/jsonapi',
@@ -7,7 +8,7 @@ const constants = {
 	externalUrlSuffix: '.fogbugz.com/f/cases/',
 	requestType: 'POST',
 	contentType: 'text/plain',
-	token: '',
+	// COLORS
 	yellow: '#FFCE56',
 	red: '#FF6384',
 	blue: '#36A2EB',
@@ -27,6 +28,44 @@ const constants = {
 		"#FFCE56",
 		"#36A2EB"
 	],
+	// CHARTS
 	eightHoursInMinutes: (60 * 8),
-	twentyFourHoursInMinutes: (60 * 24)
+	twentyFourHoursInMinutes: (60 * 24),
+	eightHourDonutData: {
+		labels: [
+			"Minutes Worked",
+			"Minutes Left"
+		],
+		datasets: [
+			{
+				data: [0, 480],
+				backgroundColor:["#FF6384","#FFCE56","#36A2EB"],
+				hoverBackgroundColor: ["#FF6384","#FFCE56","#36A2EB"]
+			}
+		]
+	},
+	eightHourDonutOptions: {
+		type:'eight',
+		legend:{
+			display: false
+		}
+	},
+	twentyFourHourDonutData : {
+		labels:[
+			"Minutes Worked",
+			"Minutes Left"
+		],
+		datasets:[
+			{
+				data: [0, this.twentyFourHoursInMinutes],
+				backgroundColor:["#F9F9F9"]
+			}
+		]
+	},
+	twentyFourHourDonutOptions : {
+		type:'twentyFour',
+		legend:{
+			display:false
+		}
+	}
 };

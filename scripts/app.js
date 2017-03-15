@@ -6,6 +6,7 @@
 		el: '#app',
 		data: {
 			currentPerson: {},
+			fogbugzSubdomain: '',
 			username: '',
 			password: '',
 			token: null,
@@ -29,11 +30,7 @@
 			timeWorked: moment.duration(0, 'minutes'),
 			minutesWorked: 0,
 			eightHourDonut: null,
-			eightHourDonutData: {labels:["Minutes Worked","Minutes Left"],datasets: [{data: [0, 480],backgroundColor:["#FF6384","#FFCE56","#36A2EB"],hoverBackgroundColor: ["#FF6384","#FFCE56","#36A2EB"]}]},
-			eightHourDonutOptions: {type:'eight',legend:{display: false}},
-			twentyFourHourDonut : null,
-			twentyFourHourDonutData : {labels:["Minutes Worked","Minutes Left"],datasets:[{data: [0, constants.twentyFourHoursInMinutes],backgroundColor:["#F9F9F9"]}]},
-			twentyFourHourDonutOptions : {type:'twentyFour',legend:{display:false}}
+			twentyFourHourDonut : null
 		},
 		mounted: function () {
 			var self = this;
@@ -45,14 +42,15 @@
 			}
 
 			// Make Eight Hour Donut
-			this.eightHourDonut = new utilities.donut('#chartone', this.eightHourDonutData, this.eightHourDonutOptions);
-
+			this.eightHourDonut = new utilities.donut('#chartone', constants.eightHourDonutData, constants.eightHourDonutOptions);
+			
 			//Make 24 hour donut
-			this.twentyFourHourDonut = new utilities.donut('#chartclock', this.twentyFourHourDonutData, this.twentyFourHourDonutOptions)
+			this.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions)
 
 			// THIS DONT WORK
 			utilities.router.initializeState();
 
+			// Load the current user 
 			this.getPerson();
 			
 			// Refresh the charts every second
@@ -61,17 +59,41 @@
 			
 		},
 		methods: {
-			addToken: function (yolo) {
+			addToken: function () {
 				if (this.token) {
 					utilities.authenticator.addToken(this.token);
 					this.hasToken = true;
 					this.getTimeSheet(this.dayToShow);
 				}
 			},
-			logon: function (yolo) {
+			logon: function () {
 				utilities.authenticator.logon(this.username, this.password);
 			},
+			downloadCSV: function (args) {
+				var data, filename, link;
+				var csv = utilities.convertArrayOfObjectsToCSV({
+					data: this.payPeriodIntervals
+				});
+				if (csv == null) return;
 
+				// filename = args.filename || 'export.csv';
+				var fullname = this.currentPerson.sFullName.replace(' ', '');
+				var startDate = this.payPeriodStartDate.format('MMMMD');
+				var endDate = this.payPeriodEndDate.format('D');
+
+
+				filename = fullname + startDate + '-' + endDate + '.csv';
+
+				if (!csv.match(/^data:text\/csv/i)) {
+					csv = 'data:text/csv;charset=utf-8,' + csv;
+				}
+				data = encodeURI(csv);
+
+				link = document.createElement('a');
+				link.setAttribute('href', data);
+				link.setAttribute('download', filename);
+				link.click();
+			},
 
 			/////////   Data Preparation Methods   /////////
 			prepareClockData: function () {

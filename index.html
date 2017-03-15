@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 	<!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<meta charset="utf-8">
@@ -9,15 +8,15 @@
 	<meta name="description" content="Making your miserable life with fogbugz a little better.">
 	<meta name="author" content="Jason Domogalla">
 
+
 	<!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+
 	<!-- Font
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<!-- There doesn't seem to be anything here -->
-
-
 
 
 	<!-- CSS
@@ -31,8 +30,8 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<link rel="icon" type="image/png" href="images/favicon.png">
 
-</head>
 
+</head>
 <body>
 	<div id="app" v-cloak>
 		<!-- CONTROLS -->
@@ -169,7 +168,13 @@
 
 					<!-- SECRET PAY PERIOD VIEW -->
 					<div class="pay-period-wrapper" v-show="payPeriodView">
-						<i class="fa fa-2x fa-times-circle" v-on:click="showList"></i>
+						<div class="report-controls u-pull-right gray">
+							<!--<i class="fa fa-2x fa-download" aria-hidden="true"></i>
+							<i class="fa fa-2x fa-times-rectangle" v-on:click="showList"></i>-->
+							<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
+							<a v-on:click.prevent="showList">close</a>							
+						</div>
+						<div class="u-cf"></div>
 						<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
 							<span class="u-pull-right">{{ payPeriodTotal | humanize }} </span>
 						</h4>
@@ -258,7 +263,7 @@
 					</div>
 					<!-- END LIST VIEW -->
 				</div>
-				<!-- END EVERYTHING -->
+				<!-- END EVERYTHING CONTAINER-->
 			</div>
 		</div>
 	</div>

@@ -116,6 +116,7 @@ a:hover {
     /*padding: 15px;*/
     width: calc(100% - 110px);
     margin-left: 110px;
+    margin-top: 1rem;
 }
 
 .tabs > .columns {
@@ -228,7 +229,8 @@ a:hover {
                 Case
 -------------------------------------*/
 .copy {
-    max-width: 500px;
+    max-width: calc(100% - 200px);
+    margin: 0 auto;
 }
 
 .case-wrapper li {
@@ -250,3 +252,42 @@ a:hover {
     line-height: 1;
 }
 
+.report-controls > * {
+    margin-left: 10px;
+}
+
+@media screen and (max-width: 550px) {
+    .control-bar {
+        width: 60%;
+        margin: 0 auto;
+        position: relative;
+    }
+    .main-content {
+        margin-left: 0px;
+        width: 100%;
+    }
+
+    .pagination-controls .columns {
+       width: 30.6666666667%;
+       margin-left: 4%;
+    }
+}
+
+
+/*  SKELTON's BREAKPOINTS */
+/* Mobile first queries */
+
+/* Larger than mobile */
+@media (min-width: 400px) {}
+
+/* Larger than phablet */
+@media (min-width: 550px) {}
+
+/* Larger than tablet */
+@media (min-width: 750px) {}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {}
