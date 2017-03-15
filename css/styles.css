@@ -36,17 +36,17 @@
     border-bottom-left-radius: 0px;
     border-left-color: #e1e1e1;
 }
-
-.stop {
+/* rename to green & red */
+.red {
     color: #AD4D32;
 }
-/*rename to green & red */
-.go {
+
+.green {
     color: #9cc3b1;
 }
 
-.green-bg {
-    background-color: #f4f5f4;
+.brown {
+    color: #1A1406;
 }
 
 .dark-red {
@@ -55,6 +55,10 @@
 
 .gray {
     color: #808080;
+}
+
+.green-bg {
+    background-color: #f4f5f4;
 }
 /* todo - rename */
 .no-padding td {

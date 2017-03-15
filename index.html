@@ -39,7 +39,7 @@
 		<div class="control-bar">
 			<button class="button case-control">
 				{{ currentPerson.ixBugWorkingOn || 'off the clock'}}
-				<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle stop hover-icon" aria-hidden="true"></i>
+				<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon" aria-hidden="true"></i>
 			</button>
 		
 			<div class="chart-wrapper">
@@ -235,8 +235,8 @@
 										<a v-on:click.prevent="showCase(interval.ixBug)">{{interval.ixBug}}</a>
 									</td>
 									<td class="controls">
-										<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg go  hover-icon" aria-hidden="true"></i>
-										<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg stop hover-icon" aria-hidden="true"></i>
+										<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+										<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
 										&nbsp;
 										<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 										<!--<i class="fa fa-trash dark-red hover-icon" aria-hidden="true"></i>-->
