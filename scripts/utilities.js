@@ -1,7 +1,7 @@
 var utilities = {
 	api: function (requestObject) {
 		return $.ajax({
-			url: constants.fogbugzUrl,
+			url: constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.apiUrlSuffix,
 			type: constants.requestType,
 			data: JSON.stringify(requestObject),
 			contentType: constants.contentType,
@@ -37,22 +37,25 @@ var utilities = {
 			return this.token;
 		},
 		getToken: function () {
-			if (this.token) {
-				return this.token;
-			} else {
-				var token = utilities.storage.load('token');
-				this.token = token;
-				return token;
+			if (!this.token) {
+				this.token = utilities.storage.load('token');
 			}
+
+			return this.token;
 		},
 		addSubDomain: function (subDomain) {
 			this.subDomain = subDomain;
+			utilities.storage.save('subDomain', subDomain);
 		},
 		getSubDomain: function () {
+			if (!this.subDomain) {
+				this.subDomain = utilities.storage.load('subDomain');
+			}	
+			
 			return this.subDomain;
 		},
 		hasToken: function () {
-			return (utilities.storage.load('token') || this.token);
+			return !(!utilities.storage.load('token') && !this.token);
 		}
 	},
 	loader: {

@@ -35,7 +35,7 @@
 <body>
 	<div id="app" v-cloak>
 		<!-- CONTROLS -->
-		<div class="control-bar">
+		<div class="control-bar" v-show="hasToken">
 			<button class="button case-control">
 				{{ currentPerson.ixBugWorkingOn || 'off the clock'}}
 				<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon" aria-hidden="true"></i>
@@ -46,8 +46,8 @@
 				<div class="centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
 			</div>
 		</div>
-		<div class="info-bar">
-			<span href="" v-show="hasToken" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span>
+		<div class="info-bar" v-show="hasToken">
+			<span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span>
 			<a v-on:click.prevent="showPayPeriod" title="Hours this pay period"><i class="fa fa-clock-o"></i></a>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 		</div>
@@ -60,7 +60,7 @@
 					<div class="row">
 						<div class="one column">&nbsp;</div>
 						<div class="ten columns">
-							<input v-model="fogbugzSubdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain">
+							<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain">
 						</div>
 						<div class="one column">&nbsp;</div>
 						</div>
@@ -68,13 +68,13 @@
 						<div class="one column">&nbsp;</div>
 						<form class="four columns non-functioning" v-on:submit.prevent="logon">
 							<div class="">
-								<input v-model="username" class="button u-full-width" type="text" placeholder="username">
+								<input disabled v-model="username" class="button u-full-width" type="text" placeholder="username">
 							</div>
 							<div class="">
-								<input v-model="password" class="button u-full-width" type="password" placeholder="password">
+								<input disabled v-model="password" class="button u-full-width" type="password" placeholder="password">
 							</div>
 							<div class="">
-								<button class="button-primary u-full-width" type="submit">Logon</button>
+								<button disabled class="button-primary u-full-width" type="submit">Logon</button>
 							</div>
 						</form>
 						<div class="two columns">&nbsp;</div>
@@ -190,7 +190,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="interval of payPeriodIntervals">
+								<tr v-for="interval of payPeriodIntervals" v-bind:class="{'green-bg': !interval.dtEnd}">
 									<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
 									<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
 									<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
@@ -205,7 +205,7 @@
 					</div>
 					<!-- END SECRET PAY PERIOD VIEW-->
 
-					<!-- LIST VIEW -->
+					<!-- TIMESHEET VIEW -->
 					<div class="time-wrapper" v-show="listView">
 						<div class="row centered-text pagination-controls">
 							<span class="four columns" v-if="dayToShow.day() !== 1">
@@ -261,7 +261,7 @@
 							<canvas id="chartclock"></canvas>
 						</div>
 					</div>
-					<!-- END LIST VIEW -->
+					<!-- END TIMESHEET VIEW -->
 				</div>
 				<!-- END EVERYTHING CONTAINER-->
 			</div>

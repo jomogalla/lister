@@ -6,7 +6,7 @@ Utilities.js - the grunt, handling API, building charts and other essential task
 Constants.js - the `config` file of this whole mess.
 
 ## todo:
-
+- Update prepareClockData() & calculateTimeWorked() to use the latest helpers, and have them accept params and return the arrays.
 - Separate Login/Logout more in utilities, and less in vue
 - separate different pages into components
 - add routing

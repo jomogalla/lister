@@ -5,8 +5,7 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
-			currentPerson: {},
-			fogbugzSubdomain: '',
+			subdomain: '',
 			username: '',
 			password: '',
 			token: null,
@@ -15,7 +14,7 @@
 			searchResults: {},
 			timeIntervals: {},
 			payPeriodIntervals: {},
-			fogbugzLinkUrl: constants.fogbugzExternalLinkUrl,
+			fogbugzLinkUrl: '',
 			listView: true,
 			caseView: false,
 			searchView: false,
@@ -25,45 +24,59 @@
 			payPeriodEndDate: null,
 			caseActive: false,
 			currentCase: {},
-			currentCaseId: null,
 			dayToShow: moment(),
 			timeWorked: moment.duration(0, 'minutes'),
 			minutesWorked: 0,
 			eightHourDonut: null,
-			twentyFourHourDonut : null
+			twentyFourHourDonut : null,
+			// Proposed state properties
+			currentPerson: {},
+			currentCaseId: null,
 		},
 		mounted: function () {
-			var self = this;
-
-			// Figure Out Token Situation
+			// If we have a token, load her up
 			if(utilities.authenticator.hasToken()){
-				this.token = utilities.authenticator.getToken();
-				this.addToken();
+				this.initializeApp();
 			}
-
-			// Make Eight Hour Donut
-			this.eightHourDonut = new utilities.donut('#chartone', constants.eightHourDonutData, constants.eightHourDonutOptions);
-			
-			//Make 24 hour donut
-			this.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions)
-
-			// THIS DONT WORK
-			utilities.router.initializeState();
-
-			// Load the current user 
-			this.getPerson();
-			
-			// Refresh the charts every second
-			setInterval(function() {self.refresher()}, 60000);
-
-			
 		},
 		methods: {
+			initializeApp: function () {
+				var self = this;
+
+				// Setup links - (not sure that this is better than having the link hardcoded....)
+				this.subdomain = utilities.authenticator.getSubDomain();
+				this.fogbugzLinkUrl = constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalUrlSuffix;
+			
+				// Setup tokens
+				this.token = utilities.authenticator.getToken();
+				this.hasToken = true;
+
+				// Get our timesheet
+				this.getTimeSheet(this.dayToShow);
+
+				// Make Eight Hour Donut
+				this.eightHourDonut = new utilities.donut('#chartone', constants.eightHourDonutData, constants.eightHourDonutOptions);
+				
+				//Make 24 hour donut
+				this.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions)
+
+				// THIS DONT WORK
+				utilities.router.initializeState();
+
+				// Load the current user 
+				this.getPerson();
+				
+				// Refresh the charts every second
+				setInterval(function() {self.refresher()}, 60000);
+			},
 			addToken: function () {
+				// Todo - pass in this token, not have it in vue
 				if (this.token) {
 					utilities.authenticator.addToken(this.token);
+					utilities.authenticator.addSubDomain(this.subdomain)
 					this.hasToken = true;
-					this.getTimeSheet(this.dayToShow);
+
+					this.initializeApp();
 				}
 			},
 			logon: function () {
@@ -72,7 +85,7 @@
 			downloadCSV: function (args) {
 				var data, filename, link;
 				var csv = utilities.convertArrayOfObjectsToCSV({
-					data: this.payPeriodIntervals
+					data: this.formatTimeIntervalsForCSV(this.payPeriodIntervals)
 				});
 				if (csv == null) return;
 
@@ -93,6 +106,25 @@
 				link.setAttribute('href', data);
 				link.setAttribute('download', filename);
 				link.click();
+			},
+
+			formatTimeIntervalsForCSV: function(timeIntervals) {
+				var formattedIntervals = [];
+
+				// TODO - Get the project for each case???
+				for(var i = 0; i < timeIntervals.length; i++) {
+					formattedIntervals.push({
+						'Start': moment(timeIntervals[i].dtStart).format('M/D/YYYY H:mm'),
+						'End': moment(timeIntervals[i].dtEnd).format('M/D/YYYY H:mm'),
+						'Duration': this.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes(),
+						'Project': '',
+						'Case': timeIntervals[i].ixBug,
+						'Title': timeIntervals[i].sTitle,
+						'User': this.currentPerson.sFullName
+					});
+				}
+
+				return formattedIntervals;
 			},
 
 			/////////   Data Preparation Methods   /////////
@@ -284,11 +316,6 @@
 				this.setActiveCase();
 			},
 			getCaseByNumber: function (caseNumber) {
-				// if (this.currentCaseId === caseNumber) {
-				// 	return;
-				// } 
-
-				// this.currentCase = {};
 				var getCase = {
 					"cmd": "search",
 					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
@@ -331,7 +358,7 @@
 					var startTime = new moment().startOf('month');
 					var endTime = new moment().date(15).endOf('day');
 				} else {
-					var startTime = new moment().date(1).startOf('day');
+					var startTime = new moment().date(16).startOf('day');
 					var endTime = new moment().endOf('month');
 				}
 
@@ -389,11 +416,8 @@
 				this.searchView = false;
 				this.payPeriodView = false;
 
-				// if(caseNumber !== this.CurrentCaseId) {
-					//TODO - The Stop/play buttons are not using currentCaseId correctly. 
-					// this.currentCaseId = caseNumber;
-					this.getCaseByNumber(caseNumber);
-				// }
+				// TODO add logic to only get this if the case has changed or is null
+				this.getCaseByNumber(caseNumber);
 				
 			},
 			showPayPeriod: function () {
@@ -401,6 +425,8 @@
 				this.caseView = false;
 				this.searchView = false;
 				this.payPeriodView = true;
+
+				// TODO add conditional logic to only get this if the pay period has changed or is null
 				this.getPayPeriod();
 			},
 			showPreviousDay: function () {
@@ -416,8 +442,10 @@
 				this.getTimeSheet(this.dayToShow.subtract(3, 'days'));
 			},
 			refresher: function () {
-				this.calculateTimeWorked();
-				this.prepareClockData();
+				if(utilities.authenticator.hasToken()){
+					this.calculateTimeWorked();
+					this.prepareClockData();
+				}
 			}
 		}
 	});
