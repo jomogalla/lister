@@ -6,6 +6,7 @@ Utilities.js - the grunt, handling API, building charts and other essential task
 Constants.js - the `config` file of this whole mess.
 
 ## todo:
+- Update Table rows to be components so they have start/stop/etc links
 - Update prepareClockData() & calculateTimeWorked() to use the latest helpers, and have them accept params and return the arrays.
 - Separate Login/Logout more in utilities, and less in vue
 - separate different pages into components
@@ -20,6 +21,8 @@ Constants.js - the `config` file of this whole mess.
 - add comment editing.
 - re add login with username/password
 - add logout
+- Allow the control button to allow inputting of a case number to start work on it.
+- bug where updating current case in fogbugz doesnt update current case in top left
 
 ## todone:
 - ~~move data passed into donuts into constants~~
