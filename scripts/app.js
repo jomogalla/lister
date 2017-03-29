@@ -258,6 +258,12 @@
 				this.eightHourDonut.updateEight(this.minutesWorked);
 			},
 
+			getWorkdaysForPeriod: function(startDay, endDay) {
+				var days = 0;
+				while(startDay.isBefore(endDay)) {
+
+				}
+			},
 
 			/////////    HTTP Methods     /////////
 			setActiveCase: function (ixBug) {
@@ -361,6 +367,8 @@
 					var startTime = new moment().date(16).startOf('day');
 					var endTime = new moment().endOf('month');
 				}
+
+				this.getWorkdaysForPeriod(startTime, endTime);
 
 				this.payPeriodStartDate = startTime;
 				this.payPeriodEndDate = endTime;
