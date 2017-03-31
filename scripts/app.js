@@ -5,6 +5,7 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
+			workdays: 0,
 			subdomain: '',
 			username: '',
 			password: '',
@@ -260,9 +261,16 @@
 
 			getWorkdaysForPeriod: function(startDay, endDay) {
 				var days = 0;
-				while(startDay.isBefore(endDay)) {
+				var tempDay = moment(startDay);
 
+				while(tempDay.isBefore(endDay)) {
+					if(tempDay.day() !== 0 && tempDay.day() !== 6) {
+						days++;
+					}
+					tempDay.add(1, 'days');
 				}
+
+				return days;
 			},
 
 			/////////    HTTP Methods     /////////
@@ -368,7 +376,7 @@
 					var endTime = new moment().endOf('month');
 				}
 
-				this.getWorkdaysForPeriod(startTime, endTime);
+				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
 
 				this.payPeriodStartDate = startTime;
 				this.payPeriodEndDate = endTime;

@@ -178,6 +178,7 @@
 						<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
 							<span class="u-pull-right">{{ payPeriodTotal | humanize }} </span>
 						</h4>
+						<span class="gray small"> {{workdays}} day pay period</span>
 						<table class="u-full-width" v-show="hasToken">
 							<thead>
 								<tr>

@@ -25,19 +25,19 @@
 
 .button-bar {
     width: 50%;
-    margin: 0px;
+    margin: 0;
 }
 
 .button-bar:first-child {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     /* TODO-JD: figure out what's adding the ghost spacing */
     margin-right: -0.6rem;
 }
 
 .button-bar:last-child {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     border-left-color: #e1e1e1;
 }
 /* rename to green & red */
@@ -61,12 +61,16 @@
     color: #808080;
 }
 
+.small {
+    font-size: small;
+}
+
 .green-bg {
     background-color: #f4f5f4;
 }
 /* todo - rename */
 .no-padding td {
-    padding: 0px;
+    padding: 0;
 
     padding: 5px 1px;
     /*white-space: nowrap;*/
@@ -146,8 +150,8 @@ a:hover {
     padding: 5px;
     width: 100px;
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     z-index: 100;    
 }
 
@@ -170,8 +174,8 @@ a:hover {
 }
 
 .case-control {
-    padding: 0px;
-    border-radius: 0px;
+    padding: 0;
+    border-radius: 0;
     width: 100%;
     font-size: 1rem;
 }
@@ -184,8 +188,8 @@ a:hover {
 
 .info-bar {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
+    bottom: 0;
+    left: 0;
     padding: 5px;
 }
 
@@ -216,7 +220,7 @@ a:hover {
 }
 
 .split-date h5 {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .time-wrapper tr td.controls i {
@@ -237,9 +241,8 @@ a:hover {
 }
 
 .case-wrapper li {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
-
 
 /* ----------------------------------
                Search
@@ -255,9 +258,28 @@ a:hover {
     line-height: 1;
 }
 
+.pay-period-wrapper h4 {
+    margin-bottom: 0;
+}
+
 .report-controls > * {
     margin-left: 10px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media screen and (max-width: 550px) {
     .control-bar {
@@ -266,7 +288,7 @@ a:hover {
         position: relative;
     }
     .main-content {
-        margin-left: 0px;
+        margin-left: 0;
         width: 100%;
     }
 
