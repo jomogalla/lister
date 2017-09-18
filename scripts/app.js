@@ -361,13 +361,15 @@
 				utilities.api(listIntervalsForDate).then(this.handleTimeSheetRequest);
 			},
 			handleTimeSheetRequest: function (response) {
-				this.timeIntervals = $.parseJSON(response).data;
+				this.timeIntervals = typeof response === 'object' ? response.data : $.parseJSON(response).data
 				utilities.loader.stop();
 				this.calculateTimeWorked();
 				this.prepareClockData();
 			},
 			getPayPeriod: function () {
 				var currentDay = new moment();
+
+				currentDay = currentDay.subtract(7, 'days');
 				if (currentDay.date() <= 15) {
 					var startTime = new moment().startOf('month');
 					var endTime = new moment().date(15).endOf('day');
@@ -408,7 +410,7 @@
 				utilities.api(viewPerson).then(this.handlePersonRequest);
 			},
 			handlePersonRequest: function (response) {
-				this.currentPerson = $.parseJSON(response).data.person;
+				this.currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
 				utilities.loader.stop();
 			},
 			
