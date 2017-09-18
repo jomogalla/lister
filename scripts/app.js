@@ -290,7 +290,7 @@
 				utilities.api(search).then(this.handleSearchRequest);
 			},
 			handleSearchRequest: function (response) {
-				this.searchResults = $.parseJSON(response).data;
+				this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 				utilities.loader.stop();
 			},
 
@@ -343,7 +343,7 @@
 			},
 			handleCaseRequest: function (response) {
 				utilities.loader.stop();
-				this.currentCase = $.parseJSON(response).data.cases[0];
+				this.currentCase = typeof response === 'object' ? response.data.cases[0] : JSON.parse(response).data.cases[0];
 			},
 
 			getTimeSheet: function (date) {
@@ -361,7 +361,7 @@
 				utilities.api(listIntervalsForDate).then(this.handleTimeSheetRequest);
 			},
 			handleTimeSheetRequest: function (response) {
-				this.timeIntervals = typeof response === 'object' ? response.data : $.parseJSON(response).data
+				this.timeIntervals = typeof response === 'object' ? response.data : JSON.parse(response).data
 				utilities.loader.stop();
 				this.calculateTimeWorked();
 				this.prepareClockData();
@@ -394,7 +394,7 @@
 				utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
 			},
 			handlePayPeriodRequest: function (response) {
-				this.payPeriodIntervals = $.parseJSON(response).data.intervals;
+				this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
 				this.payPeriodIntervals = this.addDurations(this.payPeriodIntervals);
 				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
 				utilities.loader.stop();
