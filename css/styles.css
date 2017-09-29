@@ -45,6 +45,10 @@
     color: #AD4D32;
 }
 
+.red:hover {
+    color: #8D402A
+}
+
 .green {
     color: #9cc3b1;
 }

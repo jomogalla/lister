@@ -35,6 +35,9 @@
 			currentCaseId: null,
 		},
 		mounted: function () {
+			// If we have a subdomain - populate plz.
+			this.subdomain = utilities.authenticator.getSubDomain();
+
 			// If we have a token, load her up
 			if(utilities.authenticator.hasToken()){
 				this.initializeApp();
@@ -43,9 +46,8 @@
 		methods: {
 			initializeApp: function () {
 				var self = this;
-
+				
 				// Setup links - (not sure that this is better than having the link hardcoded....)
-				this.subdomain = utilities.authenticator.getSubDomain();
 				this.fogbugzLinkUrl = constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalUrlSuffix;
 			
 				// Setup tokens
@@ -126,6 +128,10 @@
 				}
 
 				return formattedIntervals;
+			},
+			clearToken: function() {
+				utilities.authenticator.clearToken();
+				window.location.reload();
 			},
 
 			/////////   Data Preparation Methods   /////////

@@ -48,7 +48,8 @@
 		</div>
 		<div class="info-bar" v-show="hasToken">
 			<span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span>
-			<a v-on:click.prevent="showPayPeriod" title="Hours this pay period"><i class="fa fa-clock-o"></i></a>
+			<a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a>
+			<a v-on:click.prevent="showPayPeriod" title="Hours this pay period"><i class="fa fa-clock-o hover-icon"></i></a>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 		</div>
 		<!-- END CONTROLS -->

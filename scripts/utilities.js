@@ -43,6 +43,9 @@ var utilities = {
 
 			return this.token;
 		},
+		clearToken: function() {
+			utilities.storage.delete('token');
+		},
 		addSubDomain: function (subDomain) {
 			this.subDomain = subDomain;
 			utilities.storage.save('subDomain', subDomain);
@@ -193,6 +196,11 @@ var utilities = {
 		},
 		delete: function(key) {
 			localStorage.removeItem(key);
+		},
+		clearAllStorage: function() {
+			for (var key in localStorage) {
+				console.log(localStorage[key]);
+			}
 		}
 	},
 	convertArrayOfObjectsToCSV: function (args) {
