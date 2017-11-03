@@ -381,16 +381,13 @@
 
 				this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 			},
-			getPayPeriod: function () {
-				var currentDay = new moment();
-
-				currentDay = currentDay.subtract(7, 'days');
-				if (currentDay.date() <= 15) {
-					var startTime = new moment().startOf('month');
-					var endTime = new moment().date(15).endOf('day');
+			getPayPeriod: function (dayInPayPeriod) {
+				if (dayInPayPeriod.date() <= 15) {
+					var startTime = new moment(dayInPayPeriod).startOf('month');
+					var endTime = new moment(dayInPayPeriod).date(15).endOf('day');
 				} else {
-					var startTime = new moment().date(16).startOf('day');
-					var endTime = new moment().endOf('month');
+					var startTime = new moment(dayInPayPeriod).date(16).startOf('day');
+					var endTime = new moment(dayInPayPeriod).endOf('month');
 				}
 
 				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
@@ -460,7 +457,7 @@
 				this.payPeriodView = true;
 
 				// TODO add conditional logic to only get this if the pay period has changed or is null
-				this.getPayPeriod();
+				this.getPayPeriod(this.dayToShow);
 			},
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));

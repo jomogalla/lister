@@ -94,7 +94,10 @@
     transform: scale(1.5); 
 }
 
-
+i.smaller-font {
+    font-size: 80%;
+    margin-left: 0.2rem;
+}
 
 
 .hover-row {
@@ -122,6 +125,14 @@ a:hover {
     cursor: pointer;
 }
 
+.container {
+    max-width: none;
+    width: auto;
+    margin-right: 0;
+    margin-left: 0;
+    padding-left: 4%;
+    padding-right: 4%;
+}
 
 .main-content {
     /*padding: 15px;*/
@@ -162,6 +173,11 @@ a:hover {
     width: 100%;
 }
 
+.clock-wrapper {
+    width: 100%;
+    /* margin: 15px auto; */
+}
+
 #loader {
 
 
@@ -188,6 +204,11 @@ a:hover {
     border-radius: 0;
     width: 100%;
     font-size: 1rem;
+}
+
+.hidden-controls {
+    /* text-align: right; */
+    font-size: 2.5rem;
 }
 
 .case-control.active {
@@ -235,19 +256,26 @@ a:hover {
 /* ----------------------------------
               Timesheet 
 -------------------------------------*/
-
-
-.clock-wrapper {
-    width: 50%;
-    margin: 15px auto;
-}
-
 .pagination-controls span{
     font-size: 2rem;
 }
 
+.pagination-controls button {
+    border-color: #eeeeee;
+    color: #c1c1c1;
+}
+
+.pagination-controls button:hover {
+    border-color: #cccccc;
+    /* background-color: #f6f6f6; */
+}
+
 .split-date h5 {
     margin-bottom: 0;
+}
+
+.time-wrapper {
+    margin-left: 0;
 }
 
 .time-wrapper tr td.controls i {
