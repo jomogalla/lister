@@ -47,6 +47,8 @@ var utilities = {
 			utilities.storage.delete('token');
 		},
 		addSubDomain: function (subDomain) {
+			if(!subDomain) { return; }
+
 			this.subDomain = subDomain;
 			utilities.storage.save('subDomain', subDomain);
 		},
@@ -54,8 +56,8 @@ var utilities = {
 			if (!this.subDomain) {
 				this.subDomain = utilities.storage.load('subDomain');
 			}	
-			
-			return this.subDomain;
+
+			return this.subDomain ? this.subDomain : '';
 		},
 		hasToken: function () {
 			return !(!utilities.storage.load('token') && !this.token);
