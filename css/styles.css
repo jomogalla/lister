@@ -10,6 +10,10 @@
     text-align: center;
 }
 
+.right-text {
+    text-align: right;
+}
+
 .buffer {
     margin-top: 2rem;
 }
@@ -153,8 +157,10 @@ a:hover {
     border-bottom-color: #aaa;
 }
 
-.tabs .active a{
+/* .tabs .active a{ */
+.tabs a{
     color: inherit;
+    color: #808080;
 }
 
 /* ----------------------------------
