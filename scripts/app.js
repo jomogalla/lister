@@ -5,34 +5,53 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
-			workdays: 0,
-			subdomain: '',
-			username: '',
-			password: '',
+			// General
 			token: null,
 			hasToken: false,
+			timeWorked: moment.duration(0, 'minutes'),
+			fogbugzLinkUrl: '',
+
+			// Controls
+			currentPerson: {},
+			currentCaseId: null,
+			caseActive: false,
+			currentCase: {},
+
+			// Search
 			searchQuery: '',
 			searchResults: {},
+
+			// Timesheet
+			dayToShow: moment(),
 			timeIntervals: {},
-			payPeriodIntervals: {},
-			fogbugzLinkUrl: '',
+
+			// Routes
 			listView: true,
 			caseView: false,
 			searchView: false,
 			payPeriodView: false,
+
+			// Pay Period
+			workdays: 0,
+			payPeriodIntervals: {},
 			payPeriodTotal: moment.duration(0, 'minutes'),
 			payPeriodStartDate: null,
 			payPeriodEndDate: null,
-			caseActive: false,
-			currentCase: {},
-			dayToShow: moment(),
-			timeWorked: moment.duration(0, 'minutes'),
-			minutesWorked: 0,
+
+			// Login
+			username: '',
+			password: '',
+			subdomain: '',
+
+			// Donuts - Remove from data 
 			eightHourDonut: null,
 			twentyFourHourDonut : null,
-			// Proposed state properties
-			currentPerson: {},
-			currentCaseId: null,
+		},
+		watch: {
+			timeWorked: function (newTimeWorked) {
+				var minutesWorked = Math.floor(newTimeWorked.asMinutes());
+				this.eightHourDonut.updateEight(minutesWorked);
+			}
 		},
 		mounted: function () {
 			// If we have a subdomain - populate plz.
@@ -48,7 +67,7 @@
 				var self = this;
 				
 				// Setup links - (not sure that this is better than having the link hardcoded....)
-				this.fogbugzLinkUrl = constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalUrlSuffix;
+				this.fogbugzLinkUrl = constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
 			
 				// Setup tokens
 				this.token = utilities.authenticator.getToken();
@@ -61,10 +80,7 @@
 				this.eightHourDonut = new utilities.donut('#chartone', constants.eightHourDonutData, constants.eightHourDonutOptions);
 				
 				//Make 24 hour donut
-				this.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions)
-
-				// THIS DONT WORK
-				utilities.router.initializeState();
+				this.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions);
 
 				// Load the current user 
 				this.getPerson();
@@ -135,15 +151,12 @@
 			},
 
 			/////////   Data Preparation Methods   /////////
-			prepareClockData: function () {
+			prepareClockData: function (clockInputData, donut) {
 				// This is for the 24 Hour clock.
-				// Should these take an input and simply return something? I think so. 
-				// At the moment this uses Data from vue and updates donuts. All over the place;
-				var clockInputData = this.timeIntervals.intervals;
 
 				if (this.timeIntervals.intervals.length === 0) {
-					this.twentyFourHourDonut.clear();
-					this.twentyFourHourDonut.updateTwentyFour([]);
+					donut.clear();
+					donut.updateTwentyFour([]);
 					return;
 				}
 
@@ -199,11 +212,8 @@
 					'bug': ''
 				});
 
-				// Clean it... Remove 0 values and convert MS to Minutes
-				var cleanedData = [];
-
-				this.twentyFourHourDonut.clear();
-				this.twentyFourHourDonut.updateTwentyFour(startOfTimeData);
+				donut.clear();
+				donut.updateTwentyFour(startOfTimeData);
 			},
 			sumDurations: function (intervals) {
 				// This method assumes that the intervals array objects have durations
@@ -238,31 +248,29 @@
 
 				return moment.duration(endMoment.diff(startMoment));
 			},
-			calculateTimeWorked: function () {
+			calculateTimeWorked: function (intervals, donut) {
 				//This is for The 8 Hour Clock
-				this.timeWorked = moment.duration(0);
-				if (!this.timeIntervals.intervals) {
-					return;
+				var timeWorked = moment.duration(0);
+				if (!intervals) {
+					return 0;
 				}
 
-				for (var i = 0; i < this.timeIntervals.intervals.length; i++) {
-					var startMoment = moment(this.timeIntervals.intervals[i].dtStart)
-					if (this.timeIntervals.intervals[i].dtEnd) {
-						var endMoment = moment(this.timeIntervals.intervals[i].dtEnd)
+				for (var i = 0; i < intervals.length; i++) {
+					var startMoment = moment(intervals[i].dtStart)
+					if (intervals[i].dtEnd) {
+						var endMoment = moment(intervals[i].dtEnd)
 					} else {
 						var endMoment = moment();
-						this.setActiveCase(this.timeIntervals.intervals[i].ixBug);
+						this.setActiveCase(intervals[i].ixBug);
 					}
 
 
 					var duration = moment.duration(endMoment.diff(startMoment));
 
-					this.timeWorked = this.timeWorked.add(duration);
+					timeWorked = timeWorked.add(duration);
 				}
 
-				this.minutesWorked = Math.floor(this.timeWorked.asMinutes());
-
-				this.eightHourDonut.updateEight(this.minutesWorked);
+				return timeWorked;
 			},
 
 			getWorkdaysForPeriod: function(startDay, endDay) {
@@ -300,18 +308,17 @@
 				utilities.loader.stop();
 			},
 
-			startWork: function (bugNumber) {
+			startWork: function (caseId) {
 				var startWork = {
 					"cmd": "startWork",
 					"token": utilities.authenticator.getToken(),
-					"ixBug": bugNumber
+					"ixBug": caseId
 				};
 
 				utilities.loader.start('loading...');
 				utilities.api(startWork).then(this.handleStartWorkRequest);
 
-				//TODO - update these to have consistent naming
-				this.currentCaseId = bugNumber;
+				this.currentCaseId = caseId;
 			},
 			handleStartWorkRequest: function () {
 				this.getPerson();
@@ -369,8 +376,10 @@
 			handleTimeSheetRequest: function (response) {
 				this.timeIntervals = typeof response === 'object' ? response.data : JSON.parse(response).data
 				utilities.loader.stop();
-				this.calculateTimeWorked();
-				this.prepareClockData();
+
+				this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
+
+				this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 			},
 			getPayPeriod: function () {
 				var currentDay = new moment();
@@ -467,8 +476,9 @@
 			},
 			refresher: function () {
 				if(utilities.authenticator.hasToken()){
-					this.calculateTimeWorked();
-					this.prepareClockData();
+					this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
+				
+					this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 				}
 			}
 		}

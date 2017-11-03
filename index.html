@@ -43,7 +43,7 @@
 		
 			<div class="chart-wrapper">
 				<canvas id="chartone"></canvas>
-				<div class="centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
+				<div class="eight-hour-text centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
 			</div>
 		</div>
 		<div class="info-bar" v-show="hasToken">
@@ -285,7 +285,16 @@
 
 	<!-- My Scripts -->
 	<script type="text/javascript" src="scripts/constants.js"></script>
-	<script type="text/javascript" src="scripts/utilities.js"></script>
+
+	<!-- Utilities -->
+	<script type="text/javascript" src="scripts/utilities/api.js"></script>
+	<script type="text/javascript" src="scripts/utilities/authenticator.js"></script>
+	<script type="text/javascript" src="scripts/utilities/convertArrayOfObjectsToCSV.js"></script>
+	<script type="text/javascript" src="scripts/utilities/donut.js"></script>
+	<script type="text/javascript" src="scripts/utilities/loader.js"></script>
+	<script type="text/javascript" src="scripts/utilities/storage.js"></script>
+
+	<!-- <script type="text/javascript" src="scripts/utilities.js"></script> -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
 </body>
