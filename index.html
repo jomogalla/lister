@@ -116,6 +116,9 @@
 					</div>
 					<!-- END TABS -->
 
+					<router-link to="/timesheet">Go to Foo</router-link>
+
+
 					<!-- SEARCH VIEW -->
 					<div class="search-wrapper" v-show="searchView">
 						<form class="row buffer" v-on:submit.prevent="search">
@@ -208,66 +211,71 @@
 					<!-- END SECRET PAY PERIOD VIEW-->
 
 					<!-- TIMESHEET VIEW -->
-					<div class="time-wrapper" v-show="listView">
-						<div class="row centered-text pagination-controls">
-							<span class="four columns" v-if="dayToShow.day() !== 1">
-								<button class="button u-full-width" v-on:click="showPreviousDay">Previous Day</button>
-							</span>
-							<span class="four columns" v-if="dayToShow.day() === 1">
-								<button class="button button-bar" v-on:click="skipToFriday">Friday</button>
-								<button class="button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-							</span>
-							<span class="four columns">{{dayToShow | formatDate('dddd, MMM DD')}}</span>
-							<span class="four columns" v-if="dayToShow.day() !== 5">
-								<button class="button u-full-width" v-on:click="showNextDay">Next Day</button>
-							</span>
-							<span class="four columns" v-if="dayToShow.day() === 5">
-								<button class="button button-bar" v-on:click="showNextDay">Next Day</button>
-								<button class="button button-bar" v-on:click="skipToMonday">Monday</button>
-							</span>
+					<timesheet :current-case-id="currentCaseId" :fogbugz-link-url="fogbugzLinkUrl" inline-template>
+						<div class="time-wrapper">
+							
+							<div class="row centered-text pagination-controls">
+								<span class="four columns" v-if="dayToShow.day() !== 1">
+									<button class="button u-full-width" v-on:click="showPreviousDay">Previous Day</button>
+								</span>
+								<span class="four columns" v-if="dayToShow.day() === 1">
+									<button class="button button-bar" v-on:click="skipToFriday">Friday</button>
+									<button class="button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+								</span>
+								<span class="four columns">{{dayToShow | formatDate('dddd, MMM DD')}}</span>
+								<span class="four columns" v-if="dayToShow.day() !== 5">
+									<button class="button u-full-width" v-on:click="showNextDay">Next Day</button>
+								</span>
+								<span class="four columns" v-if="dayToShow.day() === 5">
+									<button class="button button-bar" v-on:click="showNextDay">Next Day</button>
+									<button class="button button-bar" v-on:click="skipToMonday">Monday</button>
+								</span>
+							</div>
+							<table class="u-full-width no-overflow" >
+							<!-- <table class="u-full-width no-overflow" v-show="hasToken"> -->
+								<thead>
+									<tr>
+										<th width="5%">Case</th>
+										<th width="10%">&nbsp;&nbsp;&nbsp;</th>
+										<th width="71%">Title</th>
+										<th width="7%">Start</th>
+										<th width="7%">End</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row animate" v-bind:class="{'green-bg': !interval.dtEnd}">
+										<td>
+											<a v-on:click.prevent="showCase(interval.ixBug)">{{interval.ixBug}}</a>
+										</td>
+										<td class="controls">
+											<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+											<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+											&nbsp;
+											<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
+											<!--<i class="fa fa-trash dark-red hover-icon" aria-hidden="true"></i>-->
+											<!--<i class="fa fa-edit hover-icon" aria-hidden="true"></i>-->
+										</td>
+										<td class="overflow-popover"> {{interval.sTitle}}</td>
+										<td class="split-date">
+											<span>{{interval.dtStart | formatDate('hh:mma')}} </span>
+										</td>
+										<td class="split-date">
+											<span v-show="interval.dtEnd">{{interval.dtEnd | formatDate('hh:mma')}}</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="clock-wrapper">
+								<canvas id="chartclock"></canvas>
+							</div>
 						</div>
-						<table class="u-full-width no-overflow" v-show="hasToken">
-							<thead>
-								<tr>
-									<th width="5%">Case</th>
-									<th width="10%">&nbsp;&nbsp;&nbsp;</th>
-									<th width="71%">Title</th>
-									<th width="7%">Start</th>
-									<th width="7%">End</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row animate" v-bind:class="{'green-bg': !interval.dtEnd}">
-									<td>
-										<a v-on:click.prevent="showCase(interval.ixBug)">{{interval.ixBug}}</a>
-									</td>
-									<td class="controls">
-										<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
-										<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
-										&nbsp;
-										<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
-										<!--<i class="fa fa-trash dark-red hover-icon" aria-hidden="true"></i>-->
-										<!--<i class="fa fa-edit hover-icon" aria-hidden="true"></i>-->
-									</td>
-									<td class="overflow-popover"> {{interval.sTitle}}</td>
-									<td class="split-date">
-										<span>{{interval.dtStart | formatDate('hh:mma')}} </span>
-									</td>
-									<td class="split-date">
-										<span v-show="interval.dtEnd">{{interval.dtEnd | formatDate('hh:mma')}}</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="clock-wrapper">
-							<canvas id="chartclock"></canvas>
-						</div>
-					</div>
+					</timesheet>
 					<!-- END TIMESHEET VIEW -->
 				</div>
 				<!-- END EVERYTHING CONTAINER-->
 			</div>
 		</div>
+		<router-view></router-view>
 	</div>
 
 	<!-- Primary Page Layout
@@ -280,13 +288,15 @@
 	<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
-	<!--<script type="text/javascript" src="scripts/thirdparty/vue-router.js"></script>-->
+	<script type="text/javascript" src="scripts/thirdparty/vue-router.js"></script>
 	<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
 
 	<!-- My Scripts -->
+	<script type="text/javascript" src="scripts/components/timesheet.js"></script>
 	<script type="text/javascript" src="scripts/constants.js"></script>
 	<script type="text/javascript" src="scripts/utilities.js"></script>
 	<script type="text/javascript" src="scripts/filters.js"></script>
+	<script type="text/javascript" src="scripts/routes.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
 </body>
 </html>
