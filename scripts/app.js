@@ -15,6 +15,8 @@
 			currentPerson: {},
 			currentCaseId: null,
 			caseActive: false,
+
+			currentViewedCaseId: null,
 			currentCase: {},
 
 			// Search
@@ -126,7 +128,17 @@
 				link.setAttribute('download', filename);
 				link.click();
 			},
+			updateCaseById: function(caseId) {
+				if(caseId === this.currentCase.ixBug) { return; }
+				
+				this.getCaseByNumber(caseId)
+			},
 
+			resetCurrentCaseId: function () {
+				if (this.currentCase.ixBug !== this.currentViewedCaseId) {
+					this.currentViewedCaseId = this.currentCase.ixBug;
+				}
+			},
 			formatTimeIntervalsForCSV: function(timeIntervals) {
 				var formattedIntervals = [];
 
@@ -359,6 +371,8 @@
 
 			},
 			getCaseByNumber: function (caseNumber) {
+				this.currentViewedCaseId = caseNumber;
+
 				var getCase = {
 					"cmd": "search",
 					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
@@ -372,7 +386,14 @@
 			},
 			handleCaseRequest: function (response) {
 				utilities.loader.stop();
-				this.currentCase = typeof response === 'object' ? response.data.cases[0] : JSON.parse(response).data.cases[0];
+				var responseObject = typeof response === 'object' ? response.data.cases[0] : JSON.parse(response).data.cases[0];
+
+				// Check to make sure we have a case
+				if(response.data.totalHits !== 0) { 
+					this.currentCase = responseObject 
+				} else {
+					this.currentViewedCaseId = this.currentCase.ixBug || null;
+				}
 			},
 
 			getTimeSheet: function (date) {

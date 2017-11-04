@@ -116,12 +116,9 @@
 						</h5>
 						<!-- Case Header -->
 						<h5 class="four columns" v-bind:class="{ 'active': caseView }">
-							<a href="" v-on:click.prevent="showCase(currentCase.ixBug)">{{currentCase.ixBug || 'no case selected'}}</a>
+							<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
+							<input v-model="currentViewedCaseId" v-on:keyup.enter="updateCaseById(currentViewedCaseId)" v-on:blur="resetCurrentCaseId()" placeholder="enter a case number" class="hidden-input">
 						</h5>
-						<!-- Search Header-->
-						<!-- <h5 class="four columns" v-bind:class="{ 'active': searchView }">
-							<a href="" v-on:click.prevent="showSearch">Search</a>
-						</h5> -->
 					</div>
 					<!-- END TABS -->
 					<div class="row">					

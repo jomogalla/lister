@@ -116,6 +116,13 @@ i.smaller-font {
     overflow: hidden;
 }
 
+.hidden-input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    margin: 0;
+}
+
 
 /* ----------------------------------
                General  
