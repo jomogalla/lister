@@ -342,6 +342,22 @@
 				this.getTimeSheet(this.dayToShow);
 				this.setActiveCase();
 			},
+			deleteInterval: function(timeIntervalId) {
+				var deleteInterval = {
+					"cmd": "deleteInterval",
+					"ixInterval": timeIntervalId,
+					"token": utilities.authenticator.getToken()
+				};
+
+				utilities.loader.start();
+				utilities.api(deleteInterval).then(this.handleDeleteInterval);
+			},
+			handleDeleteInterval: function (response) {
+				utilities.loader.stop();
+
+				this.getTimeSheet(this.dayToShow);
+
+			},
 			getCaseByNumber: function (caseNumber) {
 				var getCase = {
 					"cmd": "search",

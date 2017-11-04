@@ -154,7 +154,7 @@
 									<tr v-for="fcase of searchResults.cases">
 										<td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
 										<td>
-											{{fcase.ixBug}}
+											<a v-on:click.prevent="showCase(fcase.ixBug)">{{fcase.ixBug}}</a>
 											<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
 										</td>
 										<td>{{fcase.sTitle}}</td>
@@ -243,6 +243,7 @@
 										<td class="controls">
 											<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
 											<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+											<i v-show="currentCaseId !== interval.ixBug" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 											&nbsp;
 											<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 											<!--<i class="fa fa-trash dark-red hover-icon" aria-hidden="true"></i>-->
