@@ -6,10 +6,11 @@ utilities.loader = {
         } else {
             $('#loader').html('<i class="fa fa-asterisk fa-spin fa-fw"></i>');
         }
-        $('#loader').addClass("show-loader");
+        $('#loader-background').addClass("show-loader");
 
     },
     stop: function () {
         $('#loader').removeClass("show-loader");
+        $('#loader-background').removeClass("show-loader");
     }
 };

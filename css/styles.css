@@ -207,6 +207,24 @@ a:hover {
     transform: scale(2);
 }
 
+#loader-background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    background-color: #f6f6f6;
+    opacity: 0;
+
+    z-index: -100;
+
+    transition: opacity 0.2s;
+}
+#loader-background.show-loader {
+    opacity: 1
+}
+
 .case-control i {
     margin-left: 5px;
     /*color: #BFD0B0;*/

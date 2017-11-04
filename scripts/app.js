@@ -390,7 +390,8 @@
 
 				// Check to make sure we have a case
 				if(response.data.totalHits !== 0) { 
-					this.currentCase = responseObject 
+					this.currentCase = responseObject;
+					this.currentViewedCaseId = this.currentCase.ixBug;
 				} else {
 					this.currentViewedCaseId = this.currentCase.ixBug || null;
 				}
