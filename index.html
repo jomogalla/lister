@@ -4,7 +4,7 @@
 	<!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<meta charset="utf-8">
-	<title>Lister</title>
+	<title>&lt; time &gt;</title>
 	<meta name="description" content="Making your miserable life with fogbugz a little better.">
 	<meta name="author" content="Jason Domogalla">
 
@@ -28,7 +28,7 @@
 
 	<!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<link rel="icon" type="image/png" href="images/chartjs.png">
+	<link rel="icon" type="image/png" href="images/empty.png">
 
 
 </head>
@@ -39,8 +39,13 @@
 		<!-- CONTROLS -->
 		<div class="control-bar" v-show="hasToken">
 			<button class="button case-control">
-				{{ currentPerson.ixBugWorkingOn || 'off the clock'}}
-				<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon" aria-hidden="true"></i>
+				<span v-show="currentPerson.ixBugWorkingOn > 0">
+					<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn}}</span>
+					<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon a-little" aria-hidden="true"></i>
+				</span>
+				<span v-show="currentPerson.ixBugWorkingOn <= 0" class="not-workin">
+					off the clock
+				</span>
 			</button>
 		
 			<div class="chart-wrapper">
@@ -52,7 +57,7 @@
 			</div>
 		</div>
 		<div class="info-bar" v-show="hasToken">
-			<span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span>
+			<!-- <span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span> -->
 			<a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a>
 			<a v-on:click.prevent="showPayPeriod" title="Hours this pay period"><i class="fa fa-clock-o hover-icon"></i></a>
 			<a v-on:click.prevent="showSearch" title="Search for cases"><i class="fa fa-search gray hover-icon"></i></a>
@@ -110,16 +115,16 @@
 					<!-- TABS -->
 					<div class="tabs row" v-show="!payPeriodView && !searchView">
 						<!-- Timesheet Header-->
-						<h5 class="eight columns" v-bind:class="{ 'active': listView }">
-							<!-- <a href="" v-on:click.prevent="showList">Timesheet -->
-							<a href="" v-on:click.prevent="showList">
-								<span class="timesheet-date"></span>{{dayToShow | formatDate('dddd MM.DD')}}</span>
-							</a> 
+						<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
+							<!-- <a href="" v-on:click.prevent="showList"> -->
+								<span class="timesheet-date gray"></span>{{dayToShow | formatDate('dddd MM.DD')}}</span>
+								<!-- <input type="date" /> -->
+							<!-- </a>  -->
 						</h5>
 						<!-- Case Header -->
 						<h5 class="four columns" v-bind:class="{ 'active': caseView }">
 							<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
-							<input v-model="currentViewedCaseId" v-on:keyup.enter="updateCaseById(currentViewedCaseId)" v-on:blur="resetCurrentCaseId()" placeholder="enter a case number" class="hidden-input">
+							<input v-model="currentViewedCaseId" v-on:keyup.enter="updateCaseById(currentViewedCaseId)" v-on:blur="resetCurrentCaseId()" placeholder="¯\_(ツ)_/¯" class="hidden-input">
 						</h5>
 					</div>
 					<!-- END TABS -->
@@ -167,8 +172,6 @@
 						<!-- SECRET PAY PERIOD VIEW -->
 						<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
 							<div class="hidden-controls u-pull-right gray">
-								<!--<i class="fa fa-2x fa-download" aria-hidden="true"></i>
-								<i class="fa fa-2x fa-times-rectangle" v-on:click="showList"></i>-->
 								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 								<a v-on:click.prevent="showList">close</a>							
 							</div>
@@ -206,22 +209,15 @@
 
 						<!-- TIMESHEET VIEW -->
 						<div class="time-wrapper eight columns" v-show="listView || caseView">
-							<div class="row centered-text pagination-controls">
-								<span class="four columns" v-if="dayToShow.day() !== 1">
-									<button class="paginate button u-full-width" v-on:click="showPreviousDay">Previous Day</button>
-								</span>
-								<span class="four columns" v-if="dayToShow.day() === 1">
-									<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
+							<div class="row pagination-controls">
+								<span class="four columns">
+									<button v-show="dayToShow.day() === 1" class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
 									<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
 								</span>
 								<span class="four columns">&nbsp;</span>
-								<!-- <span class="four columns">{{dayToShow | formatDate('dddd, MMM DD')}}</span> -->
-								<span class="four columns" v-if="dayToShow.day() !== 5">
-									<button class="paginate button u-full-width" v-on:click="showNextDay">Next Day</button>
-								</span>
-								<span class="four columns" v-if="dayToShow.day() === 5">
+								<span class="four columns right-text">
 									<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-									<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
+									<button v-show="dayToShow.day() === 5" class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
 								</span>
 							</div>
 							<table class="u-full-width no-overflow" v-show="hasToken">
@@ -237,7 +233,7 @@
 								<tbody>
 									<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row animate" v-bind:class="{'green-bg': !interval.dtEnd}">
 										<td>
-											<a v-on:click.prevent="showCase(interval.ixBug)">{{interval.ixBug}}</a>
+											<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
 										</td>
 										<td class="controls">
 											<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
@@ -245,8 +241,6 @@
 											<i v-show="currentCaseId !== interval.ixBug" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 											&nbsp;
 											<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
-											<!--<i class="fa fa-trash dark-red hover-icon" aria-hidden="true"></i>-->
-											<!--<i class="fa fa-edit hover-icon" aria-hidden="true"></i>-->
 										</td>
 										<td class="overflow-popover"> {{interval.sTitle}}</td>
 										<td class="split-date">
@@ -258,25 +252,22 @@
 									</tr>
 								</tbody>
 							</table>
-							<!-- <div class="clock-wrapper">
-								<canvas id="chartclock"></canvas>
-							</div> -->
 						</div>
 						<!-- END TIMESHEET VIEW -->
 
 						<!-- CASE VIEW -->
 						<div class="case-wrapper four columns" v-show="listView || caseView">
-								<h5 v-show="currentCase.ixBug">
-									{{currentCase.sTitle}}
-									<a :href="fogbugzLinkUrl + currentCase.ixBug"  target="_blank">
-										<i class="fa fa-external-link smaller-font hover-icon" aria-hidden="true"></i>
-									</a>
-								</h5>
-								<hr v-show="currentCase.ixBug">
-								<div v-for="event of currentCase.events" v-show="event.s" class="copy">
-									<span v-html="event.sHtml"></span>
-								</div>
+							<h5 v-show="currentCase.ixBug" class="case-title">
+								{{currentCase.sTitle}}
+								<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
+									<i class="fa fa-external-link smaller-font hover-icon a-little" aria-hidden="true"></i>
+								</a>
+							</h5>
+							<hr v-show="currentCase.ixBug">
+							<div v-for="event of currentCase.events" v-show="event.s" class="copy">
+								<span v-html="event.sHtml"></span>
 							</div>
+						</div>
 						<!-- END CASE VIEW -->
 					</div>				
 				</div>

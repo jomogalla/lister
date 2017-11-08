@@ -14,6 +14,10 @@
     text-align: right;
 }
 
+.left-text {
+    text-align: right;
+}
+
 .buffer {
     margin-top: 2rem;
 }
@@ -30,19 +34,20 @@
 .button-bar {
     width: 50%;
     margin: 0;
+
+    border-top-right-radius: 0;
+    border-top-left-radius: 0; 
 }
 
 .button-bar:first-child {
-    border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     /* TODO-JD: figure out what's adding the ghost spacing */
     margin-right: -0.6rem;
 }
 
 .button-bar:last-child {
-    border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-left-color: #e1e1e1;
+    /* border-left-color: #e1e1e1; */
 }
 .red {
     color: #AD4D32;
@@ -87,11 +92,16 @@
     display: none;
 }
 
-.hover-icon, animate { 
+.hover-icon, 
+ animate { 
     transition: all .1s ease-in-out; 
 }
 .hover-icon:hover { 
     transform: scale(1.3); 
+}
+
+.hover-icon.a-little:hover {
+    transform: scale(1.02);
 }
 
 .button:hover .hover-icon { 
@@ -149,11 +159,12 @@ a:hover {
     /*padding: 15px;*/
     width: calc(100% - 110px);
     margin-left: 110px;
-    margin-top: 1rem;
+    margin-top: 1.7rem;
 }
 
 .tabs > .columns {
     border-bottom: 2px solid #eee;
+    margin-bottom: 0;
 }
 
 .tabs a {
@@ -174,7 +185,7 @@ a:hover {
                Controls 
 -------------------------------------*/
 .control-bar {
-    padding: 5px;
+    padding: 1.8rem;
     width: 100px;
     position: fixed;
     top: 0;
@@ -234,6 +245,16 @@ a:hover {
     padding: 0;
     border-radius: 0;
     width: 100%;
+    font-size: 1.6rem;
+    border-color: transparent;
+}
+
+.case-control:hover,
+.case-control:focus {
+    border: transparent;
+}
+
+.not-workin {
     font-size: 1rem;
 }
 
@@ -263,11 +284,12 @@ a:hover {
     left: 35px; */
 
     position: absolute;
-    top: 100px;
+    top: 11.2rem;
     z-index: 100;
     font-size: 13px;
     /* left: 35px; */
     width: 100px;
+
     /* height: 100px; */
     line-height: 0.5;
 }
@@ -292,13 +314,24 @@ a:hover {
 }
 
 .pagination-controls button {
-    border-color: #eeeeee;
+    border-color: transparent;
     color: #c1c1c1;
+
+    padding: 0;
+    outline: none;
+}
+
+.pagination-controls button:focus {
+    border: none;
 }
 
 .pagination-controls button:hover {
-    border-color: #cccccc;
-    /* background-color: #f6f6f6; */
+    border-color: transparent;
+    background-color: #f6f6f6;
+}
+
+.paginate-right button{
+    /* text-align: right; */
 }
 
 .split-date h5 {
@@ -310,11 +343,13 @@ a:hover {
 }
 
 .time-wrapper tr td.controls i {
-    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.15s;
+    /* transition: opacity 0.2s; */
 }
 
 .time-wrapper tr:hover td.controls i {
-    visibility: visible;
+    opacity: 1;
 }
 
 
@@ -326,8 +361,16 @@ a:hover {
     margin: 0 auto;
 }
 
+.copy p {
+    background-color: transparent;
+}
+
 .case-wrapper li {
     margin-bottom: 0;
+}
+
+.case-title {
+    margin-top: 2rem;
 }
 
 /* ----------------------------------

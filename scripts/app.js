@@ -25,6 +25,7 @@
 
 			// Timesheet
 			dayToShow: moment(),
+			//displayDate: moment().format("YYYY-MM-DD"),
 			timeIntervals: {},
 
 			// Routes
@@ -371,6 +372,8 @@
 
 			},
 			getCaseByNumber: function (caseNumber) {
+				if (caseNumber === this.currentCase.ixBug) { return; }
+
 				this.currentViewedCaseId = caseNumber;
 
 				var getCase = {
