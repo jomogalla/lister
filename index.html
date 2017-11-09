@@ -22,6 +22,7 @@
 	<!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/thirdparty/pikaday.css">
 	<link rel="stylesheet" href="css/skeleton.css">
 	<link rel="stylesheet" href="css/styles.css">
 
@@ -116,10 +117,7 @@
 					<div class="tabs row" v-show="!payPeriodView && !searchView">
 						<!-- Timesheet Header-->
 						<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
-							<!-- <a href="" v-on:click.prevent="showList"> -->
-								<span class="timesheet-date gray"></span>{{dayToShow | formatDate('dddd MM.DD')}}</span>
-								<!-- <input type="date" /> -->
-							<!-- </a>  -->
+							<input-date :datestuff="dayToShow" v-on:datepicked="showDay" /></input-date>
 						</h5>
 						<!-- Case Header -->
 						<h5 class="four columns" v-bind:class="{ 'active': caseView }">
@@ -211,13 +209,23 @@
 						<div class="time-wrapper eight columns" v-show="listView || caseView">
 							<div class="row pagination-controls">
 								<span class="four columns">
-									<button v-show="dayToShow.day() === 1" class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
-									<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+									<span v-show="dayToShow.day() !== 1">
+										<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+									</span>
+									<span v-show="dayToShow.day() === 1">
+											<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
+											<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+									</span>
 								</span>
 								<span class="four columns">&nbsp;</span>
 								<span class="four columns right-text">
-									<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-									<button v-show="dayToShow.day() === 5" class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
+									<span v-show="dayToShow.day() !== 5">
+										<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+									</span>
+									<span v-show="dayToShow.day() === 5">
+										<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+										<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
+									</span>
 								</span>
 							</div>
 							<table class="u-full-width no-overflow" v-show="hasToken">
@@ -259,9 +267,13 @@
 						<div class="case-wrapper four columns" v-show="listView || caseView">
 							<h5 v-show="currentCase.ixBug" class="case-title">
 								{{currentCase.sTitle}}
-								<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
-									<i class="fa fa-external-link smaller-font hover-icon a-little" aria-hidden="true"></i>
-								</a>
+								<span class="u-pull-right">
+									<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
+									<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
+									<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
+										<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+									</a>
+								</span>
 							</h5>
 							<hr v-show="currentCase.ixBug">
 							<div v-for="event of currentCase.events" v-show="event.s" class="copy">
@@ -284,9 +296,10 @@
 	<!-- Third Party -->
 	<script type="text/javascript" src="scripts/thirdparty/jquery.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/pikaday.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
-	<!--<script type="text/javascript" src="scripts/thirdparty/vue-router.js"></script>-->
+
 	<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
 
 	<!-- My Scripts -->
@@ -300,8 +313,9 @@
 	<script type="text/javascript" src="scripts/utilities/loader.js"></script>
 	<script type="text/javascript" src="scripts/utilities/storage.js"></script>
 
-	<!-- <script type="text/javascript" src="scripts/utilities.js"></script> -->
+	<!-- Vue Stuff -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
+	<script type="text/javascript" src="scripts/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
 </body>
 </html>

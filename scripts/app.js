@@ -401,6 +401,9 @@
 			},
 
 			getTimeSheet: function (date) {
+				// Set DayToShow
+				this.dayToShow = moment(date);
+
 				var startTime = moment(date).startOf('day');
 				var endTime = moment(date).endOf('day');
 
@@ -511,6 +514,10 @@
 			},
 			skipToFriday: function () {
 				this.getTimeSheet(this.dayToShow.subtract(3, 'days'));
+			},
+			showDay: function (day) {
+				day = new moment(day);
+				this.getTimeSheet(day);
 			},
 			refresher: function () {
 				if(utilities.authenticator.hasToken()){
