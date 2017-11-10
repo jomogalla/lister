@@ -140,6 +140,10 @@
 					this.currentViewedCaseId = this.currentCase.ixBug;
 				}
 			},
+			updateIntervalWithInterval: function (interval) {
+
+
+			},
 			formatTimeIntervalsForCSV: function(timeIntervals) {
 				var formattedIntervals = [];
 
@@ -378,7 +382,7 @@
 
 				var getCase = {
 					"cmd": "search",
-					"token": "BF2LHHGG025K2K1V5A0AG2SJDG9VO7",
+					"token": utilities.authenticator.getToken(),
 					"q": caseNumber,
 					"max": 1,
 					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts","hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
@@ -400,6 +404,28 @@
 				}
 			},
 
+
+			editInterval: function (ixInterval, dtStart, dtEnd) {
+				var editInterval = {
+					"cmd": "editInterval",
+					"token": utilities.authenticator.getToken(),
+					"ixInterval": ixInterval
+				}
+				if(dtStart) {
+					editInterval.dtStart = dtStart;
+				}
+
+				if(dtEnd) {
+					editInterval.dtEnd = dtEnd;
+				}
+
+				utilities.loader.start();
+				utilities.api(editInterval).then(this.handleEditIntervalRequest);
+			},
+			handleEditIntervalRequest: function(response) {
+				utilities.loader.stop();
+				console.log('Time Edited ;)');
+			},
 			getTimeSheet: function (date) {
 				// Set DayToShow
 				this.dayToShow = moment(date);
@@ -514,6 +540,13 @@
 			},
 			skipToFriday: function () {
 				this.getTimeSheet(this.dayToShow.subtract(3, 'days'));
+			},
+			showToday: function () {
+				var today = new moment();
+
+				if(!today.isSame(this.dayToShow, 'day')) {
+					this.showDay();
+				}
 			},
 			showDay: function (day) {
 				day = new moment(day);

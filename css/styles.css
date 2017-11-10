@@ -351,6 +351,10 @@ a:hover {
     opacity: 1;
 }
 
+.time-wrapper tr:hover {
+    background-color: #fafafa;
+}
+
 
 
 /* ----------------------------------

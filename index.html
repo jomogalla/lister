@@ -217,7 +217,9 @@
 											<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
 									</span>
 								</span>
-								<span class="four columns">&nbsp;</span>
+								<span class="four columns">
+									<button class="paginate button button-bar" v-on:click="showToday">Today</button>
+								</span>
 								<span class="four columns right-text">
 									<span v-show="dayToShow.day() !== 5">
 										<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
@@ -252,10 +254,12 @@
 										</td>
 										<td class="overflow-popover"> {{interval.sTitle}}</td>
 										<td class="split-date">
-											<span>{{interval.dtStart | formatDate('hh:mma')}} </span>
+											<!-- <span>{{interval.dtStart | formatDate('hh:mma')}} </span> -->
+											<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
 										</td>
 										<td class="split-date">
-											<span v-show="interval.dtEnd">{{interval.dtEnd | formatDate('hh:mma')}}</span>
+											<!-- <span v-show="interval.dtEnd">{{interval.dtEnd | formatDate('hh:mma')}}</span> -->
+											<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
 										</td>
 									</tr>
 								</tbody>
@@ -315,6 +319,7 @@
 
 	<!-- Vue Stuff -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
+	<script type="text/javascript" src="scripts/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
 </body>
