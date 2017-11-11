@@ -75,9 +75,6 @@
     font-size: small;
 }
 
-.green-bg {
-    background-color: #f4f5f4;
-}
 /* todo - rename */
 .no-padding td {
     padding: 0;
@@ -344,15 +341,18 @@ a:hover {
 
 .time-wrapper tr td.controls i {
     opacity: 0;
-    transition: opacity 0.15s;
 }
 
 .time-wrapper tr:hover td.controls i {
     opacity: 1;
 }
 
-.time-wrapper tr:hover {
+.time-wrapper tbody tr:hover {
     background-color: #fafafa;
+}
+
+.time-wrapper tbody tr.green-bg {
+    background-color: #f4f5f4;
 }
 
 

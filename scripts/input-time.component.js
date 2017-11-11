@@ -24,8 +24,8 @@ Vue.component('input-time', {
 			var timeSplit = newValue.match(/[a-zA-Z]+|[0-9]+/g);
 
 			var twentyFourHourOffset = timeSplit[2] === 'pm' ? 12 : 0;
-			// Turn 12 am into 00
-			if(timeSplit[2] === 'am' && parseInt(timeSplit[0] === 12)) {
+			// Turn 12am into 00
+			if(timeSplit[2] === 'am' && timeSplit[0] == 12) {
 				var hour = 0;
 			} else {
 				var hour = parseInt(timeSplit[0]) + twentyFourHourOffset;
