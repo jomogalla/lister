@@ -134,6 +134,16 @@ input.hidden-input {
     opacity: 1;
 }
 
+/*prevents selection on double click*/
+.no-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none;
+	user-select: none; 
+}
+
 /* ----------------------------------
                General  
 -------------------------------------*/
@@ -200,6 +210,10 @@ a:hover {
 .clock-wrapper {
     width: 100%;
     /* margin: 15px auto; */
+}
+
+.view-metrics-wrapper {
+	padding: 12px 0px 0px 9px;
 }
 
 #loader {

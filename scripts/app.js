@@ -33,6 +33,7 @@
 			caseView: false,
 			searchView: false,
 			payPeriodView: false,
+			metricsView: false,
 
 			// Pay Period
 			workdays: 0,
@@ -40,6 +41,9 @@
 			payPeriodTotal: moment.duration(0, 'minutes'),
 			payPeriodStartDate: null,
 			payPeriodEndDate: null,
+
+			// Metrics
+			metricsTitle: "",
 
 			// Login
 			username: '',
@@ -57,6 +61,9 @@
 			}
 		},
 		mounted: function () {
+			// Private properties
+			this.$_bar = new utilities.bar('#metrics-chart', constants.weeklyBarChartData, constants.weeklyBarChartOptions);
+
 			// If we have a subdomain - populate plz.
 			this.subdomain = utilities.authenticator.getSubDomain();
 
@@ -444,7 +451,7 @@
 				utilities.api(listIntervalsForDate).then(this.handleTimeSheetRequest);
 			},
 			handleTimeSheetRequest: function (response) {
-				this.timeIntervals = typeof response === 'object' ? response.data : JSON.parse(response).data
+				this.timeIntervals = typeof response === 'object' ? response.data : JSON.parse(response).data;
 				utilities.loader.stop();
 
 				this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
@@ -495,7 +502,74 @@
 				this.currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
 				utilities.loader.stop();
 			},
-			
+			getMetrics: function () {
+
+				var startTime = moment().startOf('week');
+				var endTime = moment().endOf('week');
+				var dFormat = "dddd MM/DD/YY";
+
+				this.metricsTitle = "Hours for " + startTime.format(dFormat) + " to " + endTime.format(dFormat);
+
+				var listIntervalsForDate = {
+					"cmd": "listIntervals",
+					"token": utilities.authenticator.getToken(),
+					"dtStart": startTime.toJSON(),
+					"dtEnd": endTime.toJSON()
+				};
+
+				var vm = this;
+				utilities.loader.start();
+				utilities.api(listIntervalsForDate).then(function (response) {
+					var intervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
+					utilities.loader.stop();
+
+
+					var rangeIntervals = _.map(intervals,
+						function(val) {
+							return {
+								range: moment.range(val.dtStart, val.dtEnd),
+								interval: val
+							};
+						});
+
+					//Build time worked Per Day
+					var timeWorkedPerDay = _
+					.chain(_.range(0, 7, 0))
+					.map(function (val, i) {
+
+						var dayStart = startTime.clone().add(i, "days");
+						var dayEnd = dayStart.clone().add(1, "days");
+						var range = moment.range(dayStart, dayEnd);
+						return { minutesWorked: 0, range: range }
+					})
+					.value();
+
+					_.forEach(timeWorkedPerDay,function (currentDay, i) {
+
+						var currentDayRange = currentDay.range;
+
+						var minutesForCurrDay =
+							_.sumBy(rangeIntervals,
+								function(rangeInterval) {
+									var dateRange = currentDayRange.intersect(rangeInterval.range);
+									return (dateRange) ? dateRange.diff("m") : 0; //intersect in minutes of the current day and this interval
+								});
+
+							currentDay.minutesWorked += minutesForCurrDay;
+						});
+
+					console.log(timeWorkedPerDay);
+
+					var hoursPerDayArray = _.map(timeWorkedPerDay, function(val) {
+						return (val.minutesWorked/60).toFixed(2);
+					});
+
+					console.log(hoursPerDayArray);
+
+					vm.$_bar.updateData(hoursPerDayArray);
+				});
+
+			},
 
 			/////////   UI Methods   /////////
 			showList: function () {
@@ -503,18 +577,21 @@
 				this.caseView = false;
 				this.searchView = false;
 				this.payPeriodView = false;
+				this.metricsView = false;
 			},
 			showSearch: function () {
 				this.listView = false;
 				this.caseView = false;
 				this.searchView = true;
 				this.payPeriodView = false;
+				this.metricsView = false;
 			},
 			showCase: function (caseNumber) {
 				this.listView = false;
 				this.caseView = true;
 				this.searchView = false;
 				this.payPeriodView = false;
+				this.metricsView = false;
 
 				// TODO add logic to only get this if the case has changed or is null
 				this.getCaseByNumber(caseNumber);
@@ -525,10 +602,30 @@
 				this.caseView = false;
 				this.searchView = false;
 				this.payPeriodView = true;
+				this.metricsView = false;
 
 				// TODO add conditional logic to only get this if the pay period has changed or is null
 				this.getPayPeriod(this.dayToShow);
 			},
+			toggleMetrics: function () {
+				
+				if (this.metricsView) {
+					this.showList();
+					return;
+				}
+
+				
+				this.listView = false;
+				this.caseView = false;
+				this.searchView = false;
+				this.payPeriodView = false;
+				this.metricsView = true;
+
+				//initialize metrics data
+				this.getMetrics();
+			},
+
+
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
 			},
