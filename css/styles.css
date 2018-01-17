@@ -123,7 +123,7 @@ input.hidden-input {
 
 input.invalid {
     /* Fix this */
-   border-bottom: 2px dotted #5E261D !important;
+   border-bottom: 2px dotted #ff4426 !important;
 }
 
 .no-input {
@@ -367,6 +367,7 @@ a:hover {
 
 .add-form i {
     font-size: x-large;
+    vertical-align: middle;
 }
 
 .add-form form {
@@ -375,13 +376,22 @@ a:hover {
     margin-bottom: 0;
 }
 
+.add-form input {
+    margin-left: 2.5rem;
+    text-align: center;
+}
+
 .add-form input.case {
     width: 5rem;
-    margin-left: 2.5rem;
+    
 }
 
 .add-form input.time {
     width: 7rem;
+}
+
+.add-form button {
+    margin-bottom: 0;
     margin-left: 2.5rem;
 }
 

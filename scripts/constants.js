@@ -26,6 +26,10 @@ const constants = {
 		"#FFCE56",
 		"#36A2EB"
 	],
+
+	// Other stuff
+	deleteCaseId: 44073,
+
 	// CHARTS
 	eightHoursInMinutes: (60 * 8),
 	twentyFourHoursInMinutes: (60 * 24),

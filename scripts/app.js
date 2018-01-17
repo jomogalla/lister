@@ -450,6 +450,30 @@
 				utilities.loader.stop();
 				this.getTimeSheet(this.dayToShow);
 			},
+			// Clear time works by adding time to a case, then deleting the interval we just created.
+			clearTime: function(dtStart, dtEnd) {
+				if(dtStart._isAMomentObject) {
+					dtStart = dtStart.toISOString();	
+				}
+
+				if(dtEnd._isAMomentObject) {
+					dtEnd = dtEnd.toISOString();	
+				}
+
+				var addInterval = {
+					"cmd": "newInterval",
+					"token": utilities.authenticator.getToken(),
+					"ixBug": constants.deleteCaseId,
+					"dtStart": dtStart,
+					"dtEnd": dtEnd
+				}
+;
+				utilities.loader.start();
+				utilities.api(addInterval).then(this.handleClearTimeRequest);
+			},
+			handleClearTimeRequest: function(response) {
+				this.deleteInterval(response.data.interval.ixInterval)
+			},
 			getTimeSheet: function (date) {
 				// Set DayToShow
 				this.dayToShow = moment(date);

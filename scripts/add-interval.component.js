@@ -15,7 +15,8 @@ Vue.component('add-interval', {
 			caseInvalid: false,			//Maybe move this validation data to computed
 			startInvalid: false,
 			endInvalid: false,
-			showForm: false
+			showingAddForm: false,
+			showingRemoveForm: false
 		};
 	},
 	computed: {
@@ -63,6 +64,37 @@ Vue.component('add-interval', {
 			this.$emit('addinterval', this.bug, startMoment, endMoment);
 		},
 
+		clearTime: function () {
+			var timeFormat = 'h:mma';
+
+			// Validate Inputs
+			this.caseInvalid = false;
+			this.startInvalid = false;
+			this.endInvalid = false;
+
+			var startMoment = moment(this.start, timeFormat);
+			var endMoment = moment(this.end, timeFormat);
+
+			if(!startMoment.isValid()) {
+				this.startInvalid = true;
+			}
+
+			if(!endMoment.isValid()) {
+				this.endInvalid = true;
+			}
+
+			if(this.startInvalid || this.endInvalid) {
+				return;
+			}
+
+			// Change Moments to the day we are looking at
+
+			this.setCorrectDates(startMoment);
+			this.setCorrectDates(endMoment);
+
+			this.$emit('cleartime', startMoment, endMoment);
+		},
+
 		setCorrectDates: function(date) {
 			date.set('year', this.currentdate.year());
 			date.set('month', this.currentdate.month());
@@ -70,10 +102,22 @@ Vue.component('add-interval', {
 		},
 
 		showAddForm: function() {
-			this.showForm = true;
+			this.showingAddForm = true;
 		},
-		hideAddForm: function() {
-			this.showForm = false;
+		showRemoveForm: function() {
+			this.showingRemoveForm = true;
+		},
+		hideForms: function() {
+			//Clear out stuff
+			this.start = null;
+			this.end = null;
+			this.bug = null;
+			this.caseInvalid = false;
+			this.startInvalid = false;
+			this.endInvalid = false;
+
+			this.showingAddForm = false;
+			this.showingRemoveForm = false;
 		}
 	}
 });
