@@ -264,6 +264,20 @@
 									</tr>
 								</tbody>
 							</table>
+							<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval"></add-interval>
+							<script type="text/x-template" id="add-interval-template">
+								<div class="add-form">
+									<i class="fa fa-plus-circle gray" v-on:click="showAddForm" v-show="!showForm"></i>
+									<!-- <i class="fa fa-minus-circle gray" v-on:click="showRemoveForm" v-show="!showForm"></i> -->
+									<i class="fa fa-times-circle dark-red" v-on:click="hideAddForm" v-show="showForm"></i>
+									<form v-show="showForm" v-on:submit.prevent="addInterval">
+										<input v-model="bug" placeholder="Case" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
+										<input v-model="start" class="hidden-input time" placeholder="Start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+										<input v-model="end" class="hidden-input time" placeholder="End" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+										<button class="button" type="submit">Add Time</button>
+									</form>
+								</div>
+							</script>
 						</div>
 						<!-- END TIMESHEET VIEW -->
 
@@ -319,6 +333,7 @@
 
 	<!-- Vue Stuff -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
+	<script type="text/javascript" src="scripts/add-interval.component.js"></script>
 	<script type="text/javascript" src="scripts/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>

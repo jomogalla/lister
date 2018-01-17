@@ -35,3 +35,6 @@ Constants.js - the `config` file of this whole mess.
 - ~~paginate time entry list~~
 - ~~save token in cookie/localstorage~~
 - ~~make case detail page~~
+
+## notes: 
+Case 44073 is the case for deleting time.

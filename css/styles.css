@@ -121,6 +121,11 @@ input.hidden-input {
     padding: 0;
 }
 
+input.invalid {
+    /* Fix this */
+   border-bottom: 2px dotted #5E261D !important;
+}
+
 .no-input {
     display: none;
 }
@@ -355,6 +360,30 @@ a:hover {
     background-color: #f4f5f4;
 }
 
+/* Add Form */
+.add-form {
+    text-align: center;
+}
+
+.add-form i {
+    font-size: x-large;
+}
+
+.add-form form {
+    display: inline-block;
+    margin-left: 2.5rem;
+    margin-bottom: 0;
+}
+
+.add-form input.case {
+    width: 5rem;
+    margin-left: 2.5rem;
+}
+
+.add-form input.time {
+    width: 7rem;
+    margin-left: 2.5rem;
+}
 
 
 /* ----------------------------------

@@ -424,7 +424,31 @@
 			},
 			handleEditIntervalRequest: function(response) {
 				utilities.loader.stop();
-				console.log('Time Edited ;)');
+				this.getTimeSheet(this.dayToShow);
+			},
+			addInterval: function (ixBug, dtStart, dtEnd) {
+				if(dtStart._isAMomentObject) {
+					dtStart = dtStart.toISOString();	
+				}
+
+				if(dtEnd._isAMomentObject) {
+					dtEnd = dtEnd.toISOString();	
+				}
+
+				var addInterval = {
+					"cmd": "newInterval",
+					"token": utilities.authenticator.getToken(),
+					"ixBug": ixBug,
+					"dtStart": dtStart,
+					"dtEnd": dtEnd
+				}
+
+				utilities.loader.start();
+				utilities.api(addInterval).then(this.handleAddIntervalRequest);
+			},
+			handleAddIntervalRequest: function(response) {
+				utilities.loader.stop();
+				this.getTimeSheet(this.dayToShow);
 			},
 			getTimeSheet: function (date) {
 				// Set DayToShow
