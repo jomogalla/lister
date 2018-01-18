@@ -15,7 +15,7 @@ Vue.component('add-interval', {
 			caseInvalid: false,			//Maybe move this validation data to computed
 			startInvalid: false,
 			endInvalid: false,
-			showingAddForm: false,
+			showingAddForm: true,
 			showingRemoveForm: false
 		};
 	},
@@ -103,8 +103,10 @@ Vue.component('add-interval', {
 
 		showAddForm: function() {
 			this.showingAddForm = true;
+			this.showingRemoveForm = false;
 		},
 		showRemoveForm: function() {
+			this.showingAddForm = false;
 			this.showingRemoveForm = true;
 		},
 		hideForms: function() {

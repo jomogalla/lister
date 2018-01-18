@@ -75,8 +75,16 @@
     color: #e2e2e2;
 }
 
+.dark-gray {
+    color: #444444;
+}
+
 .small {
     font-size: small;
+}
+
+.invisible {
+    visibility: hidden;
 }
 
 /* todo - rename */
@@ -124,6 +132,11 @@ input.hidden-input {
     padding: 0;
 }
 
+/* Need to fix this important stuff :/ */
+.add-form input {
+    border-bottom: 2px dotted #dedede !important;
+}
+
 input.invalid {
     /* Fix this */
    border-bottom: 2px dotted #ff4426 !important;
@@ -140,6 +153,10 @@ input.invalid {
 
 .hover-fade:hover {
     opacity: 1;
+}
+
+i.block {
+    display: block;
 }
 
 /*prevents selection on double click*/
@@ -377,7 +394,17 @@ a:hover {
 
 /* Add Form */
 .add-form {
-    text-align: center;
+    /* text-align: center; */
+    position: fixed;
+    bottom: 0;
+    display: inline-block;
+    background-color: #f6f6f6;
+    padding: 1rem;
+    border-radius: 1rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: 6rem;
+    margin-bottom: -5rem;
 }
 
 .add-form i {
@@ -385,29 +412,44 @@ a:hover {
     vertical-align: middle;
 }
 
+.add-form i:not(.close) {
+    display: block;
+}
+
+.add-form .close:first-of-type() {
+    display: block;
+}
+
 .add-form form {
     display: inline-block;
     margin-left: 2.5rem;
     margin-bottom: 0;
+    padding: 0.6rem;
 }
 
 .add-form input {
     margin-left: 2.5rem;
     text-align: center;
+    font-size: 2rem;
+    border-bottom: 2px dotted #dedede;
 }
 
 .add-form input.case {
-    width: 5rem;
+    width: 8rem;
     
 }
 
 .add-form input.time {
-    width: 7rem;
+    width: 8rem;
+}
+.add-form input.time:last-of-type {
+    margin-left: 0;
 }
 
 .add-form button {
     margin-bottom: 0;
     margin-left: 2.5rem;
+    background-color: white;
 }
 
 

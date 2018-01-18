@@ -64,9 +64,7 @@
 
 		</div>
 		<div class="info-bar" v-show="hasToken">
-			<!-- <span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span> -->
 			<a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a>
-			<!-- <a v-on:click.prevent="showSearch" title="Search for cases"><i class="fa fa-search gray hover-icon"></i></a> -->
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 		</div>
 		<!-- END CONTROLS -->
@@ -119,6 +117,7 @@
 				<!-- EVERYTHING -->
 				<div class="everything-else" v-show="hasToken">
 					<!-- TABS -->
+					<!-- Todo Possibly move the tabs into timesheet view? -->
 					<div class="tabs row" v-show="!payPeriodView && !searchView & !metricsView">
 						<!-- Timesheet Header-->
 						<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
@@ -212,7 +211,6 @@
 							</table>
 							<div class="hidden-controls gray">
 								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
-								<!-- <a v-on:click.prevent="showList">close</a>							 -->
 							</div>
 						</div>
 						<!-- END SECRET PAY PERIOD VIEW-->
@@ -269,7 +267,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row animate" v-bind:class="{'green-bg': !interval.dtEnd}">
+									<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
 										<td>
 											<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
 										</td>
@@ -282,11 +280,9 @@
 										</td>
 										<td class="overflow-popover"> {{interval.sTitle}}</td>
 										<td class="split-date">
-											<!-- <span>{{interval.dtStart | formatDate('hh:mma')}} </span> -->
 											<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
 										</td>
 										<td class="split-date">
-											<!-- <span v-show="interval.dtEnd">{{interval.dtEnd | formatDate('hh:mma')}}</span> -->
 											<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
 										</td>
 									</tr>
@@ -295,17 +291,20 @@
 							<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
 							<script type="text/x-template" id="add-interval-template">
 								<div class="add-form">
-									<i class="fa fa-plus-circle gray" v-on:click="showAddForm" v-show="!showingAddForm && !showingRemoveForm"></i>
-									<i class="fa fa-minus-circle gray" v-on:click="showRemoveForm" v-show="!showingAddForm && !showingRemoveForm"></i>
-									<i class="fa fa-times-circle dark-red" v-on:click="hideForms" v-show="showingAddForm || showingRemoveForm"></i>
+									<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
+											<i class="fa fa-plus-circle gray block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
+											<i class="fa fa-minus-circle gray" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+									</div>
 									<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
 										<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
 										<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+										&#x27F6;
 										<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
 										<button class="button" type="submit">Add Time</button>
 									</form>
 									<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
 											<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+											&#x27F6;
 											<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
 											<button class="button dark-red" type="submit">Clear Time</button>
 									</form>
@@ -315,7 +314,6 @@
 						<!-- END TIMESHEET VIEW -->
 						
 						
-
 						<!-- CASE VIEW -->
 						<div class="case-wrapper four columns" v-show="listView || caseView">
 							<div v-show="!starredCasesView">
@@ -362,7 +360,6 @@
 	<div class="loader-background" id="loader-background"></div>
 	<div class="notifier red">
 		<span id="notifier"></span>
-		<!-- <i class="fa fa-times-circle" onclick="utilities.notifier.clearMessage()"></i> -->
 	</div>
 
 
