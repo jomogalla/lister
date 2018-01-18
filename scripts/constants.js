@@ -29,6 +29,7 @@ const constants = {
 
 	// Other stuff
 	deleteCaseId: 44073,
+	starredByFilterId: 1572,
 
 	// CHARTS
 	eightHoursInMinutes: (60 * 8),

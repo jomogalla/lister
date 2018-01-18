@@ -56,7 +56,7 @@
 			<div class="clock-wrapper">
 				<canvas id="chartclock"></canvas>
 			</div>
-			<div class="pagination-controls no-select left-text">
+			<div class="nav pagination-controls no-select left-text">
 				<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
 				<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
 				<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
@@ -127,7 +127,14 @@
 						<!-- Case Header -->
 						<h5 class="four columns" v-bind:class="{ 'active': caseView }">
 							<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
-							<input v-model="currentViewedCaseId" v-on:keyup.enter="updateCaseById(currentViewedCaseId)" v-on:blur="resetCurrentCaseId()" placeholder="¯\_(ツ)_/¯" class="hidden-input">
+							<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
+									v-model="currentViewedCaseId" 
+									v-on:keyup.enter="updateCaseById(currentViewedCaseId)" 
+									v-on:blur="resetCurrentCaseId()" 
+									v-on:click="hideStarredCases"
+									v-bind:class="{ 'light-gray': starredCasesView }">
+									
+							<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
 						</h5>
 					</div>
 					<!-- END TABS -->
@@ -269,7 +276,7 @@
 										<td class="controls">
 											<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
 											<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
-											<i v-show="currentCaseId !== interval.ixBug" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
+											<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 											&nbsp;
 											<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 										</td>
@@ -311,19 +318,38 @@
 
 						<!-- CASE VIEW -->
 						<div class="case-wrapper four columns" v-show="listView || caseView">
-							<h5 v-show="currentCase.ixBug" class="case-title">
-								{{currentCase.sTitle}}
-								<span class="u-pull-right">
-									<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
-									<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
-									<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
-										<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
-									</a>
-								</span>
-							</h5>
-							<hr v-show="currentCase.ixBug">
-							<div v-for="event of currentCase.events" v-show="event.s" class="copy">
-								<span v-html="event.sHtml"></span>
+							<div v-show="!starredCasesView">
+								<h5 v-show="currentCase.ixBug" class="case-title">
+									{{currentCase.sTitle}}
+									<span class="u-pull-right">
+										<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
+										<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
+										<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
+											<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+										</a>
+									</span>
+								</h5>
+								<hr v-show="currentCase.ixBug">
+								<div v-for="event of currentCase.events" v-show="event.s" class="copy">
+									<span v-html="event.sHtml"></span>
+								</div>
+							</div>
+							<!-- Starred Cases -->
+							<div class="starred-cases" v-show="starredCasesView">
+								<h5 class="case-title"> Starred Cases</h5>
+								<hr>
+								<table class="u-full-width no-overflow">
+									<tbody>
+										<tr v-for="bug in starredCases">
+											<td>
+												<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{bug.ixBug}}</a>
+												<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
+													<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+												</a></td>
+											<td>{{bug.sTitle}}</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 						<!-- END CASE VIEW -->

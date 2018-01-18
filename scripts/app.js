@@ -16,8 +16,10 @@
 			currentCaseId: null,
 			caseActive: false,
 
+			// Cases
 			currentViewedCaseId: null,
 			currentCase: {},
+			starredCases: [],
 
 			// Search
 			searchQuery: '',
@@ -25,7 +27,6 @@
 
 			// Timesheet
 			dayToShow: moment(),
-			//displayDate: moment().format("YYYY-MM-DD"),
 			timeIntervals: {},
 
 			// Routes
@@ -34,6 +35,7 @@
 			searchView: false,
 			payPeriodView: false,
 			metricsView: false,
+			starredCasesView: true,
 
 			// Pay Period
 			workdays: 0,
@@ -97,6 +99,9 @@
 				// Load the current user 
 				this.getPerson();
 
+				// Load Starred Cases
+				this.getStarredCases();
+
 				// Refresh the charts every second
 				setInterval(function () { self.refresher() }, 60000);
 			},
@@ -148,10 +153,6 @@
 				if (this.currentCase.ixBug !== this.currentViewedCaseId) {
 					this.currentViewedCaseId = this.currentCase.ixBug;
 				}
-			},
-			updateIntervalWithInterval: function (interval) {
-
-
 			},
 			formatTimeIntervalsForCSV: function (timeIntervals) {
 				var formattedIntervals = [];
@@ -298,7 +299,6 @@
 
 				return timeWorked;
 			},
-
 			getWorkdaysForPeriod: function (startDay, endDay) {
 				var days = 0;
 				var tempDay = moment(startDay);
@@ -333,7 +333,21 @@
 				this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 				utilities.loader.stop();
 			},
+			getStarredCases: function () {
+				var listCases = {
+					"cmd": "listCases",
+					"cols": ["ixBug","sTitle"],
+					"token": utilities.authenticator.getToken(),
+					"sFilter": constants.starredByFilterId
+				};
 
+				utilities.loader.start();
+				utilities.api(listCases).then(this.handleStarredCases);
+			},
+			handleStarredCases: function (response) {
+				utilities.loader.stop();
+				this.starredCases = response.data.cases;
+			},
 			startWork: function (caseId) {
 				var startWork = {
 					"cmd": "startWork",
@@ -349,9 +363,6 @@
 			handleStartWorkRequest: function () {
 				this.getPerson();
 				this.getTimeSheet(this.dayToShow);
-			},
-			getActiveCase: function () {
-
 			},
 			stopWork: function () {
 				var stopWork = {
@@ -412,8 +423,6 @@
 					this.currentViewedCaseId = this.currentCase.ixBug || null;
 				}
 			},
-
-
 			editInterval: function (ixInterval, dtStart, dtEnd) {
 				var editInterval = {
 					"cmd": "editInterval",
@@ -538,7 +547,6 @@
 				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
 				utilities.loader.stop();
 			},
-
 			getPerson: function () {
 				var viewPerson = {
 					"cmd": "viewPerson",
@@ -667,6 +675,7 @@
 				this.searchView = false;
 				this.payPeriodView = false;
 				this.metricsView = false;
+				this.starredCasesView = false;
 
 				// TODO add logic to only get this if the case has changed or is null
 				this.getCaseByNumber(caseNumber);
@@ -682,13 +691,17 @@
 				// TODO add conditional logic to only get this if the pay period has changed or is null
 				this.getPayPeriod(this.dayToShow);
 			},
+			showStarredCases: function () {
+				this.starredCasesView = true;
+			},
+			hideStarredCases: function () {
+				this.starredCasesView = false;
+			},
 			toggleMetrics: function () {
-
 				if (this.metricsView) {
 					this.showList();
 					return;
 				}
-
 
 				this.listView = false;
 				this.caseView = false;
@@ -699,8 +712,6 @@
 				//initialize metrics data
 				this.getMetrics(moment());
 			},
-
-
 			showPreviousDay: function () {
 				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
 			},

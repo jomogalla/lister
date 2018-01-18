@@ -71,6 +71,10 @@
     color: #808080;
 }
 
+.light-gray {
+    color: #e2e2e2;
+}
+
 .small {
     font-size: small;
 }
@@ -80,7 +84,6 @@
     padding: 0;
 
     padding: 5px 1px;
-    /*white-space: nowrap;*/
 }
 
 [v-cloak] {
@@ -171,7 +174,6 @@ a:hover {
 }
 
 .main-content {
-    /*padding: 15px;*/
     width: calc(100% - 110px);
     margin-left: 110px;
     margin-top: 1.7rem;
@@ -190,7 +192,6 @@ a:hover {
     border-bottom-color: #aaa;
 }
 
-/* .tabs .active a{ */
 .tabs a{
     color: inherit;
     color: #808080;
@@ -208,18 +209,21 @@ a:hover {
     z-index: 100;    
 }
 
+.nav {
+    margin-top: 1rem;
+}
+
 .chart-wrapper {
     width: 100%;
 }
 
 .clock-wrapper {
     width: 100%;
-    /* margin: 15px auto; */
 }
 
 .control-bar .pagination-controls button {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     margin: 0;
 }
 
@@ -233,14 +237,8 @@ a:hover {
 
 
 #loader {
-
-
     color:#ccc;
     opacity: 0;
-
-    /* position: fixed;
-    bottom: 30px;
-    left: 8px; */
 }
 
 #loader.show-loader {
@@ -268,7 +266,6 @@ a:hover {
 
 .case-control i {
     margin-left: 5px;
-    /*color: #BFD0B0;*/
 }
 
 .case-control {
@@ -289,14 +286,7 @@ a:hover {
 }
 
 .hidden-controls {
-    /* text-align: right; */
     font-size: 2.5rem;
-}
-
-.case-control.active {
-    /*background-color: #BFD0B0;*/
-    /*color: #e0ffc4;*/
-    /*border-color: transparent;*/
 }
 
 .info-bar {
@@ -307,20 +297,11 @@ a:hover {
 }
 
 .eight-hour-text {
-    /* position: absolute;
-    top: 92px;
-    z-index: 100;
-    font-size: 13px;
-    left: 35px; */
-
     position: absolute;
     top: 11.2rem;
     z-index: 100;
     font-size: 13px;
-    /* left: 35px; */
     width: 100px;
-
-    /* height: 100px; */
     line-height: 0.5;
 }
 
@@ -447,6 +428,10 @@ a:hover {
 
 .case-title {
     margin-top: 2rem;
+}
+
+.starred-cases hr {
+    margin-bottom: 0;
 }
 
 /* ----------------------------------
