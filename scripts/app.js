@@ -341,7 +341,7 @@
 					"ixBug": caseId
 				};
 
-				utilities.loader.start('loading...');
+				utilities.loader.start();
 				utilities.api(startWork).then(this.handleStartWorkRequest);
 
 				this.currentCaseId = caseId;
@@ -359,7 +359,7 @@
 					"token": utilities.authenticator.getToken()
 				};
 
-				utilities.loader.start('loading...');
+				utilities.loader.start();
 				utilities.api(stopWork).then(this.handleResponse);
 			},
 			handleResponse: function () {
@@ -376,7 +376,7 @@
 				};
 
 				utilities.loader.start();
-				utilities.api(deleteInterval).then(this.handleDeleteInterval);
+				utilities.api(deleteInterval).then(this.handleDeleteInterval, this.handleErrorRequest);
 			},
 			handleDeleteInterval: function (response) {
 				utilities.loader.stop();
@@ -429,11 +429,59 @@
 				}
 
 				utilities.loader.start();
-				utilities.api(editInterval).then(this.handleEditIntervalRequest);
+				utilities.api(editInterval).then(this.handleEditIntervalRequest, this.handleErrorRequest);
 			},
 			handleEditIntervalRequest: function (response) {
 				utilities.loader.stop();
-				console.log('Time Edited ;)');
+				this.getTimeSheet(this.dayToShow);
+			},
+			addInterval: function (ixBug, dtStart, dtEnd) {
+				if(dtStart._isAMomentObject) {
+					dtStart = dtStart.toISOString();	
+				}
+
+				if(dtEnd._isAMomentObject) {
+					dtEnd = dtEnd.toISOString();	
+				}
+
+				var addInterval = {
+					"cmd": "newInterval",
+					"token": utilities.authenticator.getToken(),
+					"ixBug": ixBug,
+					"dtStart": dtStart,
+					"dtEnd": dtEnd
+				}
+
+				utilities.loader.start();
+				utilities.api(addInterval).then(this.handleAddIntervalRequest, this.handleErrorRequest);
+			},
+			handleAddIntervalRequest: function(response) {
+				utilities.loader.stop();
+				this.getTimeSheet(this.dayToShow);
+			},
+			// Clear time works by adding time to a case, then deleting the interval we just created.
+			clearTime: function(dtStart, dtEnd) {
+				if(dtStart._isAMomentObject) {
+					dtStart = dtStart.toISOString();	
+				}
+
+				if(dtEnd._isAMomentObject) {
+					dtEnd = dtEnd.toISOString();	
+				}
+
+				var addInterval = {
+					"cmd": "newInterval",
+					"token": utilities.authenticator.getToken(),
+					"ixBug": constants.deleteCaseId,
+					"dtStart": dtStart,
+					"dtEnd": dtEnd
+				}
+;
+				utilities.loader.start();
+				utilities.api(addInterval).then(this.handleClearTimeRequest);
+			},
+			handleClearTimeRequest: function(response) {
+				this.deleteInterval(response.data.interval.ixInterval)
 			},
 			getTimeSheet: function (date) {
 				// Set DayToShow
@@ -587,6 +635,16 @@
 				var targetDate = this.$_currentMetricDate.clone().add(1, "w");
 				this.getMetrics(targetDate);
 			},
+			handleErrorRequest: function (response) {				
+				var errors = response.responseJSON.errors;
+
+				for(var i = 0; i < errors.length; i++) {
+					utilities.notifier.addMessage(errors[i].message);
+				}
+				
+				utilities.loader.stop();
+			},
+			
 
 			/////////   UI Methods   /////////
 			showList: function () {

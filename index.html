@@ -284,6 +284,25 @@
 									</tr>
 								</tbody>
 							</table>
+							<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
+							<script type="text/x-template" id="add-interval-template">
+								<div class="add-form">
+									<i class="fa fa-plus-circle gray" v-on:click="showAddForm" v-show="!showingAddForm && !showingRemoveForm"></i>
+									<i class="fa fa-minus-circle gray" v-on:click="showRemoveForm" v-show="!showingAddForm && !showingRemoveForm"></i>
+									<i class="fa fa-times-circle dark-red" v-on:click="hideForms" v-show="showingAddForm || showingRemoveForm"></i>
+									<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
+										<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
+										<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+										<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+										<button class="button" type="submit">Add Time</button>
+									</form>
+									<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
+											<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+											<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+											<button class="button dark-red" type="submit">Clear Time</button>
+									</form>
+								</div>
+							</script>
 						</div>
 						<!-- END TIMESHEET VIEW -->
 						
@@ -313,9 +332,14 @@
 			</div>
 		</div>
 	</div>
-	<div class="loader-background" id="loader-background">
-
+	<div class="loader-background" id="loader-background"></div>
+	<div class="notifier red">
+		<span id="notifier"></span>
+		<!-- <i class="fa fa-times-circle" onclick="utilities.notifier.clearMessage()"></i> -->
 	</div>
+
+
+	
 
 	<!-- Javascript
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -341,9 +365,11 @@
 	<script type="text/javascript" src="scripts/utilities/charts/bar.js"></script>
 	<script type="text/javascript" src="scripts/utilities/loader.js"></script>
 	<script type="text/javascript" src="scripts/utilities/storage.js"></script>
+	<script type="text/javascript" src="scripts/utilities/notifier.js"></script>
 
 	<!-- Vue Stuff -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
+	<script type="text/javascript" src="scripts/add-interval.component.js"></script>
 	<script type="text/javascript" src="scripts/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
