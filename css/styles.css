@@ -15,7 +15,7 @@
 }
 
 .left-text {
-    text-align: right;
+    text-align: left;
 }
 
 .buffer {
@@ -75,9 +75,6 @@
     font-size: small;
 }
 
-.green-bg {
-    background-color: #f4f5f4;
-}
 /* todo - rename */
 .no-padding td {
     padding: 0;
@@ -124,6 +121,11 @@ input.hidden-input {
     padding: 0;
 }
 
+input.invalid {
+    /* Fix this */
+   border-bottom: 2px dotted #ff4426 !important;
+}
+
 .no-input {
     display: none;
 }
@@ -135,6 +137,16 @@ input.hidden-input {
 
 .hover-fade:hover {
     opacity: 1;
+}
+
+/*prevents selection on double click*/
+.no-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none;
+	user-select: none; 
 }
 
 /* ----------------------------------
@@ -204,6 +216,21 @@ a:hover {
     width: 100%;
     /* margin: 15px auto; */
 }
+
+.control-bar .pagination-controls button {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin: 0;
+}
+
+.control-bar .pagination-controls .active {
+    color: #333333;
+}
+
+.control-bar .pagination-controls button:focus {
+    border: 1px solid transparent;
+}
+
 
 #loader {
 
@@ -298,6 +325,15 @@ a:hover {
 }
 
 
+.notifier {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+    z-index: 100;
+}
+
 
 
 /* ----------------------------------
@@ -344,13 +380,54 @@ a:hover {
 
 .time-wrapper tr td.controls i {
     opacity: 0;
-    transition: opacity 0.15s;
 }
 
 .time-wrapper tr:hover td.controls i {
     opacity: 1;
 }
 
+.time-wrapper tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.time-wrapper tbody tr.green-bg {
+    background-color: #f4f5f4;
+}
+
+/* Add Form */
+.add-form {
+    text-align: center;
+}
+
+.add-form i {
+    font-size: x-large;
+    vertical-align: middle;
+}
+
+.add-form form {
+    display: inline-block;
+    margin-left: 2.5rem;
+    margin-bottom: 0;
+}
+
+.add-form input {
+    margin-left: 2.5rem;
+    text-align: center;
+}
+
+.add-form input.case {
+    width: 5rem;
+    
+}
+
+.add-form input.time {
+    width: 7rem;
+}
+
+.add-form button {
+    margin-bottom: 0;
+    margin-left: 2.5rem;
+}
 
 
 /* ----------------------------------
@@ -393,21 +470,29 @@ a:hover {
 .report-controls > * {
     margin-left: 10px;
 }
+ 
+
+/* ----------------------------------
+               Metrics
+-------------------------------------*/
+.metrics-wrapper h5 {
+	margin-bottom: 0px;
+}
+
+
+.metrics-wrapper button {
+	margin: 0px 20px 0px 0px;
+}
+
+.link-wrapper a{
+	margin: 10px;
+}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+/* ----------------------------------
+               Mobile
+-------------------------------------*/
 
 @media screen and (max-width: 550px) {
     .control-bar {
