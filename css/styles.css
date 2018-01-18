@@ -216,6 +216,10 @@ a:hover {
 	padding: 12px 0px 0px 9px;
 }
 
+.link-wrapper a{
+	margin: 10px;
+}
+
 #loader {
 
 

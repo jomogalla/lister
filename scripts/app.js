@@ -63,7 +63,8 @@
 		mounted: function () {
 			// Private properties
 			this.$_bar = new utilities.bar('#metrics-chart', constants.weeklyBarChartData, constants.weeklyBarChartOptions);
-
+			this.$_currentMetricDate = moment();
+			
 			// If we have a subdomain - populate plz.
 			this.subdomain = utilities.authenticator.getSubDomain();
 
@@ -502,10 +503,13 @@
 				this.currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
 				utilities.loader.stop();
 			},
-			getMetrics: function () {
 
-				var startTime = moment().startOf('week');
-				var endTime = moment().endOf('week');
+			//METRICS
+			getMetrics: function (targetDate) {
+				this.$_currentMetricDate = targetDate.clone();
+
+				var startTime = targetDate.clone().startOf('week');
+				var endTime = targetDate.clone().endOf('week');
 				var dFormat = "dddd MM/DD/YY";
 
 				this.metricsTitle = "Hours for " + startTime.format(dFormat) + " to " + endTime.format(dFormat);
@@ -569,6 +573,16 @@
 
 			},
 
+			goToPreviousWeekMetrics: function() {
+				var targetDate = this.$_currentMetricDate.clone().subtract(1, "w");
+				this.getMetrics(targetDate);
+			},
+
+			goToNextWeekMetrics: function() {
+				var targetDate = this.$_currentMetricDate.clone().add(1, "w");
+				this.getMetrics(targetDate);
+			},
+
 			/////////   UI Methods   /////////
 			showList: function () {
 				this.listView = true;
@@ -620,7 +634,7 @@
 				this.metricsView = true;
 
 				//initialize metrics data
-				this.getMetrics();
+				this.getMetrics(moment());
 			},
 
 

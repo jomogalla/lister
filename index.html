@@ -211,8 +211,13 @@
 
 						<!-- METRICS VIEW -->
 						<div class="metrics-wrapper" v-show="metricsView">
-							<h3>How Much You Been Twerkin?</h3>
+							<h3>How Much You Been Werkin?</h3>
 							<h4 v-text="metricsTitle"></h4>
+							<div class="link-wrapper">
+								<a v-on:click="goToPreviousWeekMetrics()">Previous Week</a>
+								<a v-on:click="goToNextWeekMetrics()">Next Week</a>
+							</div>
+
 							<div class="metrics-chart-wrapper">
 								<canvas id="metrics-chart"></canvas>
 							</div>
