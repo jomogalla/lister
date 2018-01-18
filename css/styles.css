@@ -134,6 +134,16 @@ input.hidden-input {
     opacity: 1;
 }
 
+/*prevents selection on double click*/
+.no-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none;
+	user-select: none; 
+}
+
 /* ----------------------------------
                General  
 -------------------------------------*/
@@ -201,6 +211,7 @@ a:hover {
     width: 100%;
     /* margin: 15px auto; */
 }
+
 
 #loader {
 
@@ -403,7 +414,26 @@ a:hover {
 
 
 
+/* ----------------------------------
+               Metrics
+-------------------------------------*/
+.view-metrics-wrapper {
+	padding: 12px 0px 0px 9px;
+}
 
+
+.metrics-wrapper h5 {
+	margin-bottom: 0px;
+}
+
+
+.metrics-wrapper button {
+	margin: 0px 20px 0px 0px;
+}
+
+.link-wrapper a{
+	margin: 10px;
+}
 
 
 

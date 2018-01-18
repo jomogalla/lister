@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 	<!-- Basic Page Needs
@@ -56,6 +56,10 @@
 			<div class="clock-wrapper">
 				<canvas id="chartclock"></canvas>
 			</div>
+			<div class="view-metrics-wrapper no-select">
+				<a v-on:click="toggleMetrics()">{{(metricsView) ? "Close Metrics" : "View Metrics"}}</a>
+			</div>
+
 		</div>
 		<div class="info-bar" v-show="hasToken">
 			<!-- <span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span> -->
@@ -114,7 +118,7 @@
 				<!-- EVERYTHING -->
 				<div class="everything-else" v-show="hasToken">
 					<!-- TABS -->
-					<div class="tabs row" v-show="!payPeriodView && !searchView">
+					<div class="tabs row" v-show="!payPeriodView && !searchView & !metricsView">
 						<!-- Timesheet Header-->
 						<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
 							<input-date :datestuff="dayToShow" v-on:datepicked="showDay" /></input-date>
@@ -205,6 +209,22 @@
 						</div>
 						<!-- END SECRET PAY PERIOD VIEW-->
 
+						<!-- METRICS VIEW -->
+						<div class="metrics-wrapper" v-show="metricsView">
+							<h5 v-text="metricsTitle"></h5>
+							<span>{{metricsTotalHours}} Hours Total</span>
+							<div class="pagination-controls no-select">
+								<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
+								<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
+							</div>
+
+							<div class="metrics-chart-wrapper">
+								<canvas id="metrics-chart"></canvas>
+							</div>
+						</div>
+						<!-- END METRICS VIEW-->
+						
+
 						<!-- TIMESHEET VIEW -->
 						<div class="time-wrapper eight columns" v-show="listView || caseView">
 							<div class="row pagination-controls">
@@ -266,6 +286,8 @@
 							</table>
 						</div>
 						<!-- END TIMESHEET VIEW -->
+						
+						
 
 						<!-- CASE VIEW -->
 						<div class="case-wrapper four columns" v-show="listView || caseView">
@@ -300,8 +322,10 @@
 	<!-- Third Party -->
 	<script type="text/javascript" src="scripts/thirdparty/jquery.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/moment-range.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/pikaday.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/lodash.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
 
 	<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
@@ -313,7 +337,8 @@
 	<script type="text/javascript" src="scripts/utilities/api.js"></script>
 	<script type="text/javascript" src="scripts/utilities/authenticator.js"></script>
 	<script type="text/javascript" src="scripts/utilities/convertArrayOfObjectsToCSV.js"></script>
-	<script type="text/javascript" src="scripts/utilities/donut.js"></script>
+	<script type="text/javascript" src="scripts/utilities/charts/donut.js"></script>
+	<script type="text/javascript" src="scripts/utilities/charts/bar.js"></script>
 	<script type="text/javascript" src="scripts/utilities/loader.js"></script>
 	<script type="text/javascript" src="scripts/utilities/storage.js"></script>
 
@@ -322,5 +347,11 @@
 	<script type="text/javascript" src="scripts/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
+
+
+	<script type="text/javascript">
+		window['moment-range'].extendMoment(moment);
+	</script>
+
 </body>
 </html>
