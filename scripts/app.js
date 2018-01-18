@@ -332,7 +332,7 @@
 					"ixBug": caseId
 				};
 
-				utilities.loader.start('loading...');
+				utilities.loader.start();
 				utilities.api(startWork).then(this.handleStartWorkRequest);
 
 				this.currentCaseId = caseId;
@@ -350,7 +350,7 @@
 					"token": utilities.authenticator.getToken()
 				};
 
-				utilities.loader.start('loading...');
+				utilities.loader.start();
 				utilities.api(stopWork).then(this.handleResponse);
 			},
 			handleResponse: function() {
@@ -367,7 +367,7 @@
 				};
 
 				utilities.loader.start();
-				utilities.api(deleteInterval).then(this.handleDeleteInterval);
+				utilities.api(deleteInterval).then(this.handleDeleteInterval, this.handleErrorRequest);
 			},
 			handleDeleteInterval: function (response) {
 				utilities.loader.stop();
@@ -420,7 +420,7 @@
 				}
 
 				utilities.loader.start();
-				utilities.api(editInterval).then(this.handleEditIntervalRequest);
+				utilities.api(editInterval).then(this.handleEditIntervalRequest, this.handleErrorRequest);
 			},
 			handleEditIntervalRequest: function(response) {
 				utilities.loader.stop();
@@ -444,7 +444,7 @@
 				}
 
 				utilities.loader.start();
-				utilities.api(addInterval).then(this.handleAddIntervalRequest);
+				utilities.api(addInterval).then(this.handleAddIntervalRequest, this.handleErrorRequest);
 			},
 			handleAddIntervalRequest: function(response) {
 				utilities.loader.stop();
@@ -541,6 +541,15 @@
 			},
 			handlePersonRequest: function (response) {
 				this.currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
+				utilities.loader.stop();
+			},
+			handleErrorRequest: function (response) {				
+				var errors = response.responseJSON.errors;
+
+				for(var i = 0; i < errors.length; i++) {
+					utilities.notifier.addMessage(errors[i].message);
+				}
+				
 				utilities.loader.stop();
 			},
 			
