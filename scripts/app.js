@@ -44,6 +44,7 @@
 
 			// Metrics
 			metricsTitle: "",
+			metricsTotalHours: 0,
 
 			// Login
 			username: '',
@@ -510,7 +511,7 @@
 
 				var startTime = targetDate.clone().startOf('week');
 				var endTime = targetDate.clone().endOf('week');
-				var dFormat = "dddd MM/DD/YY";
+				var dFormat = "M.DD";
 
 				this.metricsTitle = "Hours for " + startTime.format(dFormat) + " to " + endTime.format(dFormat);
 
@@ -567,7 +568,11 @@
 					var hoursPerDayArray = _.map(timeWorkedPerDay, function (val) {
 						return (val.minutesWorked / 60).toFixed(2);
 					});
-					
+
+					vm.metricsTotalHours = _.sumBy(hoursPerDayArray, function(val) {
+						return parseFloat(val);
+					}).toFixed(2);
+
 					vm.$_bar.updateData(hoursPerDayArray);
 				});
 

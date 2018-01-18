@@ -212,6 +212,7 @@
 						<!-- METRICS VIEW -->
 						<div class="metrics-wrapper" v-show="metricsView">
 							<h5 v-text="metricsTitle"></h5>
+							<span>{{metricsTotalHours}} Hours Total</span>
 							<div class="pagination-controls no-select">
 								<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
 								<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
