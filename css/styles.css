@@ -212,13 +212,6 @@ a:hover {
     /* margin: 15px auto; */
 }
 
-.view-metrics-wrapper {
-	padding: 12px 0px 0px 9px;
-}
-
-.link-wrapper a{
-	margin: 10px;
-}
 
 #loader {
 
@@ -421,7 +414,26 @@ a:hover {
 
 
 
+/* ----------------------------------
+               Metrics
+-------------------------------------*/
+.view-metrics-wrapper {
+	padding: 12px 0px 0px 9px;
+}
 
+
+.metrics-wrapper h5 {
+	margin-bottom: 0px;
+}
+
+
+.metrics-wrapper button {
+	margin: 0px 20px 0px 0px;
+}
+
+.link-wrapper a{
+	margin: 10px;
+}
 
 
 
