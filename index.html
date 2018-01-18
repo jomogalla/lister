@@ -56,16 +56,17 @@
 			<div class="clock-wrapper">
 				<canvas id="chartclock"></canvas>
 			</div>
-			<div class="view-metrics-wrapper no-select">
-				<a v-on:click="toggleMetrics()">{{(metricsView) ? "Close Metrics" : "View Metrics"}}</a>
+			<div class="pagination-controls no-select left-text">
+				<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
+				<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
+				<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
 			</div>
 
 		</div>
 		<div class="info-bar" v-show="hasToken">
 			<!-- <span href="" :title="'logged in as ' + currentPerson.sFullName"><i class="fa fa-id-card gray" aria-hidden="true"></i></span> -->
 			<a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a>
-			<a v-on:click.prevent="showPayPeriod" title="Hours this pay period"><i class="fa fa-clock-o hover-icon"></i></a>
-			<a v-on:click.prevent="showSearch" title="Search for cases"><i class="fa fa-search gray hover-icon"></i></a>
+			<!-- <a v-on:click.prevent="showSearch" title="Search for cases"><i class="fa fa-search gray hover-icon"></i></a> -->
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 		</div>
 		<!-- END CONTROLS -->
@@ -173,10 +174,6 @@
 
 						<!-- SECRET PAY PERIOD VIEW -->
 						<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
-							<div class="hidden-controls u-pull-right gray">
-								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
-								<a v-on:click.prevent="showList">close</a>							
-							</div>
 							<div class="u-cf"></div>
 							<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
 								<span class="u-pull-right">{{ payPeriodTotal | humanize }} </span>
@@ -206,6 +203,10 @@
 									</tr>
 								</tbody>
 							</table>
+							<div class="hidden-controls gray">
+								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
+								<!-- <a v-on:click.prevent="showList">close</a>							 -->
+							</div>
 						</div>
 						<!-- END SECRET PAY PERIOD VIEW-->
 
