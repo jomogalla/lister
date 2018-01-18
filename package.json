@@ -1,0 +1,11 @@
+{
+	"version": "1.0.0",
+	"name": "ASP.NET",
+	"private": true,
+	"devDependencies": {},
+	"dependencies": {
+		"lodash": "^4.17.4",
+		"moment": "^2.20.1",
+		"moment-range": "^3.1.0"
+	}
+}

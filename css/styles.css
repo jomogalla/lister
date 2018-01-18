@@ -15,7 +15,7 @@
 }
 
 .left-text {
-    text-align: right;
+    text-align: left;
 }
 
 .buffer {
@@ -71,19 +71,27 @@
     color: #808080;
 }
 
+.light-gray {
+    color: #e2e2e2;
+}
+
+.dark-gray {
+    color: #444444;
+}
+
 .small {
     font-size: small;
 }
 
-.green-bg {
-    background-color: #f4f5f4;
+.invisible {
+    visibility: hidden;
 }
+
 /* todo - rename */
 .no-padding td {
     padding: 0;
 
     padding: 5px 1px;
-    /*white-space: nowrap;*/
 }
 
 [v-cloak] {
@@ -124,6 +132,16 @@ input.hidden-input {
     padding: 0;
 }
 
+/* Need to fix this important stuff :/ */
+.add-form input {
+    border-bottom: 2px dotted #dedede !important;
+}
+
+input.invalid {
+    /* Fix this */
+   border-bottom: 2px dotted #ff4426 !important;
+}
+
 .no-input {
     display: none;
 }
@@ -135,6 +153,20 @@ input.hidden-input {
 
 .hover-fade:hover {
     opacity: 1;
+}
+
+i.block {
+    display: block;
+}
+
+/*prevents selection on double click*/
+.no-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none;
+	user-select: none; 
 }
 
 /* ----------------------------------
@@ -159,7 +191,6 @@ a:hover {
 }
 
 .main-content {
-    /*padding: 15px;*/
     width: calc(100% - 110px);
     margin-left: 110px;
     margin-top: 1.7rem;
@@ -178,7 +209,6 @@ a:hover {
     border-bottom-color: #aaa;
 }
 
-/* .tabs .active a{ */
 .tabs a{
     color: inherit;
     color: #808080;
@@ -196,24 +226,36 @@ a:hover {
     z-index: 100;    
 }
 
+.nav {
+    margin-top: 1rem;
+}
+
 .chart-wrapper {
     width: 100%;
 }
 
 .clock-wrapper {
     width: 100%;
-    /* margin: 15px auto; */
 }
 
+.control-bar .pagination-controls button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0;
+}
+
+.control-bar .pagination-controls .active {
+    color: #333333;
+}
+
+.control-bar .pagination-controls button:focus {
+    border: 1px solid transparent;
+}
+
+
 #loader {
-
-
     color:#ccc;
     opacity: 0;
-
-    /* position: fixed;
-    bottom: 30px;
-    left: 8px; */
 }
 
 #loader.show-loader {
@@ -241,7 +283,6 @@ a:hover {
 
 .case-control i {
     margin-left: 5px;
-    /*color: #BFD0B0;*/
 }
 
 .case-control {
@@ -262,14 +303,7 @@ a:hover {
 }
 
 .hidden-controls {
-    /* text-align: right; */
     font-size: 2.5rem;
-}
-
-.case-control.active {
-    /*background-color: #BFD0B0;*/
-    /*color: #e0ffc4;*/
-    /*border-color: transparent;*/
 }
 
 .info-bar {
@@ -280,23 +314,23 @@ a:hover {
 }
 
 .eight-hour-text {
-    /* position: absolute;
-    top: 92px;
-    z-index: 100;
-    font-size: 13px;
-    left: 35px; */
-
     position: absolute;
     top: 11.2rem;
     z-index: 100;
     font-size: 13px;
-    /* left: 35px; */
     width: 100px;
-
-    /* height: 100px; */
     line-height: 0.5;
 }
 
+
+.notifier {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+    z-index: 100;
+}
 
 
 
@@ -344,13 +378,79 @@ a:hover {
 
 .time-wrapper tr td.controls i {
     opacity: 0;
-    transition: opacity 0.15s;
 }
 
 .time-wrapper tr:hover td.controls i {
     opacity: 1;
 }
 
+.time-wrapper tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.time-wrapper tbody tr.green-bg {
+    background-color: #f4f5f4;
+}
+
+/* Add Form */
+.add-form {
+    /* text-align: center; */
+    position: fixed;
+    bottom: 0;
+    display: inline-block;
+    background-color: #f6f6f6;
+    padding: 1rem;
+    border-radius: 1rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: 6rem;
+    margin-bottom: -5rem;
+}
+
+.add-form i {
+    font-size: x-large;
+    vertical-align: middle;
+}
+
+.add-form i:not(.close) {
+    display: block;
+}
+
+.add-form .close:first-of-type() {
+    display: block;
+}
+
+.add-form form {
+    display: inline-block;
+    margin-left: 2.5rem;
+    margin-bottom: 0;
+    padding: 0.6rem;
+}
+
+.add-form input {
+    margin-left: 2.5rem;
+    text-align: center;
+    font-size: 2rem;
+    border-bottom: 2px dotted #dedede;
+}
+
+.add-form input.case {
+    width: 8rem;
+    
+}
+
+.add-form input.time {
+    width: 8rem;
+}
+.add-form input.time:last-of-type {
+    margin-left: 0;
+}
+
+.add-form button {
+    margin-bottom: 0;
+    margin-left: 2.5rem;
+    background-color: white;
+}
 
 
 /* ----------------------------------
@@ -370,6 +470,10 @@ a:hover {
 
 .case-title {
     margin-top: 2rem;
+}
+
+.starred-cases hr {
+    margin-bottom: 0;
 }
 
 /* ----------------------------------
@@ -393,21 +497,29 @@ a:hover {
 .report-controls > * {
     margin-left: 10px;
 }
+ 
+
+/* ----------------------------------
+               Metrics
+-------------------------------------*/
+.metrics-wrapper h5 {
+	margin-bottom: 0px;
+}
+
+
+.metrics-wrapper button {
+	margin: 0px 20px 0px 0px;
+}
+
+.link-wrapper a{
+	margin: 10px;
+}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+/* ----------------------------------
+               Mobile
+-------------------------------------*/
 
 @media screen and (max-width: 550px) {
     .control-bar {

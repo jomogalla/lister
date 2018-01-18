@@ -1,7 +1,7 @@
 // First Draft input-date. needs updates & to be configurable
 
 Vue.component('input-date', {
-	template: '<input type=text class="date-picker hidden-input" v-model="dayPicked" id="date-picker">',
+	template: '<input type="text" class="date-picker hidden-input" v-model="dayPicked" id="date-picker">',
 	props: [
 		'datestuff'
 	],
