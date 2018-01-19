@@ -301,8 +301,8 @@
 							<script type="text/x-template" id="add-interval-template">
 								<div class="add-form">
 									<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
-											<i class="fa fa-plus-circle gray block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
-											<i class="fa fa-minus-circle gray" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+											<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
+											<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
 									</div>
 									<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
 										<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
@@ -418,6 +418,5 @@
 	<script type="text/javascript">
 		window['moment-range'].extendMoment(moment);
 	</script>
-
 </body>
 </html>
