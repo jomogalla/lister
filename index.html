@@ -370,7 +370,23 @@
 	<div class="notifier red">
 		<span id="notifier"></span>
 	</div>
+	<!-- TEMPLATES -->
 
+	<!-- Case Links -->
+	<script type="text/x-template" id="case-links-template">
+		<span class="case-links">
+			<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
+			<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+			<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+			<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
+			&nbsp;
+			<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
+		</span>
+	</script>
+
+
+
+	<!-- END TEMPLATES -->
 
 	
 
@@ -409,9 +425,9 @@
 
 	<!-- Vue Stuff -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
-	<script type="text/javascript" src="scripts/add-interval.component.js"></script>
-	<script type="text/javascript" src="scripts/input-time.component.js"></script>
-	<script type="text/javascript" src="scripts/input-date.component.js"></script>
+	<script type="text/javascript" src="scripts/components/add-interval.component.js"></script>
+	<script type="text/javascript" src="scripts/components/input-time.component.js"></script>
+	<script type="text/javascript" src="scripts/components/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
 
 
