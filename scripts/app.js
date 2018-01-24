@@ -1,4 +1,4 @@
-(function () {
+ (function () {
 	'use strict';
 
 
@@ -39,10 +39,13 @@
 
 			// Pay Period
 			workdays: 0,
+			workdaysSoFar: 0,
 			payPeriodIntervals: {},
 			payPeriodTotal: moment.duration(0, 'minutes'),
+			workedDuration: moment.duration(0, 'days'),
 			payPeriodStartDate: null,
 			payPeriodEndDate: null,
+			downloadReady: false,
 
 			// Metrics
 			metricsTitle: "",
@@ -127,11 +130,12 @@
 
 				// filename = args.filename || 'export.csv';
 				var fullname = this.currentPerson.sFullName.replace(' ', '');
-				var startDate = this.payPeriodStartDate.format('MMMMD');
+				var startDate = this.payPeriodStartDate.format('MMMM_D');
 				var endDate = this.payPeriodEndDate.format('D');
+				var year = this.payPeriodEndDate.format('YYYY');
 
 
-				filename = fullname + startDate + '-' + endDate + '.csv';
+				filename = fullname + '_' + startDate + '-' + endDate + '_' + year + '.csv';
 
 				if (!csv.match(/^data:text\/csv/i)) {
 					csv = 'data:text/csv;charset=utf-8,' + csv;
@@ -159,11 +163,13 @@
 
 				// TODO - Get the project for each case???
 				for (var i = 0; i < timeIntervals.length; i++) {
+					if(!timeIntervals[i].dtEnd) { break; 	}
+
 					formattedIntervals.push({
-						'Start': moment(timeIntervals[i].dtStart).format('M/D/YYYY H:mm'),
-						'End': moment(timeIntervals[i].dtEnd).format('M/D/YYYY H:mm'),
-						'Duration': this.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes(),
-						'Project': '',
+						'Start': moment(timeIntervals[i].dtStart).format('M/D/YYYY h:mm A'),
+						'End': moment(timeIntervals[i].dtEnd).format('M/D/YYYY h:mm A'),
+						'Duration (Min)': Math.round(this.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes() * 100) / 100,
+						'Project': timeIntervals[i].sProject,
 						'Case': timeIntervals[i].ixBug,
 						'Title': timeIntervals[i].sTitle,
 						'User': this.currentPerson.sFullName
@@ -322,7 +328,7 @@
 					"cmd": "search",
 					"token": utilities.authenticator.getToken(),
 					"q": this.searchQuery,
-					"max": 5,
+					"max": 50,
 					"cols": ["sTitle", "sStatus"]
 				};
 
@@ -518,6 +524,10 @@
 				this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 			},
 			getPayPeriod: function (dayInPayPeriod) {
+				this.downloadReady = false;
+
+				// if the date <= 15, startTime = 1st & endTime = 15th
+				// otherwise, startTime = 16th & endTime = last day of month
 				if (dayInPayPeriod.date() <= 15) {
 					var startTime = new moment(dayInPayPeriod).startOf('month');
 					var endTime = new moment(dayInPayPeriod).date(15).endOf('day');
@@ -527,6 +537,16 @@
 				}
 
 				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
+
+				// TODO - Update variable name workdaysSoFar
+				// If current time is between startTime & endTime, calculate workdays from startTime to now.
+				if(moment().isBetween(startTime, endTime)) {
+					this.workdaysSoFar = this.getWorkdaysForPeriod(startTime, moment());
+				} else {
+					this.workdaysSoFar = this.getWorkdaysForPeriod(startTime, endTime);
+				}
+
+				this.workedDuration = moment.duration((this.workdaysSoFar * 8), 'hours');
 
 				this.payPeriodStartDate = startTime;
 				this.payPeriodEndDate = endTime;
@@ -545,7 +565,49 @@
 				this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
 				this.payPeriodIntervals = this.addDurations(this.payPeriodIntervals);
 				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
+
+				this.addPayPeriodProjects(this.payPeriodIntervals);
 				utilities.loader.stop();
+			},
+			addPayPeriodProjects(intervals) {
+				if(!intervals.length) { return; }
+				var caseList = [];
+
+				for(var i = 0; i < intervals.length; i++) {
+					var preExisting = caseList.includes(intervals[i].ixBug);
+
+					if(!preExisting) {
+						caseList.push(intervals[i].ixBug);
+					}
+				}
+				
+				var joinedCaseList = caseList.join(',');
+
+				var search = {
+					"cmd": "search",
+					"token": utilities.authenticator.getToken(),
+					"q": joinedCaseList,
+					"max": 200,
+					"cols": ["sProject"]
+				};
+
+				utilities.loader.start();
+				utilities.api(search).then(this.handleAddPayPeriodProjects);
+			},
+			handleAddPayPeriodProjects: function (response) {
+				utilities.loader.stop();
+				var self = this;
+				var caseToProjectMap = response.data.cases;
+
+				for(var i = 0; i < this.payPeriodIntervals.length; i++) {
+					var caseData = caseToProjectMap.find(function(element) {
+						return element.ixBug === self.payPeriodIntervals[i].ixBug;
+					});
+
+					this.payPeriodIntervals[i].sProject = caseData.sProject;
+				}
+
+				this.downloadReady = true;
 			},
 			getPerson: function () {
 				var viewPerson = {

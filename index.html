@@ -67,6 +67,7 @@
 			</div>
 			<div class="nav pagination-controls no-select left-text">
 				<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
+				<button class="button u-full-width left-text" v-on:click.prevent="showSearch" v-bind:class="{ 'active': searchView }">Search</button>
 				<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
 				<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
 			</div>
@@ -82,81 +83,59 @@
 			<div class="container">
 				<!-- LOGIN VIEW -->
 				<div class="login buffer" v-show="!hasToken">
-					<div class="row">
-						<div class="one column">&nbsp;</div>
-						<div class="ten columns">
-							<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain">
+					<form v-on:submit.prevent="addToken">
+						<div class="row">
+							<div class="one column">&nbsp;</div>
+							<div class="ten columns">
+								<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain" required>
+							</div>
+							<div class="one column">&nbsp;</div>
 						</div>
-						<div class="one column">&nbsp;</div>
-						</div>
-					<div class="row">
-						<div class="one column">&nbsp;</div>
-						<form class="four columns non-functioning" v-on:submit.prevent="logon">
-							<div class="">
-								<input disabled v-model="username" class="button u-full-width" type="text" placeholder="username">
+						<div class="row">
+							<div class="one column">&nbsp;</div>
+							<div class="four columns non-functioning">
+								<div class="">
+									<input v-model="username" class="button u-full-width" type="text" placeholder="username" disabled>
+								</div>
+								<div class="">
+									<input v-model="password" class="button u-full-width" type="password" placeholder="password" disabled>
+								</div>
+								<div class="">
+									<button class="button-primary u-full-width" disabled>Logon</button>
+								</div>
 							</div>
-							<div class="">
-								<input disabled v-model="password" class="button u-full-width" type="password" placeholder="password">
-							</div>
-							<div class="">
-								<button disabled class="button-primary u-full-width" type="submit">Logon</button>
-							</div>
-						</form>
-						<div class="two columns">&nbsp;</div>
+							<div class="two columns">&nbsp;</div>
 
-						<form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
-							<div class="">
-								<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
+							<div class="four columns" v-bind:class="{ 'half-hidden': hasToken }">
+								<div class="">
+									<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
+								</div>
+								<div class="">
+									<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
+										<span v-show="hasToken">token accepted</span>
+										<span v-show="!hasToken">insert token</span>
+									</button>
+								</div>
+								<div class="centered-text">
+									<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
+								</div>
 							</div>
-							<div class="">
-								<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
-									<span v-show="hasToken">token accepted</span>
-									<span v-show="!hasToken">insert token</span>
-								</button>
-							</div>
-							<div class="centered-text">
-								<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
-							</div>
-						</form>
-						<div class="one column">&nbsp;</div>
-					</div>
+							<div class="one column">&nbsp;</div>
+						</div>
+					</form>
 				</div>
 				<!-- END LOGIN VIEW -->
 
 				<!-- EVERYTHING -->
 				<div class="everything-else" v-show="hasToken">
-					<!-- TABS -->
-					<!-- Todo Possibly move the tabs into timesheet view? -->
-					<div class="tabs row" v-show="!payPeriodView && !searchView & !metricsView">
-						<!-- Timesheet Header-->
-						<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
-							<input-date :datestuff="dayToShow" v-on:datepicked="showDay" /></input-date>
-						</h5>
-						<!-- Case Header -->
-						<h5 class="four columns" v-bind:class="{ 'active': caseView }">
-							<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
-							<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
-									v-model="currentViewedCaseId" 
-									v-on:keyup.enter="updateCaseById(currentViewedCaseId)" 
-									v-on:blur="resetCurrentCaseId()" 
-									v-on:click="hideStarredCases"
-									v-bind:class="{ 'light-gray': starredCasesView }">
-									
-							<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
-						</h5>
-					</div>
-					<!-- END TABS -->
 					<div class="row">					
 						<!-- SEARCH VIEW -->
 						<div class="search-wrapper twelve columns" v-show="searchView">
-							<div class="hidden-controls gray right-text">
-								<a v-on:click.prevent="showList">close</a>							
-							</div>
-							<form class="row buffer" v-on:submit.prevent="search">
-								<div class="six columns">
-									<input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
-								</div>
-								<div class="six columns">
+							<form class="row" v-on:submit.prevent="search">
+								<h5 class="nine columns border-bottom">
+									<input v-model="searchQuery" name="searchQuery" class="u-full-width hidden-input" type="text" placeholder="query">
+								</h5>
+								<div class="three columns">
 									<button class="button-primary u-full-width" type="submit">
 										search
 									</button>
@@ -184,14 +163,21 @@
 									</tr>
 								</tbody>
 							</table>
+							<h5 class="italic gray centered-text" v-show="searchResults.cases && searchResults.cases.length === 50">
+								<i>{{searchResults.totalHits}} results, limited to top 50</i>
+							</h5>
+							<h5 class="italic gray centered-text" v-show="searchQuery && !searchResults.count && searchResults.count === 0">
+									<i>no search results</i>
+								</h5>
 						</div>
 						<!-- END SEARCH VIEW -->
 
-						<!-- SECRET PAY PERIOD VIEW -->
+						<!-- PAY PERIOD VIEW -->
 						<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
 							<div class="u-cf"></div>
 							<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
-								<span class="u-pull-right">{{ payPeriodTotal | humanize }} </span>
+								<span class="u-pull-right gray">&nbsp;|&nbsp;{{ workedDuration.asHours() }} h </span>
+								<span class="u-pull-right">{{ payPeriodTotal | humanize }}</span>
 							</h4>
 							<span class="gray small"> {{workdays}} day pay period</span>
 							<table class="u-full-width" v-show="hasToken">
@@ -218,11 +204,15 @@
 									</tr>
 								</tbody>
 							</table>
-							<div class="hidden-controls gray">
+							<div class="gray"> 
+									<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
+							</div>
+							<div v-show="downloadReady" class="hidden-controls gray">
 								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 							</div>
+
 						</div>
-						<!-- END SECRET PAY PERIOD VIEW-->
+						<!-- END PAY PERIOD VIEW-->
 
 						<!-- METRICS VIEW -->
 						<div class="metrics-wrapper" v-show="metricsView">
@@ -240,126 +230,153 @@
 						<!-- END METRICS VIEW-->
 						
 
-						<!-- TIMESHEET VIEW -->
-						<div class="time-wrapper eight columns" v-show="listView || caseView">
-							<div class="row pagination-controls">
-								<span class="four columns">
-									<span v-show="dayToShow.day() !== 1">
-										<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-									</span>
-									<span v-show="dayToShow.day() === 1">
-											<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
-											<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-									</span>
-								</span>
-								<span class="four columns">
-									<button class="paginate button button-bar" v-on:click="showToday">Today</button>
-								</span>
-								<span class="four columns right-text">
-									<span v-show="dayToShow.day() !== 5">
-										<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-									</span>
-									<span v-show="dayToShow.day() === 5">
-										<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-										<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
-									</span>
-								</span>
-							</div>
-							<table class="u-full-width no-overflow" v-show="hasToken">
-								<thead>
-									<tr>
-										<th width="5%">Case</th>
-										<th width="10%">&nbsp;&nbsp;&nbsp;</th>
-										<th width="71%">Title</th>
-										<th width="7%">Start</th>
-										<th width="7%">End</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
-										<td>
-											<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
-										</td>
-										<td class="controls">
-											<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
-											<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
-											<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
-											&nbsp;
-											<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
-										</td>
-										<td class="overflow-popover"> {{interval.sTitle}}</td>
-										<td class="split-date">
-											<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
-										</td>
-										<td class="split-date">
-											<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-							<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
-							<script type="text/x-template" id="add-interval-template">
-								<div class="add-form">
-									<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
-											<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
-											<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
-									</div>
-									<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
-										<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
-										<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-										&#x27F6;
-										<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-										<button class="button" type="submit">Add Time</button>
-									</form>
-									<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
-											<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-											&#x27F6;
-											<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-											<button class="button dark-red" type="submit">Clear Time</button>
-									</form>
-								</div>
-							</script>
-						</div>
-						<!-- END TIMESHEET VIEW -->
 						
 						
-						<!-- CASE VIEW -->
-						<div class="case-wrapper four columns" v-show="listView || caseView">
-							<div v-show="!starredCasesView">
-								<h5 v-show="currentCase.ixBug" class="case-title">
-									{{currentCase.sTitle}}
-									<span class="u-pull-right">
-										<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
-										<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
-										<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
-											<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
-										</a>
-									</span>
+						<!-- Home  -->
+						<div v-show="listView || caseView">
+							<!-- HOME HEADER -->
+							<div class="tabs row">
+								<!-- Timesheet Header-->
+								<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
+									<input-date v-bind:datestuff="dayToShow" v-on:datepicked="showDay"/></input-date>
 								</h5>
-								<hr v-show="currentCase.ixBug">
-								<div v-for="event of currentCase.events" v-show="event.s" class="copy">
-									<span v-html="event.sHtml"></span>
-								</div>
+								<!-- Case Header -->
+								<h5 class="four columns" v-bind:class="{ 'active': caseView }">
+									<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
+									<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
+											v-model="currentViewedCaseId" 
+											v-on:keyup.enter="updateCaseById(currentViewedCaseId)" 
+											v-on:blur="resetCurrentCaseId()" 
+											v-on:click="hideStarredCases"
+											v-bind:class="{ 'light-gray': starredCasesView }"/>
+											
+									<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
+								</h5>
 							</div>
-							<!-- Starred Cases -->
-							<div class="starred-cases" v-show="starredCasesView">
-								<h5 class="case-title"> Starred Cases</h5>
-								<hr>
-								<table class="u-full-width no-overflow">
+							<!-- END HOME HEADER -->
+							
+							<!-- TIMESHEET VIEW -->
+							<div class="time-wrapper eight columns">
+								<div class="row pagination-controls">
+									<span class="four columns">
+										<span v-show="dayToShow.day() !== 1">
+											<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+										</span>
+										<span v-show="dayToShow.day() === 1">
+												<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
+												<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+										</span>
+									</span>
+									<span class="four columns">
+										<button class="paginate button button-bar" v-on:click="showToday">Today</button>
+									</span>
+									<span class="four columns right-text">
+										<span v-show="dayToShow.day() !== 5">
+											<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+										</span>
+										<span v-show="dayToShow.day() === 5">
+											<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+											<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
+										</span>
+									</span>
+								</div>
+								<table class="u-full-width no-overflow" v-show="hasToken">
+									<thead>
+										<tr>
+											<th width="5%">Case</th>
+											<th width="10%">&nbsp;&nbsp;&nbsp;</th>
+											<th width="71%">Title</th>
+											<th width="7%">Start</th>
+											<th width="7%">End</th>
+										</tr>
+									</thead>
 									<tbody>
-										<tr v-for="bug in starredCases">
+										<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
 											<td>
-												<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{bug.ixBug}}</a>
-												<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
-													<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
-												</a></td>
-											<td>{{bug.sTitle}}</td>
+												<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
+											</td>
+											<td class="controls">
+												<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+												<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+												<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
+												&nbsp;
+												<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
+											</td>
+											<td class="overflow-popover"> {{interval.sTitle}}</td>
+											<td class="split-date">
+												<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
+											</td>
+											<td class="split-date">
+												<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
+											</td>
 										</tr>
 									</tbody>
 								</table>
+								<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
+								<script type="text/x-template" id="add-interval-template">
+									<div class="add-form">
+										<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
+												<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
+												<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+										</div>
+										<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
+											<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
+											<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+											&#x27F6;
+											<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+											<button class="button" type="submit">Add Time</button>
+										</form>
+										<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
+												<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+												&#x27F6;
+												<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+												<button class="button dark-red" type="submit">Clear Time</button>
+										</form>
+									</div>
+								</script>
 							</div>
+							<!-- END TIMESHEET VIEW -->
+							
+							
+							<!-- CASE VIEW -->
+							<div class="case-wrapper four columns" v-show="listView || caseView">
+								<div v-show="!starredCasesView">
+									<h5 v-show="currentCase.ixBug" class="case-title">
+										{{currentCase.sTitle}}
+										<span class="u-pull-right">
+											<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
+											<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
+											<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
+												<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+											</a>
+										</span>
+									</h5>
+									<hr v-show="currentCase.ixBug">
+									<div v-for="event of currentCase.events" v-show="event.s" class="copy">
+										<span v-html="event.sHtml"></span>
+									</div>
+								</div>
+								<!-- Starred Cases -->
+								<div class="starred-cases" v-show="starredCasesView">
+									<h5 class="case-title"> Starred Cases</h5>
+									<hr>
+									<table class="u-full-width no-overflow">
+										<tbody>
+											<tr v-for="bug in starredCases">
+												<td>
+													<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{bug.ixBug}}</a>
+													<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
+														<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+													</a></td>
+												<td>{{bug.sTitle}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- END CASE VIEW -->
 						</div>
-						<!-- END CASE VIEW -->
+						<!-- END HOME VIEW -->
 					</div>				
 				</div>
 				<!-- END EVERYTHING CONTAINER-->
