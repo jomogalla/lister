@@ -322,7 +322,7 @@
 					"cmd": "search",
 					"token": utilities.authenticator.getToken(),
 					"q": this.searchQuery,
-					"max": 5,
+					"max": 50,
 					"cols": ["sTitle", "sStatus"]
 				};
 

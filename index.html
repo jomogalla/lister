@@ -67,6 +67,7 @@
 			</div>
 			<div class="nav pagination-controls no-select left-text">
 				<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
+				<button class="button u-full-width left-text" v-on:click.prevent="showSearch" v-bind:class="{ 'active': searchView }">Search</button>
 				<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
 				<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
 			</div>
@@ -82,44 +83,46 @@
 			<div class="container">
 				<!-- LOGIN VIEW -->
 				<div class="login buffer" v-show="!hasToken">
-					<div class="row">
-						<div class="one column">&nbsp;</div>
-						<div class="ten columns">
-							<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain">
+					<form v-on:submit.prevent="addToken">
+						<div class="row">
+							<div class="one column">&nbsp;</div>
+							<div class="ten columns">
+								<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain" required>
+							</div>
+							<div class="one column">&nbsp;</div>
 						</div>
-						<div class="one column">&nbsp;</div>
-						</div>
-					<div class="row">
-						<div class="one column">&nbsp;</div>
-						<form class="four columns non-functioning" v-on:submit.prevent="logon">
-							<div class="">
-								<input disabled v-model="username" class="button u-full-width" type="text" placeholder="username">
+						<div class="row">
+							<div class="one column">&nbsp;</div>
+							<div class="four columns non-functioning">
+								<div class="">
+									<input v-model="username" class="button u-full-width" type="text" placeholder="username" disabled>
+								</div>
+								<div class="">
+									<input v-model="password" class="button u-full-width" type="password" placeholder="password" disabled>
+								</div>
+								<div class="">
+									<button class="button-primary u-full-width" disabled>Logon</button>
+								</div>
 							</div>
-							<div class="">
-								<input disabled v-model="password" class="button u-full-width" type="password" placeholder="password">
-							</div>
-							<div class="">
-								<button disabled class="button-primary u-full-width" type="submit">Logon</button>
-							</div>
-						</form>
-						<div class="two columns">&nbsp;</div>
+							<div class="two columns">&nbsp;</div>
 
-						<form class="four columns" v-on:submit.prevent="addToken" v-bind:class="{ 'half-hidden': hasToken }">
-							<div class="">
-								<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token">
+							<div class="four columns" v-bind:class="{ 'half-hidden': hasToken }">
+								<div class="">
+									<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
+								</div>
+								<div class="">
+									<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
+										<span v-show="hasToken">token accepted</span>
+										<span v-show="!hasToken">insert token</span>
+									</button>
+								</div>
+								<div class="centered-text">
+									<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
+								</div>
 							</div>
-							<div class="">
-								<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
-									<span v-show="hasToken">token accepted</span>
-									<span v-show="!hasToken">insert token</span>
-								</button>
-							</div>
-							<div class="centered-text">
-								<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
-							</div>
-						</form>
-						<div class="one column">&nbsp;</div>
-					</div>
+							<div class="one column">&nbsp;</div>
+						</div>
+					</form>
 				</div>
 				<!-- END LOGIN VIEW -->
 
@@ -149,14 +152,11 @@
 					<div class="row">					
 						<!-- SEARCH VIEW -->
 						<div class="search-wrapper twelve columns" v-show="searchView">
-							<div class="hidden-controls gray right-text">
-								<a v-on:click.prevent="showList">close</a>							
-							</div>
-							<form class="row buffer" v-on:submit.prevent="search">
-								<div class="six columns">
-									<input v-model="searchQuery" name="searchQuery" class="button u-full-width" type="text" placeholder="what are ya lookin for">
-								</div>
-								<div class="six columns">
+							<form class="row" v-on:submit.prevent="search">
+								<h5 class="nine columns border-bottom">
+									<input v-model="searchQuery" name="searchQuery" class="u-full-width hidden-input" type="text" placeholder="query">
+								</h5>
+								<div class="three columns">
 									<button class="button-primary u-full-width" type="submit">
 										search
 									</button>
@@ -184,6 +184,9 @@
 									</tr>
 								</tbody>
 							</table>
+							<h5 class="italic gray centered-text" v-show="searchResults.cases && searchResults.cases.length === 50">
+								<i>limited to top 50 results</i>
+							</h5>
 						</div>
 						<!-- END SEARCH VIEW -->
 
