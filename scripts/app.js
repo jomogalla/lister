@@ -166,7 +166,7 @@
 					formattedIntervals.push({
 						'Start': moment(timeIntervals[i].dtStart).format('M/D/YYYY h:mm A'),
 						'End': moment(timeIntervals[i].dtEnd).format('M/D/YYYY h:mm A'),
-						'Duration': Math.round(this.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes() * 100) / 100,
+						'Duration (Min)': Math.round(this.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes() * 100) / 100,
 						'Project': timeIntervals[i].sProject,
 						'Case': timeIntervals[i].ixBug,
 						'Title': timeIntervals[i].sTitle,
@@ -523,7 +523,7 @@
 			},
 			getPayPeriod: function (dayInPayPeriod) {
 				this.downloadReady = false;
-				
+
 				if (dayInPayPeriod.date() <= 15) {
 					var startTime = new moment(dayInPayPeriod).startOf('month');
 					var endTime = new moment(dayInPayPeriod).date(15).endOf('day');
