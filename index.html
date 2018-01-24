@@ -185,8 +185,11 @@
 								</tbody>
 							</table>
 							<h5 class="italic gray centered-text" v-show="searchResults.cases && searchResults.cases.length === 50">
-								<i>limited to top 50 results</i>
+								<i>{{searchResults.totalHits}} results, limited to top 50</i>
 							</h5>
+							<h5 class="italic gray centered-text" v-show="searchQuery && !searchResults.count && searchResults.count === 0">
+									<i>no search results</i>
+								</h5>
 						</div>
 						<!-- END SEARCH VIEW -->
 
@@ -221,7 +224,7 @@
 									</tr>
 								</tbody>
 							</table>
-							<div class="hidden-controls gray">
+							<div v-show="downloadReady" class="hidden-controls gray">
 								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 							</div>
 						</div>
