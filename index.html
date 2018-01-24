@@ -193,11 +193,12 @@
 						</div>
 						<!-- END SEARCH VIEW -->
 
-						<!-- SECRET PAY PERIOD VIEW -->
+						<!-- PAY PERIOD VIEW -->
 						<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
 							<div class="u-cf"></div>
 							<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
-								<span class="u-pull-right">{{ payPeriodTotal | humanize }} </span>
+								<span class="u-pull-right gray">&nbsp;|&nbsp;{{ workedDuration.asHours() }} h </span>
+								<span class="u-pull-right">{{ payPeriodTotal | humanize }}</span>
 							</h4>
 							<span class="gray small"> {{workdays}} day pay period</span>
 							<table class="u-full-width" v-show="hasToken">
@@ -224,11 +225,15 @@
 									</tr>
 								</tbody>
 							</table>
+							<div class="gray"> 
+									<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
+							</div>
 							<div v-show="downloadReady" class="hidden-controls gray">
 								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 							</div>
+
 						</div>
-						<!-- END SECRET PAY PERIOD VIEW-->
+						<!-- END PAY PERIOD VIEW-->
 
 						<!-- METRICS VIEW -->
 						<div class="metrics-wrapper" v-show="metricsView">

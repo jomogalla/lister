@@ -39,8 +39,10 @@
 
 			// Pay Period
 			workdays: 0,
+			workdaysSoFar: 0,
 			payPeriodIntervals: {},
 			payPeriodTotal: moment.duration(0, 'minutes'),
+			workedDuration: moment.duration(0, 'days'),
 			payPeriodStartDate: null,
 			payPeriodEndDate: null,
 			downloadReady: false,
@@ -524,6 +526,8 @@
 			getPayPeriod: function (dayInPayPeriod) {
 				this.downloadReady = false;
 
+				// if the date <= 15, startTime = 1st & endTime = 15th
+				// otherwise, startTime = 16th & endTime = last day of month
 				if (dayInPayPeriod.date() <= 15) {
 					var startTime = new moment(dayInPayPeriod).startOf('month');
 					var endTime = new moment(dayInPayPeriod).date(15).endOf('day');
@@ -533,6 +537,16 @@
 				}
 
 				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
+
+				// TODO - Update variable name workdaysSoFar
+				// If current time is between startTime & endTime, calculate workdays from startTime to now.
+				if(moment().isBetween(startTime, endTime)) {
+					this.workdaysSoFar = this.getWorkdaysForPeriod(startTime, moment());
+				} else {
+					this.workdaysSoFar = this.getWorkdaysForPeriod(startTime, endTime);
+				}
+
+				this.workedDuration = moment.duration((this.workdaysSoFar * 8), 'hours');
 
 				this.payPeriodStartDate = startTime;
 				this.payPeriodEndDate = endTime;
