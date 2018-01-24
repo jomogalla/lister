@@ -87,6 +87,10 @@
     visibility: hidden;
 }
 
+.border-bottom {
+    border-bottom: #aaa solid 2px;
+}
+
 /* todo - rename */
 .no-padding td {
     padding: 0;
