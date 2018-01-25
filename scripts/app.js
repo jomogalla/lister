@@ -1,7 +1,7 @@
  (function () {
 	'use strict';
 
-
+	// import store from '/store';
 	var app = new Vue({
 		el: '#app',
 		data: {
@@ -60,6 +60,7 @@
 			eightHourDonut: null,
 			twentyFourHourDonut: null,
 		},
+		computed: Vuex.mapState('view'),
 		watch: {
 			timeWorked: function (newTimeWorked) {
 				var minutesWorked = Math.floor(newTimeWorked.asMinutes());

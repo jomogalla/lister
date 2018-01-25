@@ -1,4 +1,5 @@
 var viewModule = {
+    namespaced: true,
     state: {
         list: true,
         case: false,
