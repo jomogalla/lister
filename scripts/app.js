@@ -718,6 +718,7 @@
 
 			/////////   UI Methods   /////////
 			showList: function () {
+				store.commit('showList')
 				this.listView = true;
 				this.caseView = false;
 				this.searchView = false;

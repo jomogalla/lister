@@ -313,27 +313,6 @@
 									</tbody>
 								</table>
 								<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
-								<script type="text/x-template" id="add-interval-template">
-									<div class="add-form">
-										<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
-												<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
-												<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
-										</div>
-										<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
-											<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
-											<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-											&#x27F6;
-											<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-											<button class="button" type="submit">Add Time</button>
-										</form>
-										<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
-												<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-												&#x27F6;
-												<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-												<button class="button dark-red" type="submit">Clear Time</button>
-										</form>
-									</div>
-								</script>
 							</div>
 							<!-- END TIMESHEET VIEW -->
 							
@@ -401,6 +380,29 @@
 		</span>
 	</script>
 
+	<!-- Add/Clear Intervals -->
+	<script type="text/x-template" id="add-interval-template">
+		<div class="add-form">
+			<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
+					<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
+					<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+			</div>
+			<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
+				<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
+				<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+				&#x27F6;
+				<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+				<button class="button" type="submit">Add Time</button>
+			</form>
+			<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
+					<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+					&#x27F6;
+					<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+					<button class="button dark-red" type="submit">Clear Time</button>
+			</form>
+		</div>
+	</script>
+
 
 
 	<!-- END TEMPLATES -->
@@ -417,6 +419,7 @@
 	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/lodash.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vuex.js"></script>
 
 	<!-- Third Party Hosted -->
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -442,9 +445,17 @@
 
 	<!-- Vue Stuff -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
+
+	<!-- Store -->
+	<script type="text/javascript" src="scripts/store/controls.store.js"></script>
+	<script type="text/javascript" src="scripts/store/view.store.js"></script>
+	<script type="text/javascript" src="scripts/store/store.js"></script>
+
+	<!-- Components -->
 	<script type="text/javascript" src="scripts/components/add-interval.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-date.component.js"></script>
+
 	<script type="text/javascript" src="scripts/app.js"></script>
 
 
