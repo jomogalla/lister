@@ -180,6 +180,18 @@
 								<span class="u-pull-right">{{ payPeriodTotal | humanize }}</span>
 							</h4>
 							<span class="gray small"> {{workdays}} day pay period</span>
+							<div class="chart-stuff">
+								
+								<!-- TODO allow for paging Periods -->
+								<!--<div class="pagination-controls no-select">
+									<button v-on:click="goToPreviousTimePeriod()" class="paginate button">Previous Time Period</button>
+									<button v-on:click="goToNextTimePeriod()" class="paginate button">Next Time Period</button>
+								</div>-->
+	
+								<div class="timesheet-chart-wrapper">
+									<canvas id="timesheet-chart"></canvas>
+								</div>
+							</div>
 							<table class="u-full-width" v-show="hasToken">
 								<thead>
 									<tr>
@@ -436,6 +448,7 @@
 	<script type="text/javascript" src="scripts/utilities/convertArrayOfObjectsToCSV.js"></script>
 	<script type="text/javascript" src="scripts/utilities/charts/donut.js"></script>
 	<script type="text/javascript" src="scripts/utilities/charts/bar.js"></script>
+	<script type="text/javascript" src="scripts/utilities/charts/chartHelper.js"></script>
 	<script type="text/javascript" src="scripts/utilities/loader.js"></script>
 	<script type="text/javascript" src="scripts/utilities/storage.js"></script>
 	<script type="text/javascript" src="scripts/utilities/notifier.js"></script>
