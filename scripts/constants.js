@@ -97,7 +97,11 @@ const constants = {
 				backgroundColor: Color("#36A2EB").alpha(0.5).rgbString(),
 				borderColor: ["#36A2EB"],
 				borderWidth: 1,
-				data: []
+				data: [],
+				options: {
+					maintainAspectRatio: false,
+					responsive: true
+				}
 			}
 		]
 	},

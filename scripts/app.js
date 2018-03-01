@@ -113,9 +113,20 @@
 				setInterval(function () { self.refresher() }, 60000);
 			},
 			addToken: function () {
-				// Todo - pass in this token, not have it in vue
-				if (this.token) {
-					utilities.authenticator.addToken(this.token);
+				var checkToken = {
+					"cmd": "logon",
+					"token": this.token,
+				};
+
+				utilities.loader.start();
+				utilities.api(checkToken).then(this.handleAddToken, this.handleErrorRequest);
+
+			},
+			handleAddToken: function (response) {
+				var token = response.data.token;
+
+				if (token) {
+					utilities.authenticator.addToken(token);
 					utilities.authenticator.addSubDomain(this.subdomain)
 					this.hasToken = true;
 

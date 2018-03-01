@@ -334,6 +334,7 @@ a:hover {
     left: 0;
     text-align: center;
     z-index: 100;
+    background-color: #ffd8cc;
 }
 
 
@@ -502,6 +503,10 @@ a:hover {
     margin-left: 10px;
 }
  
+.timesheet-chart-wrapper {
+    width: 50vw;
+    margin: 0 auto;
+}
 
 /* ----------------------------------
                Metrics
