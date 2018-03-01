@@ -502,6 +502,10 @@ a:hover {
     margin-left: 10px;
 }
  
+.timesheet-chart-wrapper {
+    width: 50vw;
+    margin: 0 auto;
+}
 
 /* ----------------------------------
                Metrics
