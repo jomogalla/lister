@@ -71,6 +71,10 @@
 			this.$_bar = new utilities.bar('#metrics-chart', constants.weeklyBarChartData, constants.weeklyBarChartOptions);
 			this.$_currentMetricDate = moment();
 			
+			//timesheet chart
+			this.$_timesheetBar = new utilities.bar('#timesheet-chart', constants.payPeriodBarChartData, constants.weeklyBarChartOptions);
+
+
 			// If we have a subdomain - populate plz.
 			this.subdomain = utilities.authenticator.getSubDomain();
 
@@ -566,6 +570,14 @@
 				this.payPeriodIntervals = this.addDurations(this.payPeriodIntervals);
 				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
 
+				//Update Chart stuff
+				var intervalData = utilities.chartHelper.getProcessedData(this.payPeriodIntervals,this.payPeriodStartDate,this.payPeriodEndDate);
+
+				var labels = _.map(intervalData.days, function (val) { return val.format('dddd M.DD'); });
+
+				this.$_timesheetBar.updateLabels(labels);
+				this.$_timesheetBar.updateData(intervalData.hoursPerDay);
+
 				this.addPayPeriodProjects(this.payPeriodIntervals);
 				utilities.loader.stop();
 			},
@@ -646,52 +658,10 @@
 					var intervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
 					utilities.loader.stop();
 
-					//Convert intervals to moment ranges
-					var rangeIntervals = _.map(intervals,
-						function (val) {
-							var endDate = (val.dtEnd) ? val.dtEnd : moment(); //if the end time is empty the case is currently being worked, so use current time
+					var intervalData = utilities.chartHelper.getProcessedData(intervals, startTime, endTime);
+					vm.metricsTotalHours = intervalData.totalHours;
 
-							return {
-								range: moment.range(val.dtStart, endDate),
-								interval: val
-							};
-						});
-
-					//Build time worked Per Day
-					var timeWorkedPerDay = _
-					.chain(_.range(0, 7, 0))
-					.map(function (val, i) {
-
-						var dayStart = startTime.clone().add(i, "days");
-						var dayEnd = dayStart.clone().add(1, "days");
-						var range = moment.range(dayStart, dayEnd);
-						return { minutesWorked: 0, range: range }
-					})
-					.value();
-
-					_.forEach(timeWorkedPerDay, function (currentDay, i) {
-
-						var currentDayRange = currentDay.range;
-
-						var minutesForCurrDay =
-							_.sumBy(rangeIntervals,
-								function (rangeInterval) {
-									var dateRange = currentDayRange.intersect(rangeInterval.range);
-									return (dateRange) ? dateRange.diff("m") : 0; //intersect in minutes of the current day and this interval
-								});
-
-						currentDay.minutesWorked += minutesForCurrDay;
-					});
-
-					var hoursPerDayArray = _.map(timeWorkedPerDay, function (val) {
-						return (val.minutesWorked / 60).toFixed(2);
-					});
-
-					vm.metricsTotalHours = _.sumBy(hoursPerDayArray, function(val) {
-						return parseFloat(val);
-					}).toFixed(2);
-
-					vm.$_bar.updateData(hoursPerDayArray);
+					vm.$_bar.updateData(intervalData.hoursPerDay);
 				});
 
 			},

@@ -8,6 +8,11 @@ utilities.bar = function (id, data, options, updateFunction) {
 		options: options
 	});
 
+	this.updateLabels = function(labels) {
+		this.chart.data.labels = labels;
+		this.chart.update();
+	}
+
 	this.updateData = function(data) {
 		this.chart.data.datasets[0].data = data;
 		this.chart.update();
