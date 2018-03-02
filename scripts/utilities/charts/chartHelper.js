@@ -14,8 +14,7 @@ utilities.chartHelper = {
 				};
 			});
 
-		var daysDiff = endDate.diff(startDate, 'days');
-
+		var daysDiff = Math.ceil(endDate.diff(startDate, 'days', true));
 
 		//Build time worked Per Day
 		var timeWorkedPerDay = _
