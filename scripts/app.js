@@ -113,7 +113,6 @@
 				setInterval(function () { self.refresher() }, 60000);
 			},
 			addToken: function () {
-				debugger;
 				var checkToken = {
 					"cmd": "logon",
 					"token": this.token,
