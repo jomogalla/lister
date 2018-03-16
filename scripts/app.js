@@ -113,11 +113,13 @@
 				setInterval(function () { self.refresher() }, 60000);
 			},
 			addToken: function () {
+				debugger;
 				var checkToken = {
 					"cmd": "logon",
 					"token": this.token,
 				};
 
+				utilities.authenticator.addSubDomain(this.subdomain)
 				utilities.loader.start();
 				utilities.api(checkToken).then(this.handleAddToken, this.handleErrorRequest);
 
@@ -127,7 +129,7 @@
 
 				if (token) {
 					utilities.authenticator.addToken(token);
-					utilities.authenticator.addSubDomain(this.subdomain)
+					
 					this.hasToken = true;
 
 					this.initializeApp();
