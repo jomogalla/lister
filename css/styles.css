@@ -1,7 +1,6 @@
 /* ----------------------------------
                Utility 
 -------------------------------------*/
-
 .half-hidden {
     opacity: 0.25;
 }
@@ -77,6 +76,14 @@
 
 .dark-gray {
     color: #444444;
+}
+
+.invert {
+    filter: invert(85%);
+    
+}
+body.invert {
+    background-color: #333;
 }
 
 .small {

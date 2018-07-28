@@ -10,6 +10,7 @@
 			hasToken: false,
 			timeWorked: moment.duration(0, 'minutes'),
 			fogbugzLinkUrl: '',
+			stylesInverted: JSON.parse(utilities.storage.load('stylesInverted')),
 
 			// Controls
 			currentPerson: {},
@@ -35,6 +36,7 @@
 			searchView: false,
 			payPeriodView: false,
 			metricsView: false,
+			settingsView: false,
 			starredCasesView: true,
 
 			// Pay Period
@@ -64,6 +66,9 @@
 			timeWorked: function (newTimeWorked) {
 				var minutesWorked = Math.floor(newTimeWorked.asMinutes());
 				this.eightHourDonut.updateEight(minutesWorked);
+			},
+			stylesInverted: function() {
+				this.stylesInverted ? document.body.classList.add('invert') : document.body.classList.remove('invert');
 			}
 		},
 		mounted: function () {
@@ -74,6 +79,9 @@
 			//timesheet chart
 			this.$_timesheetBar = new utilities.bar('#timesheet-chart', constants.payPeriodBarChartData, constants.weeklyBarChartOptions);
 
+			// Check for saved settings
+			this.stylesInverted = JSON.parse(utilities.storage.load('stylesInverted'));
+			// this.invertColors();
 
 			// If we have a subdomain - populate plz.
 			this.subdomain = utilities.authenticator.getSubDomain();
@@ -705,6 +713,7 @@
 				this.searchView = false;
 				this.payPeriodView = false;
 				this.metricsView = false;
+				this.settingsView = false;
 			},
 			showSearch: function () {
 				this.listView = false;
@@ -712,6 +721,7 @@
 				this.searchView = true;
 				this.payPeriodView = false;
 				this.metricsView = false;
+				this.settingsView = false;
 			},
 			showCase: function (caseNumber) {
 				this.listView = false;
@@ -720,6 +730,7 @@
 				this.payPeriodView = false;
 				this.metricsView = false;
 				this.starredCasesView = false;
+				this.settingsView = false;
 
 				// TODO add logic to only get this if the case has changed or is null
 				this.getCaseByNumber(caseNumber);
@@ -731,9 +742,18 @@
 				this.searchView = false;
 				this.payPeriodView = true;
 				this.metricsView = false;
+				this.settingsView = false;
 
 				// TODO add conditional logic to only get this if the pay period has changed or is null
 				this.getPayPeriod(this.dayToShow);
+			},
+			showSettings: function () {
+				this.listView = false;
+				this.caseView = false;
+				this.searchView = false;
+				this.payPeriodView = false;
+				this.metricsView = false;
+				this.settingsView = true;
 			},
 			showStarredCases: function () {
 				this.starredCasesView = true;
@@ -778,6 +798,11 @@
 			showDay: function (day) {
 				day = new moment(day);
 				this.getTimeSheet(day);
+			},
+			invertColors: function () {
+				this.stylesInverted = !this.stylesInverted;
+
+				utilities.storage.save('stylesInverted', this.stylesInverted);
 			},
 			refresher: function () {
 				if (utilities.authenticator.hasToken()) {
