@@ -180,6 +180,10 @@ i.block {
 	user-select: none; 
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 /* ----------------------------------
                General  
 -------------------------------------*/
@@ -492,6 +496,30 @@ a:hover {
                Search
 -------------------------------------*/
 /* There doesn't seem to be anything here*/
+
+
+/* ----------------------------------
+               Settings
+-------------------------------------*/
+.settings-view {
+    padding: 1rem;
+}
+
+.settings-container {
+    margin-bottom: 2rem;
+}
+
+.settings-container button {
+    font-weight: 600;
+    font-size: inherit;
+    line-height: 1.6;
+    letter-spacing: 0;
+    padding: 0;
+    border: none;
+    text-transform: none;
+    color: #1A1406;
+    height: auto;
+}
 
 
 /* ----------------------------------

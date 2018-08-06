@@ -243,19 +243,19 @@
 						<!-- END METRICS VIEW-->
 						
 						<!-- Settings -->
-						<div v-show="settingsView">
+						<div v-show="settingsView" class="settings-view">
 							<div class="settings-container">
-								<label for="invert-styles">
+								<label for="invert-styles" class="pointer">
 									<i class="fa fa-check-circle-o fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
 									<i class="fa fa-circle-o fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
 									Invert Colors
 								</label>
 								
-								<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors" style="display: none">
+								<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors(!stylesInverted)" style="display: none">
 							</div> 
 							<div class="settings-container">
 								<button v-on:click.prevent="clearToken()">
-									<i class="fa fa-trash"></i>
+									<i class="fa fa-trash fa-lg"></i>
 									Clear Token
 <!-- <a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a> -->
 								</button>

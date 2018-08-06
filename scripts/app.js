@@ -10,7 +10,7 @@
 			hasToken: false,
 			timeWorked: moment.duration(0, 'minutes'),
 			fogbugzLinkUrl: '',
-			stylesInverted: JSON.parse(utilities.storage.load('stylesInverted')),
+			stylesInverted: null,
 
 			// Controls
 			currentPerson: {},
@@ -81,7 +81,6 @@
 
 			// Check for saved settings
 			this.stylesInverted = JSON.parse(utilities.storage.load('stylesInverted'));
-			// this.invertColors();
 
 			// If we have a subdomain - populate plz.
 			this.subdomain = utilities.authenticator.getSubDomain();
