@@ -74,7 +74,7 @@
 
 		</div>
 		<div class="info-bar" v-show="hasToken">
-			<a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a>
+			<a v-on:click.prevent="showSettings" class="red" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 		</div>
 		<!-- END CONTROLS -->
@@ -241,7 +241,25 @@
 						</div>
 						<!-- END METRICS VIEW-->
 						
-
+						<!-- Settings -->
+						<div v-show="settingsView" class="settings-view">
+							<div class="settings-container">
+								<label for="invert-styles" class="pointer">
+									<i class="fa fa-check-circle-o fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
+									<i class="fa fa-circle-o fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
+									Invert Colors
+								</label>
+								
+								<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors(!stylesInverted)" style="display: none">
+							</div> 
+							<div class="settings-container">
+								<button v-on:click.prevent="clearToken()">
+									<i class="fa fa-trash fa-lg"></i>
+									Clear Token
+<!-- <a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a> -->
+								</button>
+							</div>
+						</div>
 						
 						
 						<!-- Home  -->

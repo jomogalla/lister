@@ -1,7 +1,6 @@
 /* ----------------------------------
                Utility 
 -------------------------------------*/
-
 .half-hidden {
     opacity: 0.25;
 }
@@ -77,6 +76,14 @@
 
 .dark-gray {
     color: #444444;
+}
+
+.invert {
+    filter: invert(85%);
+    
+}
+body.invert {
+    background-color: #333;
 }
 
 .small {
@@ -171,6 +178,10 @@ i.block {
 	-moz-user-select: none; 
 	-ms-user-select: none;
 	user-select: none; 
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 /* ----------------------------------
@@ -485,6 +496,30 @@ a:hover {
                Search
 -------------------------------------*/
 /* There doesn't seem to be anything here*/
+
+
+/* ----------------------------------
+               Settings
+-------------------------------------*/
+.settings-view {
+    padding: 1rem;
+}
+
+.settings-container {
+    margin-bottom: 2rem;
+}
+
+.settings-container button {
+    font-weight: 600;
+    font-size: inherit;
+    line-height: 1.6;
+    letter-spacing: 0;
+    padding: 0;
+    border: none;
+    text-transform: none;
+    color: #1A1406;
+    height: auto;
+}
 
 
 /* ----------------------------------
