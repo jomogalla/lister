@@ -426,9 +426,10 @@
 					"token": utilities.authenticator.getToken(),
 					"q": caseNumber,
 					"max": 1,
-					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts", "hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
+					"cols": ["ixBug", "ixBugParent", "ixBugChildren","sTitle", "dtOpened", "dtClosed", "ixPersonAssignedTo","sPersonAssignedTo","dblStoryPts", "hrsElapsed", "hrsCurrEst", "sLatestTextSummary", "ixBugEventLatestText", "events"]
 				};
 
+				this.currentCase = {};
 				utilities.loader.start();
 				utilities.api(getCase).then(this.handleCaseRequest);
 			},
@@ -438,11 +439,41 @@
 
 				// Check to make sure we have a case
 				if (response.data.totalHits !== 0) {
-					this.currentCase = responseObject;
+					var tempCase = this.fixLinksInCase(responseObject);
+					tempCase = this.turnCaseDatesIntoMoments(tempCase);
+
+					this.currentCase = tempCase;
 					this.currentViewedCaseId = this.currentCase.ixBug;
 				} else {
 					this.currentViewedCaseId = this.currentCase.ixBug || null;
 				}
+			},
+			fixLinksInCase: function (caseToFix) {
+				var stringToSplitOn = 'src="'
+
+				for(var i = 0; i < caseToFix.events.length; i++) {
+					var currentSHtml = caseToFix.events[i].sHtml;
+					if(currentSHtml) {
+						caseToFix.events[i].sHtml = currentSHtml.replace(stringToSplitOn, stringToSplitOn + 'https://altsource.fogbugz.com')
+					}
+				}
+
+				return caseToFix;
+			},
+			turnCaseDatesIntoMoments: function(caseToModify) {
+				caseToModify.dtClosedMoment = moment(caseToModify.dtClosed);
+				caseToModify.dtOpenedMoment = moment(caseToModify.dtOpened);
+				caseToModify.hrsCurrEstMoment = moment.duration(caseToModify.hrsCurrEst, 'hours');
+				caseToModify.hrsElapsedMoment = moment.duration(caseToModify.hrsElapsed, 'hours');
+
+
+
+				//Update All Event Dates
+				for(var i = 0; i < caseToModify.events.length; i++) {
+					caseToModify.events[i].dtMoment = moment(caseToModify.events[i].dt);
+				}
+
+				return caseToModify;
 			},
 			editInterval: function (ixInterval, dtStart, dtEnd) {
 				var editInterval = {

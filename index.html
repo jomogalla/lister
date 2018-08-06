@@ -353,6 +353,7 @@
 							<!-- CASE VIEW -->
 							<div class="case-wrapper four columns" v-show="listView || caseView">
 								<div v-show="!starredCasesView">
+									<!-- Case Header -->
 									<h5 v-show="currentCase.ixBug" class="case-title">
 										{{currentCase.sTitle}}
 										<span class="u-pull-right">
@@ -361,11 +362,35 @@
 											<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
 												<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
 											</a>
+											
 										</span>
 									</h5>
 									<hr v-show="currentCase.ixBug">
-									<div v-for="event of currentCase.events" v-show="event.s" class="copy">
-										<span v-html="event.sHtml"></span>
+									<!-- Case Details -->
+									<div class="current-case-details" v-show="currentCase">
+										<div class="current-case-detail" v-if="currentCase.ixBugParent">
+											<strong>Parent:</strong>
+											<span>{{currentCase.ixBugParent}}</span>
+										</div>
+										<div class="current-case-detail">
+											<strong v-bind:class="{'dark-red': currentCase.hrsElapsed > currentCase.hrsCurrEst}">Elapsed:</strong>
+											<span>{{currentCase.hrsElapsedMoment | humanize}}</span>
+										</div>
+										<div class="current-case-detail">
+											<strong>Estimated:</strong>
+											<span>{{currentCase.hrsCurrEstMoment | humanize}}</span>
+										</div>
+										<div class="current-case-detail">
+											<strong>Assigned:</strong>
+											<span>{{currentCase.sPersonAssignedTo}}</span>
+										</div>
+									</div>
+									<hr>
+									<!-- Case Events -->
+									<div v-for="event of currentCase.events" class="copy">
+										<div>{{event.sChanges}}</div>
+										<div v-html="event.sHtml"></div>
+										<i>{{event.evtDescription}}</i>
 									</div>
 								</div>
 								<!-- Starred Cases -->
