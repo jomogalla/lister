@@ -191,6 +191,8 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #1A1406;
     font-weight: 300;
+
+    min-height: 100vh;
 }
 a:hover {
     cursor: pointer;
@@ -208,7 +210,7 @@ a:hover {
 .main-content {
     width: calc(100% - 110px);
     margin-left: 110px;
-    margin-top: 1.7rem;
+    padding-top: 1.7rem;
 }
 
 .tabs > .columns {
