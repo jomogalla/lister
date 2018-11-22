@@ -75,7 +75,7 @@
 			// Private properties
 			this.$_bar = new utilities.bar('#metrics-chart', constants.weeklyBarChartData, constants.weeklyBarChartOptions);
 			this.$_currentMetricDate = moment();
-			
+			this.$_currentPayPeriod = moment(); 
 			//timesheet chart
 			this.$_timesheetBar = new utilities.bar('#timesheet-chart', constants.payPeriodBarChartData, constants.weeklyBarChartOptions);
 
@@ -546,9 +546,7 @@
 
 				this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 			},
-			getPayPeriod: function (dayInPayPeriod) {
-				this.downloadReady = false;
-
+			getPayPeriodRange: function(dayInPayPeriod) {
 				// if the date <= 15, startTime = 1st & endTime = 15th
 				// otherwise, startTime = 16th & endTime = last day of month
 				if (dayInPayPeriod.date() <= 15) {
@@ -558,7 +556,14 @@
 					var startTime = new moment(dayInPayPeriod).date(16).startOf('day');
 					var endTime = new moment(dayInPayPeriod).endOf('month');
 				}
-
+				return [startTime, endTime];
+			},
+			getPayPeriod: function(dayInPayPeriod) {
+				this.downloadReady = false;
+				var times = this.getPayPeriodRange(dayInPayPeriod);
+				this.$_currentPayPeriod = times[0].clone();
+				var startTime = times[0];
+				var endTime = times[1];
 				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
 
 				// TODO - Update variable name workdaysSoFar
@@ -583,6 +588,15 @@
 
 				utilities.loader.start();
 				utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
+			},
+			goToPreviousPayPeriod: function () {
+				let dates = this.getPayPeriodRange(this.$_currentPayPeriod);
+				this.getPayPeriod(dates[0].subtract(1, "days"));
+			},
+			goToNextPayPeriod: function () {
+				let dates = this.getPayPeriodRange(this.$_currentPayPeriod);
+				this.getPayPeriod(dates[1].add(11, "days"));
+
 			},
 			handlePayPeriodRequest: function (response) {
 				this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
