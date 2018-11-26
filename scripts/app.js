@@ -1,28 +1,29 @@
- (function () {
+(function () {
 	'use strict';
 
+	// TODO: ACTUALLY IMPORT
+	var mapState = Vuex.mapState;
 
 	var app = new Vue({
 		el: '#app',
+		store,
 		data: {
 			// General
-			token: null,
-			hasToken: false,
+		//	hasToken: false,
 			timeWorked: moment.duration(0, 'minutes'),
-			fogbugzLinkUrl: '',
-			stylesInverted: null,
+		//	stylesInverted: null,
 
 			// Controls
-			currentPerson: {},
-			currentCaseId: null,
-			caseActive: false,
+		//	currentPerson: {},
+		//	currentCaseId: null,
+		//	caseActive: false,
 
 			// Cases
 			currentViewedCaseId: null,
 			currentCase: {},
 			starredCases: [],
 
-			// Search
+			// Search - Should go in component
 			searchQuery: '',
 			searchResults: {},
 
@@ -30,16 +31,7 @@
 			dayToShow: moment(),
 			timeIntervals: {},
 
-			// Routes
-			listView: true,
-			caseView: false,
-			searchView: false,
-			payPeriodView: false,
-			metricsView: false,
-			settingsView: false,
-			starredCasesView: true,
-
-			// Pay Period
+			// Pay Period -- Should go in component
 			workdays: 0,
 			workdaysSoFar: 0,
 			payPeriodIntervals: {},
@@ -49,11 +41,12 @@
 			payPeriodEndDate: null,
 			downloadReady: false,
 
-			// Metrics
+			// Metrics - Should go in component
 			metricsTitle: "",
 			metricsTotalHours: 0,
 
-			// Login
+			// Login - Should go in component
+			//token: null,
 			username: '',
 			password: '',
 			subdomain: '',
@@ -62,6 +55,26 @@
 			eightHourDonut: null,
 			twentyFourHourDonut: null,
 		},
+		computed: mapState({
+			listView: state => state.ui.listView,
+			caseView: state => state.ui.caseView,
+			searchView: state => state.ui.searchView,
+			payPeriodView: state => state.ui.payPeriodView,
+			metricsView: state => state.ui.metricsView,
+			settingsView: state => state.ui.settingsView,
+			starredCasesView: state => state.ui.starredCasesView,
+			stylesInverted: state => state.ui.stylesInverted,
+			currentPerson: state => state.controls.currentPerson,
+			currentCaseId: state => state.controls.currentCaseId,
+			caseActive: state => state.controls.caseActive,
+			token: state => state.token,
+			hasToken: state => state.hasToken,
+			dayToShow: state => state.time.dayToShow,
+			timeIntervals: state => state.time.timeIntervals,
+			fogbugzLinkUrl () {
+				return constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
+			}
+		}),
 		watch: {
 			timeWorked: function (newTimeWorked) {
 				var minutesWorked = Math.floor(newTimeWorked.asMinutes());
@@ -80,7 +93,8 @@
 			this.$_timesheetBar = new utilities.bar('#timesheet-chart', constants.payPeriodBarChartData, constants.weeklyBarChartOptions);
 
 			// Check for saved settings
-			this.stylesInverted = JSON.parse(utilities.storage.load('stylesInverted'));
+			//this.stylesInverted = JSON.parse(utilities.storage.load('stylesInverted'));
+			store.commit('initializeUI');
 
 			// If we have a subdomain - populate plz.
 			this.subdomain = utilities.authenticator.getSubDomain();
@@ -95,11 +109,12 @@
 				var self = this;
 
 				// Setup links - (not sure that this is better than having the link hardcoded....)
-				this.fogbugzLinkUrl = constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
+			//	this.fogbugzLinkUrl = constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
 
 				// Setup tokens
-				this.token = utilities.authenticator.getToken();
-				this.hasToken = true;
+			//	this.token = utilities.authenticator.getToken();
+			//	this.hasToken = true;
+				store.commit('setToken', true);
 
 				// Get our timesheet
 				this.getTimeSheet(this.dayToShow);
@@ -111,38 +126,15 @@
 				this.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions);
 
 				// Load the current user 
-				this.getPerson();
+				//this.getPerson();
+				store.dispatch('getPerson');
+
 
 				// Load Starred Cases
 				this.getStarredCases();
 
 				// Refresh the charts every second
 				setInterval(function () { self.refresher() }, 60000);
-			},
-			addToken: function () {
-				var checkToken = {
-					"cmd": "logon",
-					"token": this.token,
-				};
-
-				utilities.authenticator.addSubDomain(this.subdomain)
-				utilities.loader.start();
-				utilities.api(checkToken).then(this.handleAddToken, this.handleErrorRequest);
-
-			},
-			handleAddToken: function (response) {
-				var token = response.data.token;
-
-				if (token) {
-					utilities.authenticator.addToken(token);
-					
-					this.hasToken = true;
-
-					this.initializeApp();
-				}
-			},
-			logon: function () {
-				utilities.authenticator.logon(this.username, this.password);
 			},
 			downloadCSV: function (args) {
 				var data, filename, link;
@@ -344,7 +336,8 @@
 
 			/////////    HTTP Methods     /////////
 			setActiveCase: function (ixBug) {
-				this.currentCaseId = ixBug;
+				//this.currentCaseId = ixBug;
+				store.commit('setCurrentCaseId', ixBug);
 			},
 			search: function () {
 				var search = {
@@ -387,10 +380,12 @@
 				utilities.loader.start();
 				utilities.api(startWork).then(this.handleStartWorkRequest);
 
-				this.currentCaseId = caseId;
+				store.commit('setCurrentCaseId', caseId);
+				//this.currentCaseId = caseId;
 			},
 			handleStartWorkRequest: function () {
-				this.getPerson();
+				//this.getPerson();
+				store.dispatch('getPerson');
 				this.getTimeSheet(this.dayToShow);
 			},
 			stopWork: function () {
@@ -404,7 +399,8 @@
 			},
 			handleResponse: function () {
 				utilities.loader.stop();
-				this.getPerson();
+				//this.getPerson();
+				store.dispatch('getPerson');
 				this.getTimeSheet(this.dayToShow);
 				this.setActiveCase();
 			},
@@ -521,31 +517,7 @@
 			handleClearTimeRequest: function(response) {
 				this.deleteInterval(response.data.interval.ixInterval)
 			},
-			getTimeSheet: function (date) {
-				// Set DayToShow
-				this.dayToShow = moment(date);
 
-				var startTime = moment(date).startOf('day');
-				var endTime = moment(date).endOf('day');
-
-				var listIntervalsForDate = {
-					"cmd": "listIntervals",
-					"token": utilities.authenticator.getToken(),
-					"dtStart": startTime.toJSON(),
-					"dtEnd": endTime.toJSON()
-				};
-
-				utilities.loader.start();
-				utilities.api(listIntervalsForDate).then(this.handleTimeSheetRequest);
-			},
-			handleTimeSheetRequest: function (response) {
-				this.timeIntervals = typeof response === 'object' ? response.data : JSON.parse(response).data;
-				utilities.loader.stop();
-
-				this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
-
-				this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
-			},
 			getPayPeriod: function (dayInPayPeriod) {
 				this.downloadReady = false;
 
@@ -707,70 +679,35 @@
 
 			/////////   UI Methods   /////////
 			showList: function () {
-				this.listView = true;
-				this.caseView = false;
-				this.searchView = false;
-				this.payPeriodView = false;
-				this.metricsView = false;
-				this.settingsView = false;
+				store.commit('showList')
 			},
 			showSearch: function () {
-				this.listView = false;
-				this.caseView = false;
-				this.searchView = true;
-				this.payPeriodView = false;
-				this.metricsView = false;
-				this.settingsView = false;
+				store.commit('showSearch');
 			},
 			showCase: function (caseNumber) {
-				this.listView = false;
-				this.caseView = true;
-				this.searchView = false;
-				this.payPeriodView = false;
-				this.metricsView = false;
-				this.starredCasesView = false;
-				this.settingsView = false;
+				store.commit('showCase');
 
 				// TODO add logic to only get this if the case has changed or is null
 				this.getCaseByNumber(caseNumber);
 
 			},
 			showPayPeriod: function () {
-				this.listView = false;
-				this.caseView = false;
-				this.searchView = false;
-				this.payPeriodView = true;
-				this.metricsView = false;
-				this.settingsView = false;
+				store.commit('showPayPeriod');
 
 				// TODO add conditional logic to only get this if the pay period has changed or is null
 				this.getPayPeriod(this.dayToShow);
 			},
 			showSettings: function () {
-				this.listView = false;
-				this.caseView = false;
-				this.searchView = false;
-				this.payPeriodView = false;
-				this.metricsView = false;
-				this.settingsView = true;
+				store.commit('showSettings');
 			},
 			showStarredCases: function () {
-				this.starredCasesView = true;
+				store.commit('showStarredCases');
 			},
 			hideStarredCases: function () {
-				this.starredCasesView = false;
+				store.commit('hideStarredCases');
 			},
 			toggleMetrics: function () {
-				if (this.metricsView) {
-					this.showList();
-					return;
-				}
-
-				this.listView = false;
-				this.caseView = false;
-				this.searchView = false;
-				this.payPeriodView = false;
-				this.metricsView = true;
+				store.commit('showMetrics')
 
 				//initialize metrics data
 				this.getMetrics(moment());
@@ -799,9 +736,7 @@
 				this.getTimeSheet(day);
 			},
 			invertColors: function () {
-				this.stylesInverted = !this.stylesInverted;
-
-				utilities.storage.save('stylesInverted', this.stylesInverted);
+				store.commit('invertColors');
 			},
 			refresher: function () {
 				if (utilities.authenticator.hasToken()) {

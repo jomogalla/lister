@@ -82,48 +82,7 @@
 		<div class="main-content">
 			<div class="container">
 				<!-- LOGIN VIEW -->
-				<div class="login buffer" v-show="!hasToken">
-					<form v-on:submit.prevent="addToken">
-						<div class="row">
-							<div class="one column">&nbsp;</div>
-							<div class="ten columns">
-								<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain" required>
-							</div>
-							<div class="one column">&nbsp;</div>
-						</div>
-						<div class="row">
-							<div class="one column">&nbsp;</div>
-							<div class="four columns non-functioning">
-								<div class="">
-									<input v-model="username" class="button u-full-width" type="text" placeholder="username" disabled>
-								</div>
-								<div class="">
-									<input v-model="password" class="button u-full-width" type="password" placeholder="password" disabled>
-								</div>
-								<div class="">
-									<button class="button-primary u-full-width" disabled>Logon</button>
-								</div>
-							</div>
-							<div class="two columns">&nbsp;</div>
-
-							<div class="four columns" v-bind:class="{ 'half-hidden': hasToken }">
-								<div class="">
-									<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
-								</div>
-								<div class="">
-									<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
-										<span v-show="hasToken">token accepted</span>
-										<span v-show="!hasToken">insert token</span>
-									</button>
-								</div>
-								<div class="centered-text">
-									<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
-								</div>
-							</div>
-							<div class="one column">&nbsp;</div>
-						</div>
-					</form>
-				</div>
+				<login></login>
 				<!-- END LOGIN VIEW -->
 
 				<!-- EVERYTHING -->
@@ -431,6 +390,51 @@
 		</span>
 	</script>
 
+	<!-- Login -->
+	<script type="text/x-template" id="login-template">
+		<div class="login buffer" v-show="!hasToken">
+			<form v-on:submit.prevent="addToken">
+				<div class="row">
+					<div class="one column">&nbsp;</div>
+					<div class="ten columns">
+						<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain" required>
+					</div>
+					<div class="one column">&nbsp;</div>
+				</div>
+				<div class="row">
+					<div class="one column">&nbsp;</div>
+					<div class="four columns non-functioning">
+						<div class="">
+							<input v-model="username" class="button u-full-width" type="text" placeholder="username" disabled>
+						</div>
+						<div class="">
+							<input v-model="password" class="button u-full-width" type="password" placeholder="password" disabled>
+						</div>
+						<div class="">
+							<button class="button-primary u-full-width" disabled>Logon</button>
+						</div>
+					</div>
+					<div class="two columns">&nbsp;</div>
+
+					<div class="four columns" v-bind:class="{ 'half-hidden': hasToken }">
+						<div class="">
+							<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
+						</div>
+						<div class="">
+							<button :disabled="hasToken" class="button-primary u-full-width" type="submit">
+								<span v-show="hasToken">token accepted</span>
+								<span v-show="!hasToken">insert token</span>
+							</button>
+						</div>
+						<div class="centered-text">
+							<a href="http://help.fogcreek.com/8447/how-to-get-a-fogbugz-xml-api-token" target="_blank" class="u-full-width"> How to get an API token </a>
+						</div>
+					</div>
+					<div class="one column">&nbsp;</div>
+				</div>
+			</form>
+		</div>
+	</script>
 
 
 	<!-- END TEMPLATES -->
@@ -446,6 +450,7 @@
 	<script type="text/javascript" src="scripts/thirdparty/pikaday.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/lodash.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vuex.js" type="module"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
 
 	<!-- Third Party Hosted -->
@@ -472,10 +477,12 @@
 	<script type="text/javascript" src="scripts/utilities/notifier.js"></script>
 
 	<!-- Vue Stuff -->
+	<script type="text/javascript" src="scripts/store.js"></script>
 	<script type="text/javascript" src="scripts/filters.js"></script>
 	<script type="text/javascript" src="scripts/components/add-interval.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-date.component.js"></script>
+	<script type="text/javascript" src="scripts/components/login.component.js"></script>
 	<script type="text/javascript" src="scripts/app.js"></script>
 
 
