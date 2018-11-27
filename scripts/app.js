@@ -10,7 +10,7 @@
 		data: {
 			// General
 		//	hasToken: false,
-			timeWorked: moment.duration(0, 'minutes'),
+		//	timeWorked: moment.duration(0, 'minutes'),
 		//	stylesInverted: null,
 
 			// Controls
@@ -28,8 +28,8 @@
 			searchResults: {},
 
 			// Timesheet
-			dayToShow: moment(),
-			timeIntervals: {},
+			//dayToShow: moment(),
+			//timeIntervals: {},
 
 			// Pay Period -- Should go in component
 			workdays: 0,
@@ -70,7 +70,10 @@
 			token: state => state.token,
 			hasToken: state => state.hasToken,
 			dayToShow: state => state.time.dayToShow,
-			timeIntervals: state => state.time.timeIntervals,
+			timeIntervals: state => state.time.intervals,
+			timeWorked() {
+				return this.$store.getters.timeWorked;
+			},
 			fogbugzLinkUrl () {
 				return constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
 			}
@@ -117,7 +120,8 @@
 				store.commit('setToken', true);
 
 				// Get our timesheet
-				this.getTimeSheet(this.dayToShow);
+				// this.getTimeSheet(this.dayToShow);
+				this.$store.dispatch('getTimeSheet', this.dayToShow)
 
 				// Make Eight Hour Donut
 				this.eightHourDonut = new utilities.donut('#chartone', constants.eightHourDonutData, constants.eightHourDonutOptions);
@@ -183,7 +187,7 @@
 					formattedIntervals.push({
 						'Start': moment(timeIntervals[i].dtStart).format('M/D/YYYY h:mm A'),
 						'End': moment(timeIntervals[i].dtEnd).format('M/D/YYYY h:mm A'),
-						'Duration (Min)': Math.round(this.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes() * 100) / 100,
+						'Duration (Min)': Math.round(utilities.dataPreparation.getDuration(timeIntervals[i].dtStart, timeIntervals[i].dtEnd).asMinutes() * 100) / 100,
 						'Project': timeIntervals[i].sProject,
 						'Case': timeIntervals[i].ixBug,
 						'Title': timeIntervals[i].sTitle,
@@ -202,7 +206,7 @@
 			prepareClockData: function (clockInputData, donut) {
 				// This is for the 24 Hour clock.
 
-				if (this.timeIntervals.intervals.length === 0) {
+				if (this.timeIntervals.length === 0) {
 					donut.clear();
 					donut.updateTwentyFour([]);
 					return;
@@ -263,76 +267,76 @@
 				donut.clear();
 				donut.updateTwentyFour(startOfTimeData);
 			},
-			sumDurations: function (intervals) {
-				// This method assumes that the intervals array objects have durations
-				var sum = moment.duration(0, 'minutes');
+			// sumDurations: function (intervals) {
+			// 	// This method assumes that the intervals array objects have durations
+			// 	var sum = moment.duration(0, 'minutes');
 
-				for (var i = 0; i < intervals.length; i++) {
-					if (intervals[i].duration) {
-						sum = sum.add(intervals[i].duration);
-					}
-				}
+			// 	for (var i = 0; i < intervals.length; i++) {
+			// 		if (intervals[i].duration) {
+			// 			sum = sum.add(intervals[i].duration);
+			// 		}
+			// 	}
 
-				return sum;
-			},
-			addDurations: function (intervals) {
-				for (var i = 0; i < intervals.length; i++) {
-					intervals[i].duration = this.getDuration(intervals[i].dtStart, intervals[i].dtEnd);
-				}
+			// 	return sum;
+			// },
+			// addDurations: function (intervals) {
+			// 	for (var i = 0; i < intervals.length; i++) {
+			// 		intervals[i].duration = utilities.dataPreparation.getDuration(intervals[i].dtStart, intervals[i].dtEnd);
+			// 	}
 
-				return intervals;
-			},
-			getDuration: function (start, end) {
-				if (start && end) {
-					var startMoment = moment(start);
-					var endMoment = moment(end);
-				} else if (start && !end) {
-					// Use the current time as end if we dont have one
-					var startMoment = moment(start);
-					var endMoment = moment();
-				} else {
-					return moment.duration(0, 'minutes');
-				}
+			// 	return intervals;
+			// },
+			// getDuration: function (start, end) {
+			// 	if (start && end) {
+			// 		var startMoment = moment(start);
+			// 		var endMoment = moment(end);
+			// 	} else if (start && !end) {
+			// 		// Use the current time as end if we dont have one
+			// 		var startMoment = moment(start);
+			// 		var endMoment = moment();
+			// 	} else {
+			// 		return moment.duration(0, 'minutes');
+			// 	}
 
-				return moment.duration(endMoment.diff(startMoment));
-			},
-			calculateTimeWorked: function (intervals, donut) {
-				//This is for The 8 Hour Clock
-				var timeWorked = moment.duration(0);
-				if (!intervals) {
-					return 0;
-				}
+			// 	return moment.duration(endMoment.diff(startMoment));
+			// },
+			// calculateTimeWorked: function (intervals, donut) {
+			// 	//This is for The 8 Hour Clock
+			// 	var timeWorked = moment.duration(0);
+			// 	if (!intervals) {
+			// 		return 0;
+			// 	}
 
-				for (var i = 0; i < intervals.length; i++) {
-					var startMoment = moment(intervals[i].dtStart)
-					if (intervals[i].dtEnd) {
-						var endMoment = moment(intervals[i].dtEnd)
-					} else {
-						var endMoment = moment();
-						this.setActiveCase(intervals[i].ixBug);
-					}
+			// 	for (var i = 0; i < intervals.length; i++) {
+			// 		var startMoment = moment(intervals[i].dtStart)
+			// 		if (intervals[i].dtEnd) {
+			// 			var endMoment = moment(intervals[i].dtEnd)
+			// 		} else {
+			// 			var endMoment = moment();
+			// 			this.setActiveCase(intervals[i].ixBug);
+			// 		}
 
 
-					var duration = moment.duration(endMoment.diff(startMoment));
+			// 		var duration = moment.duration(endMoment.diff(startMoment));
 
-					timeWorked = timeWorked.add(duration);
-				}
+			// 		timeWorked = timeWorked.add(duration);
+			// 	}
 
-				return timeWorked;
-			},
-			getWorkdaysForPeriod: function (startDay, endDay) {
-				var days = 0;
-				var tempDay = moment(startDay);
+			// 	return timeWorked;
+			// },
+			// getWorkdaysForPeriod: function (startDay, endDay) {
+			// 	var days = 0;
+			// 	var tempDay = moment(startDay);
 
-				while (tempDay.isBefore(endDay)) {
-					if (tempDay.day() !== 0 && tempDay.day() !== 6) {
-						days++;
-					}
-					tempDay.add(1, 'days');
-				}
+			// 	while (tempDay.isBefore(endDay)) {
+			// 		if (tempDay.day() !== 0 && tempDay.day() !== 6) {
+			// 			days++;
+			// 		}
+			// 		tempDay.add(1, 'days');
+			// 	}
 
-				return days;
-			},
+			// 	return days;
+			// },
 
 			/////////    HTTP Methods     /////////
 			setActiveCase: function (ixBug) {
@@ -386,7 +390,8 @@
 			handleStartWorkRequest: function () {
 				//this.getPerson();
 				store.dispatch('getPerson');
-				this.getTimeSheet(this.dayToShow);
+				this.$store.dispatch('getTimeSheet', this.dayToShow)
+				//this.getTimeSheet(this.dayToShow);
 			},
 			stopWork: function () {
 				var stopWork = {
@@ -401,7 +406,9 @@
 				utilities.loader.stop();
 				//this.getPerson();
 				store.dispatch('getPerson');
-				this.getTimeSheet(this.dayToShow);
+				
+				// this.getTimeSheet(this.dayToShow);
+				this.$store.dispatch('getTimeSheet', this.dayToShow)
 				this.setActiveCase();
 			},
 			deleteInterval: function (timeIntervalId) {
@@ -417,7 +424,8 @@
 			handleDeleteInterval: function (response) {
 				utilities.loader.stop();
 
-				this.getTimeSheet(this.dayToShow);
+				this.$store.dispatch('getTimeSheet', this.dayToShow)
+				//this.getTimeSheet(this.dayToShow);
 
 			},
 			getCaseByNumber: function (caseNumber) {
@@ -491,7 +499,8 @@
 			},
 			handleAddIntervalRequest: function(response) {
 				utilities.loader.stop();
-				this.getTimeSheet(this.dayToShow);
+				this.$store.dispatch('getTimeSheet', this.dayToShow)
+				//this.getTimeSheet(this.dayToShow);
 			},
 			// Clear time works by adding time to a case, then deleting the interval we just created.
 			clearTime: function(dtStart, dtEnd) {
@@ -531,14 +540,14 @@
 					var endTime = new moment(dayInPayPeriod).endOf('month');
 				}
 
-				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
+				this.workdays = utilities.dataPreparation.getWorkdaysForPeriod(startTime, endTime);
 
 				// TODO - Update variable name workdaysSoFar
 				// If current time is between startTime & endTime, calculate workdays from startTime to now.
 				if(moment().isBetween(startTime, endTime)) {
-					this.workdaysSoFar = this.getWorkdaysForPeriod(startTime, moment());
+					this.workdaysSoFar = utilities.dataPreparation.getWorkdaysForPeriod(startTime, moment());
 				} else {
-					this.workdaysSoFar = this.getWorkdaysForPeriod(startTime, endTime);
+					this.workdaysSoFar = utilities.dataPreparation.getWorkdaysForPeriod(startTime, endTime);
 				}
 
 				this.workedDuration = moment.duration((this.workdaysSoFar * 8), 'hours');
@@ -558,8 +567,8 @@
 			},
 			handlePayPeriodRequest: function (response) {
 				this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
-				this.payPeriodIntervals = this.addDurations(this.payPeriodIntervals);
-				this.payPeriodTotal = this.sumDurations(this.payPeriodIntervals);
+				this.payPeriodIntervals = utilities.dataPreparation.addDurations(this.payPeriodIntervals);
+				this.payPeriodTotal = utilities.dataPreparation.sumDurations(this.payPeriodIntervals);
 
 				//Update Chart stuff
 				var intervalData = utilities.chartHelper.getProcessedData(this.payPeriodIntervals,this.payPeriodStartDate,this.payPeriodEndDate);
@@ -612,19 +621,19 @@
 
 				this.downloadReady = true;
 			},
-			getPerson: function () {
-				var viewPerson = {
-					"cmd": "viewPerson",
-					"token": utilities.authenticator.getToken()
-				};
+			// getPerson: function () {
+			// 	var viewPerson = {
+			// 		"cmd": "viewPerson",
+			// 		"token": utilities.authenticator.getToken()
+			// 	};
 
-				utilities.loader.start();
-				utilities.api(viewPerson).then(this.handlePersonRequest);
-			},
-			handlePersonRequest: function (response) {
-				this.currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
-				utilities.loader.stop();
-			},
+			// 	utilities.loader.start();
+			// 	utilities.api(viewPerson).then(this.handlePersonRequest);
+			// },
+			// handlePersonRequest: function (response) {
+			// 	this.currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
+			// 	utilities.loader.stop();
+			// },
 
 			//METRICS
 			getMetrics: function (targetDate) {
@@ -713,16 +722,27 @@
 				this.getMetrics(moment());
 			},
 			showPreviousDay: function () {
-				this.getTimeSheet(this.dayToShow.subtract(1, 'days'));
+				let previousDay = this.dayToShow.subtract(1, 'days');
+				this.$store.dispatch('getTimeSheet', previousDay)
+				//this.getTimeSheet();
 			},
 			showNextDay: function () {
-				this.getTimeSheet(this.dayToShow.add(1, 'days'));
+				let nextDay = this.dayToShow.add(1, 'days');
+				this.$store.dispatch('getTimeSheet', nextDay)
+
+				//this.getTimeSheet();
 			},
 			skipToMonday: function () {
-				this.getTimeSheet(this.dayToShow.add(3, 'days'));
+				let monday = this.dayToShow.add(3, 'days');
+				this.$store.dispatch('getTimeSheet', monday)
+
+				//this.getTimeSheet();
 			},
 			skipToFriday: function () {
-				this.getTimeSheet(this.dayToShow.subtract(3, 'days'));
+				let friday = this.dayToShow.subtract(3, 'days');
+				this.$store.dispatch('getTimeSheet', friday);
+				
+				//this.getTimeSheet();
 			},
 			showToday: function () {
 				var today = new moment();
@@ -733,16 +753,18 @@
 			},
 			showDay: function (day) {
 				day = new moment(day);
-				this.getTimeSheet(day);
+
+				this.$store.dispatch('getTimeSheet', friday);
+				//this.getTimeSheet(day);
 			},
 			invertColors: function () {
 				store.commit('invertColors');
 			},
 			refresher: function () {
 				if (utilities.authenticator.hasToken()) {
-					this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
+				//	this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
 
-					this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
+					this.prepareClockData(this.timeIntervals, this.twentyFourHourDonut);
 				}
 			}
 		}

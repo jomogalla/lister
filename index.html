@@ -280,7 +280,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr v-for="interval of timeIntervals.intervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
+										<tr v-for="interval of timeIntervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
 											<td>
 												<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
 											</td>
@@ -475,14 +475,26 @@
 	<script type="text/javascript" src="scripts/utilities/loader.js"></script>
 	<script type="text/javascript" src="scripts/utilities/storage.js"></script>
 	<script type="text/javascript" src="scripts/utilities/notifier.js"></script>
+	<script type="text/javascript" src="scripts/utilities/dataPreparation.js"></script>
+
 
 	<!-- Vue Stuff -->
-	<script type="text/javascript" src="scripts/store.js"></script>
+	<!-- Store -->
+	<script type="text/javascript" src="scripts/store/modules/time.js"></script>
+	<script type="text/javascript" src="scripts/store/modules/ui.js"></script>
+	<script type="text/javascript" src="scripts/store/modules/controls.js"></script>
+	<script type="text/javascript" src="scripts/store/store.js"></script>
+
+	<!-- Misc -->
 	<script type="text/javascript" src="scripts/filters.js"></script>
+
+	<!-- Components -->
 	<script type="text/javascript" src="scripts/components/add-interval.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/components/login.component.js"></script>
+	
+	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>
 
 
