@@ -19,13 +19,13 @@
 		//	caseActive: false,
 
 			// Cases
-			currentViewedCaseId: null,
-			currentCase: {},
-			starredCases: [],
+			// currentViewedCaseId: null,
+			// currentCase: {},
+			// starredCases: [],
 
 			// Search - Should go in component
-			searchQuery: '',
-			searchResults: {},
+			// searchQuery: '',
+			// searchResults: {},
 
 			// Timesheet
 			//dayToShow: moment(),
@@ -71,11 +71,14 @@
 			hasToken: state => state.hasToken,
 			dayToShow: state => state.time.dayToShow,
 			timeIntervals: state => state.time.intervals,
+			currentViewedCaseId: state => state.case.currentViewedCaseId,
+			currentCase: state => state.case.currentCase,
+			starredCases: state => state.case.starredCases,
 			timeWorked() {
 				return this.$store.getters.timeWorked;
 			},
 			fogbugzLinkUrl () {
-				return constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
+				return utilities.authenticator.getFogBugzLinkUrl();
 			}
 		}),
 		watch: {
@@ -135,11 +138,13 @@
 
 
 				// Load Starred Cases
-				this.getStarredCases();
+				// this.getStarredCases();
+				store.dispatch('getStarredCases');
 
 				// Refresh the charts every second
 				setInterval(function () { self.refresher() }, 60000);
 			},
+			// Move this to utilities
 			downloadCSV: function (args) {
 				var data, filename, link;
 				var csv = utilities.convertArrayOfObjectsToCSV({
@@ -169,7 +174,8 @@
 			updateCaseById: function (caseId) {
 				if (caseId === this.currentCase.ixBug) { return; }
 
-				this.getCaseByNumber(caseId)
+				// this.getCaseByNumber(caseId)
+				store.dispatch('getCaseByNumber', caseId);
 			},
 
 			resetCurrentCaseId: function () {
@@ -359,21 +365,21 @@
 				this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 				utilities.loader.stop();
 			},
-			getStarredCases: function () {
-				var listCases = {
-					"cmd": "listCases",
-					"cols": ["ixBug","sTitle"],
-					"token": utilities.authenticator.getToken(),
-					"sFilter": constants.starredByFilterId
-				};
+			// getStarredCases: function () {
+			// 	var listCases = {
+			// 		"cmd": "listCases",
+			// 		"cols": ["ixBug","sTitle"],
+			// 		"token": utilities.authenticator.getToken(),
+			// 		"sFilter": constants.starredByFilterId
+			// 	};
 
-				utilities.loader.start();
-				utilities.api(listCases).then(this.handleStarredCases);
-			},
-			handleStarredCases: function (response) {
-				utilities.loader.stop();
-				this.starredCases = response.data.cases;
-			},
+			// 	utilities.loader.start();
+			// 	utilities.api(listCases).then(this.handleStarredCases);
+			// },
+			// handleStarredCases: function (response) {
+			// 	utilities.loader.stop();
+			// 	this.starredCases = response.data.cases;
+			// },
 			startWork: function (caseId) {
 				var startWork = {
 					"cmd": "startWork",
@@ -428,34 +434,34 @@
 				//this.getTimeSheet(this.dayToShow);
 
 			},
-			getCaseByNumber: function (caseNumber) {
-				if (caseNumber === this.currentCase.ixBug) { return; }
+			// getCaseByNumber: function (caseNumber) {
+			// 	if (caseNumber === this.currentCase.ixBug) { return; }
 
-				this.currentViewedCaseId = caseNumber;
+			// 	this.currentViewedCaseId = caseNumber;
 
-				var getCase = {
-					"cmd": "search",
-					"token": utilities.authenticator.getToken(),
-					"q": caseNumber,
-					"max": 1,
-					"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts", "hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
-				};
+			// 	var getCase = {
+			// 		"cmd": "search",
+			// 		"token": utilities.authenticator.getToken(),
+			// 		"q": caseNumber,
+			// 		"max": 1,
+			// 		"cols": ["ixBug", "ixBugParent", "sTitle", "dblStoryPts", "hrsElapsed", "sLatestTextSummary", "ixBugEventLatestText", "events"]
+			// 	};
 
-				utilities.loader.start();
-				utilities.api(getCase).then(this.handleCaseRequest);
-			},
-			handleCaseRequest: function (response) {
-				utilities.loader.stop();
-				var responseObject = typeof response === 'object' ? response.data.cases[0] : JSON.parse(response).data.cases[0];
+			// 	utilities.loader.start();
+			// 	utilities.api(getCase).then(this.handleCaseRequest);
+			// },
+			// handleCaseRequest: function (response) {
+			// 	utilities.loader.stop();
+			// 	var responseObject = typeof response === 'object' ? response.data.cases[0] : JSON.parse(response).data.cases[0];
 
-				// Check to make sure we have a case
-				if (response.data.totalHits !== 0) {
-					this.currentCase = responseObject;
-					this.currentViewedCaseId = this.currentCase.ixBug;
-				} else {
-					this.currentViewedCaseId = this.currentCase.ixBug || null;
-				}
-			},
+			// 	// Check to make sure we have a case
+			// 	if (response.data.totalHits !== 0) {
+			// 		this.currentCase = responseObject;
+			// 		this.currentViewedCaseId = this.currentCase.ixBug;
+			// 	} else {
+			// 		this.currentViewedCaseId = this.currentCase.ixBug || null;
+			// 	}
+			// },
 			editInterval: function (ixInterval, dtStart, dtEnd) {
 				var editInterval = {
 					"cmd": "editInterval",
@@ -475,7 +481,8 @@
 			},
 			handleEditIntervalRequest: function (response) {
 				utilities.loader.stop();
-				this.getTimeSheet(this.dayToShow);
+				this.$store.dispatch('getTimeSheet', this.dayToShow)
+				//this.getTimeSheet(this.dayToShow);
 			},
 			addInterval: function (ixBug, dtStart, dtEnd) {
 				if(dtStart._isAMomentObject) {
@@ -694,10 +701,10 @@
 				store.commit('showSearch');
 			},
 			showCase: function (caseNumber) {
-				store.commit('showCase');
+				store.dispatch('getAndShowCase', caseNumber);
 
 				// TODO add logic to only get this if the case has changed or is null
-				this.getCaseByNumber(caseNumber);
+				//this.getCaseByNumber(caseNumber);
 
 			},
 			showPayPeriod: function () {
@@ -762,6 +769,7 @@
 			},
 			refresher: function () {
 				if (utilities.authenticator.hasToken()) {
+					// Need to update getters on store
 				//	this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
 
 					this.prepareClockData(this.timeIntervals, this.twentyFourHourDonut);

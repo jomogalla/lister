@@ -38,6 +38,7 @@ Vue.component('login', {
 				store.commit('setToken', token);
 				//this.hasToken = true;
 
+				// THIS IS BROKEN
 				this.initializeApp();
 			}
 		},

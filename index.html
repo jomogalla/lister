@@ -89,46 +89,7 @@
 				<div class="everything-else" v-show="hasToken">
 					<div class="row">					
 						<!-- SEARCH VIEW -->
-						<div class="search-wrapper twelve columns" v-show="searchView">
-							<form class="row" v-on:submit.prevent="search">
-								<h5 class="nine columns border-bottom">
-									<input v-model="searchQuery" name="searchQuery" class="u-full-width hidden-input" type="text" placeholder="query">
-								</h5>
-								<div class="three columns">
-									<button class="button-primary u-full-width" type="submit">
-										search
-									</button>
-								</div>
-							</form>
-
-							<table class="u-full-width" v-show="hasToken">
-								<thead>
-									<tr>
-										<th> &nbsp; </th>
-										<th>Case # </th>
-										<th>Title</th>
-										<th>Status</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr v-for="fcase of searchResults.cases">
-										<td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
-										<td>
-											<a v-on:click.prevent="showCase(fcase.ixBug)">{{fcase.ixBug}}</a>
-											<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
-										</td>
-										<td>{{fcase.sTitle}}</td>
-										<td>{{fcase.sStatus}}</td>
-									</tr>
-								</tbody>
-							</table>
-							<h5 class="italic gray centered-text" v-show="searchResults.cases && searchResults.cases.length === 50">
-								<i>{{searchResults.totalHits}} results, limited to top 50</i>
-							</h5>
-							<h5 class="italic gray centered-text" v-show="searchQuery && !searchResults.count && searchResults.count === 0">
-									<i>no search results</i>
-								</h5>
-						</div>
+						<search></search>
 						<!-- END SEARCH VIEW -->
 
 						<!-- PAY PERIOD VIEW -->
@@ -436,6 +397,49 @@
 		</div>
 	</script>
 
+	<script type="text/x-template" id="search-template">
+		<div class="search-wrapper twelve columns" v-show="searchView">
+			<form class="row" v-on:submit.prevent="search">
+				<h5 class="nine columns border-bottom">
+					<input v-model="searchQuery" name="searchQuery" class="u-full-width hidden-input" type="text" placeholder="query">
+				</h5>
+				<div class="three columns">
+					<button class="button-primary u-full-width" type="submit">
+						search
+					</button>
+				</div>
+			</form>
+
+			<table class="u-full-width" v-show="hasToken">
+				<thead>
+					<tr>
+						<th> &nbsp; </th>
+						<th>Case # </th>
+						<th>Title</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="fcase of searchResults.cases">
+						<td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
+						<td>
+							<a v-on:click.prevent="showCase(fcase.ixBug)">{{fcase.ixBug}}</a>
+							<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+						</td>
+						<td>{{fcase.sTitle}}</td>
+						<td>{{fcase.sStatus}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h5 class="italic gray centered-text" v-show="searchResults.cases && searchResults.cases.length === 50">
+				<i>{{searchResults.totalHits}} results, limited to top 50</i>
+			</h5>
+			<h5 class="italic gray centered-text" v-show="searchQuery && !searchResults.count && searchResults.count === 0">
+					<i>no search results</i>
+				</h5>
+		</div>
+	</script>
+
 
 	<!-- END TEMPLATES -->
 
@@ -483,6 +487,7 @@
 	<script type="text/javascript" src="scripts/store/modules/time.js"></script>
 	<script type="text/javascript" src="scripts/store/modules/ui.js"></script>
 	<script type="text/javascript" src="scripts/store/modules/controls.js"></script>
+	<script type="text/javascript" src="scripts/store/modules/case.js"></script>
 	<script type="text/javascript" src="scripts/store/store.js"></script>
 
 	<!-- Misc -->
@@ -493,6 +498,7 @@
 	<script type="text/javascript" src="scripts/components/input-time.component.js"></script>
 	<script type="text/javascript" src="scripts/components/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/components/login.component.js"></script>
+	<script type="text/javascript" src="scripts/components/search.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>

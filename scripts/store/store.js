@@ -6,7 +6,8 @@ const store = new Vuex.Store({
 	modules: {
 		ui: uiModule,
 		controls: controlsModule,
-		time: timeModule
+		time: timeModule,
+		case: caseModule
 	},
 	state: {
 		token: null,

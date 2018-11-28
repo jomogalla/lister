@@ -38,7 +38,9 @@ const uiModule = {
 			state.payPeriodView = false;
 			state.metricsView = false;
 			state.starredCasesView = false;
-			state.settingsView = false;
+            state.settingsView = false;
+            
+
 		},
 		showPayPeriod: function (state) {
 			state.listView = false;
@@ -84,5 +86,11 @@ const uiModule = {
 
 			utilities.storage.save('stylesInverted', state.stylesInverted);
 		}
-	}
+    },
+    actions: {
+        getAndShowCase: function (context, caseNumber) {
+            context.commit('showCase', caseNumber);
+            context.dispatch('getCaseByNumber', caseNumber);
+		},
+    }
 }
