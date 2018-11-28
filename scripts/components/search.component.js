@@ -2,9 +2,6 @@ var mapState = Vuex.mapState;
 
 Vue.component('search', {
 	template: '#search-template',
-	props: [
-
-	],
 	data: function() {
 		return {
 			searchQuery: '',

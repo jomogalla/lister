@@ -89,6 +89,7 @@ const uiModule = {
     },
     actions: {
         getAndShowCase: function (context, caseNumber) {
+			context.commit('setCurrentCase');
             context.commit('showCase', caseNumber);
             context.dispatch('getCaseByNumber', caseNumber);
 		},

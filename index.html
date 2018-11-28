@@ -22,14 +22,11 @@
 	<!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<!-- third party  -->
- 	<link rel="stylesheet" href="css/normalize.css">
+ 	<link rel="stylesheet" href="css/thirdparty/normalize.css">
 	<link rel="stylesheet" href="css/thirdparty/pikaday.css">
-	<link rel="stylesheet" href="css/skeleton.css">
-
-	<!-- third party cdn -->
-	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"> -->
+	<link rel="stylesheet" href="css/thirdparty/fontawesome.min.css">
+	<link rel="stylesheet" href="css/thirdparty/solid.min.css">
+	<link rel="stylesheet" href="css/thirdparty/skeleton.css">
 
 	<!-- homegrown -->
 	<link rel="stylesheet" href="css/styles.css">
@@ -87,7 +84,11 @@
 
 				<!-- EVERYTHING -->
 				<div class="everything-else" v-show="hasToken">
-					<div class="row">					
+					<div class="row">		
+						<!-- HOME VIEW -->
+						<home></home>
+						<!-- END HOME VIEW -->
+						
 						<!-- SEARCH VIEW -->
 						<search></search>
 						<!-- END SEARCH VIEW -->
@@ -183,149 +184,7 @@
 						
 						
 						<!-- Home  -->
-						<div v-show="listView || caseView">
-							<!-- HOME HEADER -->
-							<div class="tabs row">
-								<!-- Timesheet Header-->
-								<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
-									<input-date v-bind:datestuff="dayToShow" v-on:datepicked="showDay"/></input-date>
-								</h5>
-								<!-- Case Header -->
-								<h5 class="four columns" v-bind:class="{ 'active': caseView }">
-									<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
-									<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
-											v-model="currentViewedCaseId" 
-											v-on:keyup.enter="updateCaseById(currentViewedCaseId)" 
-											v-on:blur="resetCurrentCaseId()" 
-											v-on:click="hideStarredCases"
-											v-bind:class="{ 'light-gray': starredCasesView }"/>
-											
-									<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
-								</h5>
-							</div>
-							<!-- END HOME HEADER -->
-							
-							<!-- TIMESHEET VIEW -->
-							<div class="time-wrapper eight columns">
-								<div class="row pagination-controls">
-									<span class="four columns">
-										<span v-show="dayToShow.day() !== 1">
-											<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-										</span>
-										<span v-show="dayToShow.day() === 1">
-												<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
-												<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-										</span>
-									</span>
-									<span class="four columns">
-										<button class="paginate button button-bar" v-on:click="showToday">Today</button>
-									</span>
-									<span class="four columns right-text">
-										<span v-show="dayToShow.day() !== 5">
-											<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-										</span>
-										<span v-show="dayToShow.day() === 5">
-											<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-											<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
-										</span>
-									</span>
-								</div>
-								<table class="u-full-width no-overflow" v-show="hasToken">
-									<thead>
-										<tr>
-											<th width="5%">Case</th>
-											<th width="10%">&nbsp;&nbsp;&nbsp;</th>
-											<th width="71%">Title</th>
-											<th width="7%">Start</th>
-											<th width="7%">End</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr v-for="interval of timeIntervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
-											<td>
-												<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
-											</td>
-											<td class="controls">
-												<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
-												<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
-												<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
-												&nbsp;
-												<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
-											</td>
-											<td class="overflow-popover"> {{interval.sTitle}}</td>
-											<td class="split-date">
-												<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
-											</td>
-											<td class="split-date">
-												<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
-								<script type="text/x-template" id="add-interval-template">
-									<div class="add-form">
-										<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
-												<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
-												<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
-										</div>
-										<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
-											<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
-											<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-											&#x27F6;
-											<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-											<button class="button" type="submit">Add Time</button>
-										</form>
-										<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
-												<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-												&#x27F6;
-												<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-												<button class="button dark-red" type="submit">Clear Time</button>
-										</form>
-									</div>
-								</script>
-							</div>
-							<!-- END TIMESHEET VIEW -->
-							
-							
-							<!-- CASE VIEW -->
-							<div class="case-wrapper four columns" v-show="listView || caseView">
-								<div v-show="!starredCasesView">
-									<h5 v-show="currentCase.ixBug" class="case-title">
-										{{currentCase.sTitle}}
-										<span class="u-pull-right">
-											<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
-											<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
-											<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
-												<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
-											</a>
-										</span>
-									</h5>
-									<hr v-show="currentCase.ixBug">
-									<div v-for="event of currentCase.events" v-show="event.s" class="copy">
-										<span v-html="event.sHtml"></span>
-									</div>
-								</div>
-								<!-- Starred Cases -->
-								<div class="starred-cases" v-show="starredCasesView">
-									<h5 class="case-title"> Starred Cases</h5>
-									<hr>
-									<table class="u-full-width no-overflow">
-										<tbody>
-											<tr v-for="bug in starredCases">
-												<td>
-													<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{bug.ixBug}}</a>
-													<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
-														<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
-													</a></td>
-												<td>{{bug.sTitle}}</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-							<!-- END CASE VIEW -->
-						</div>
+
 						<!-- END HOME VIEW -->
 					</div>				
 				</div>
@@ -338,8 +197,7 @@
 		<span id="notifier"></span>
 	</div>
 	<!-- TEMPLATES -->
-
-	<!-- Case Links -->
+	<!-- CASE LINKS TEMPLATE -->
 	<script type="text/x-template" id="case-links-template">
 		<span class="case-links">
 			<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
@@ -351,7 +209,7 @@
 		</span>
 	</script>
 
-	<!-- Login -->
+	<!-- LOGIN TEMPLATE -->
 	<script type="text/x-template" id="login-template">
 		<div class="login buffer" v-show="!hasToken">
 			<form v-on:submit.prevent="addToken">
@@ -397,6 +255,7 @@
 		</div>
 	</script>
 
+	<!-- SEARCH TEMPLATE -->
 	<script type="text/x-template" id="search-template">
 		<div class="search-wrapper twelve columns" v-show="searchView">
 			<form class="row" v-on:submit.prevent="search">
@@ -440,6 +299,164 @@
 		</div>
 	</script>
 
+	<!-- ADD INTERVAL TEMPLATE -->
+	<script type="text/x-template" id="add-interval-template">
+		<div class="add-form">
+			<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
+					<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
+					<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+			</div>
+			<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
+				<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
+				<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+				&#x27F6;
+				<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+				<button class="button" type="submit">Add Time</button>
+			</form>
+			<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
+					<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+					&#x27F6;
+					<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+					<button class="button dark-red" type="submit">Clear Time</button>
+			</form>
+		</div>
+	</script>
+
+	<!-- CASE TEMPLATE -->
+	<script type="text/x-template" id="case-template">
+		<div v-show="!starredCasesView">
+			<h5 v-show="currentCase.ixBug" class="case-title">
+				{{currentCase.sTitle}}
+				<span class="u-pull-right">
+					<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
+					<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
+					<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
+						<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+					</a>
+				</span>
+			</h5>
+			<hr v-show="currentCase.ixBug">
+			<div v-for="event of currentCase.events" v-show="event.s" class="copy">
+				<span v-html="event.sHtml"></span>
+			</div>
+		</div>
+	</script>
+
+	<!-- STARRED CASES TEMPLATE -->
+	<script type="text/x-template" id="starred-cases-template">
+		<div class="starred-cases" v-show="starredCasesView">
+			<h5 class="case-title"> Starred Cases</h5>
+			<hr>
+			<table class="u-full-width no-overflow">
+				<tbody>
+					<tr v-for="bug in starredCases">
+						<td>
+							<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{bug.ixBug}}</a>
+							<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
+								<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+							</a></td>
+						<td>{{bug.sTitle}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</script>
+
+	<!-- HOME TEMPLATE -->
+	<script type="text/x-template" id="home-template">
+		<div v-show="listView || caseView">
+			<!-- HOME HEADER -->
+			<div class="tabs row">
+				<!-- Timesheet Header-->
+				<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
+					<input-date v-bind:datestuff="dayToShow" v-on:datepicked="showDay"/></input-date>
+				</h5>
+				<!-- Case Header -->
+				<h5 class="four columns" v-bind:class="{ 'active': caseView }">
+					<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
+					<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
+							:value="currentViewedCaseId" 
+							v-on:keyup.enter="updateCaseById" 
+							v-on:blur="resetCurrentCaseId()" 
+							v-on:click="hideStarredCases"
+							v-bind:class="{ 'light-gray': starredCasesView }"/>
+							
+					<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
+				</h5>
+			</div>
+			<!-- END HOME HEADER -->
+			
+			<!-- TIMESHEET VIEW -->
+			<div class="time-wrapper eight columns">
+				<div class="row pagination-controls">
+					<span class="four columns">
+						<span v-show="dayToShow.day() !== 1">
+							<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+						</span>
+						<span v-show="dayToShow.day() === 1">
+								<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
+								<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+						</span>
+					</span>
+					<span class="four columns">
+						<button class="paginate button button-bar" v-on:click="showToday">Today</button>
+					</span>
+					<span class="four columns right-text">
+						<span v-show="dayToShow.day() !== 5">
+							<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+						</span>
+						<span v-show="dayToShow.day() === 5">
+							<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+							<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
+						</span>
+					</span>
+				</div>
+				<table class="u-full-width no-overflow" v-show="hasToken">
+					<thead>
+						<tr>
+							<th width="5%">Case</th>
+							<th width="10%">&nbsp;&nbsp;&nbsp;</th>
+							<th width="71%">Title</th>
+							<th width="7%">Start</th>
+							<th width="7%">End</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="interval of timeIntervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
+							<td>
+								<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
+							</td>
+							<td class="controls">
+								<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+								<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+								<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
+								&nbsp;
+								<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
+							</td>
+							<td class="overflow-popover"> {{interval.sTitle}}</td>
+							<td class="split-date">
+								<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
+							</td>
+							<td class="split-date">
+								<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
+			</div>
+			<!-- END TIMESHEET VIEW -->
+			
+			
+			<!-- CASE VIEW -->
+			<div class="case-wrapper four columns" v-show="listView || caseView">
+				<case></case>
+				<starred-cases></starred-cases>
+			</div>
+			<!-- END CASE VIEW -->
+		</div>
+	</script>
+
 
 	<!-- END TEMPLATES -->
 
@@ -448,23 +465,14 @@
 	<!-- Javascript
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<!-- Third Party -->
-	<script type="text/javascript" src="scripts/thirdparty/jquery.js"></script>
-	<script type="text/javascript" src="scripts/thirdparty/moment.js"></script>
-	<script type="text/javascript" src="scripts/thirdparty/moment-range.js"></script>
-	<script type="text/javascript" src="scripts/thirdparty/pikaday.js"></script>
-	<script type="text/javascript" src="scripts/thirdparty/Chart.js"></script>
-	<script type="text/javascript" src="scripts/thirdparty/lodash.js"></script>
-	<script type="text/javascript" src="scripts/thirdparty/vuex.js" type="module"></script>
-	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
-
-	<!-- Third Party Hosted -->
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script> -->
-
-	<script src="https://use.fontawesome.com/d04f0d059a.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/jquery.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/moment.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/moment-range.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/pikaday.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/Chart.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/lodash.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vuex.min.js" type="module"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script>
 
 	<!-- My Scripts -->
 	<script type="text/javascript" src="scripts/constants.js"></script>
@@ -499,6 +507,9 @@
 	<script type="text/javascript" src="scripts/components/input-date.component.js"></script>
 	<script type="text/javascript" src="scripts/components/login.component.js"></script>
 	<script type="text/javascript" src="scripts/components/search.component.js"></script>
+	<script type="text/javascript" src="scripts/components/home.component.js"></script>
+	<script type="text/javascript" src="scripts/components/case.component.js"></script>
+	<script type="text/javascript" src="scripts/components/starred-cases.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>

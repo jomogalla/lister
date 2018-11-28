@@ -38,6 +38,36 @@ const timeModule = {
 		}
 	},
 	actions: {
+		startWork(context, caseId) {
+			var startWork = {
+				"cmd": "startWork",
+				"token": utilities.authenticator.getToken(),
+				"ixBug": caseId
+			};
+
+			utilities.loader.start();
+			utilities.api(startWork).then(function() {
+				context.dispatch('getPerson');
+				context.dispatch('getTimeSheet', this.dayToShow)
+			});
+
+			context.commit('setCurrentCaseId', caseId);
+		},
+		stopWork(context) {
+			var stopWork = {
+				"cmd": "stopWork",
+				"token": utilities.authenticator.getToken()
+			};
+
+			utilities.loader.start();
+			utilities.api(stopWork).then(function() {
+				utilities.loader.stop();
+				context.dispatch('getPerson');
+				
+				context.dispatch('getTimeSheet', this.dayToShow)
+				store.commit('setCurrentCaseId');
+			});
+		},
 		getTimeSheet: function (context, date) {
 			// Set DayToShow
 			//this.dayToShow = moment(date);

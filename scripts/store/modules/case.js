@@ -1,6 +1,6 @@
 const caseModule = {			//Rename this module plz
 	state: {
-		currentViewedCaseId: null,
+		currentViewedCaseId: null,	// MOVE TO GETTER
 		currentCase: {},
 		starredCases: []
 	},
@@ -12,6 +12,10 @@ const caseModule = {			//Rename this module plz
 			state.currentViewedCaseId = caseId;
 		},
 		setCurrentCase(state, currentCase) {
+			if(!currentCase) {
+				state.currentCase = {};
+				return;
+			}
 			state.currentCase = currentCase;
 		},
 		setStarredCases(state, cases) {
