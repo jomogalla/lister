@@ -103,7 +103,7 @@
 			store.commit('initializeUI');
 
 			// If we have a subdomain - populate plz.
-			this.subdomain = utilities.authenticator.getSubDomain();
+			//this.subdomain = utilities.authenticator.getSubDomain();
 
 			// If we have a token, load her up
 			if (utilities.authenticator.hasToken()) {
@@ -142,7 +142,7 @@
 				store.dispatch('getStarredCases');
 
 				// Refresh the charts every second
-				setInterval(function () { self.refresher() }, 60000);
+				setInterval(function () { self.refresher() }, 1000);
 			},
 			// Move this to utilities
 			downloadCSV: function (args) {
@@ -209,70 +209,70 @@
 			},
 
 			/////////   Data Preparation Methods   /////////
-			prepareClockData: function (clockInputData, donut) {
-				// This is for the 24 Hour clock.
+			// prepareClockData: function (clockInputData, donut) {
+			// 	// This is for the 24 Hour clock.
 
-				if (this.timeIntervals.length === 0) {
-					donut.clear();
-					donut.updateTwentyFour([]);
-					return;
-				}
+			// 	if (this.timeIntervals.length === 0) {
+			// 		donut.clear();
+			// 		donut.updateTwentyFour([]);
+			// 		return;
+			// 	}
 
-				if (!clockInputData.length) { return; }
-				var date = clockInputData[0].dtStart;
-				var startOfDay = moment(date).startOf('day');
-				var endOfDay = moment(date).endOf('day');
-				var betterClockData = [];
+			// 	if (!clockInputData.length) { return; }
+			// 	var date = clockInputData[0].dtStart;
+			// 	var startOfDay = moment(date).startOf('day');
+			// 	var endOfDay = moment(date).endOf('day');
+			// 	var betterClockData = [];
 
-				// Strip the data to just be start & end
-				for (var i = 0; i < clockInputData.length; i++) {
-					var start = moment(clockInputData[i].dtStart);
-					var end = moment(clockInputData[i].dtEnd);
-					var bug = clockInputData[i].ixBug;
+			// 	// Strip the data to just be start & end
+			// 	for (var i = 0; i < clockInputData.length; i++) {
+			// 		var start = moment(clockInputData[i].dtStart);
+			// 		var end = moment(clockInputData[i].dtEnd);
+			// 		var bug = clockInputData[i].ixBug;
 
-					// Handle if there is no end time
-					if (!clockInputData[i].dtEnd) {
-						var end = moment();
-					}
+			// 		// Handle if there is no end time
+			// 		if (!clockInputData[i].dtEnd) {
+			// 			var end = moment();
+			// 		}
 
-					betterClockData.push({
-						'bug': bug,
-						'start': start,
-						'end': end
-					});
-				}
+			// 		betterClockData.push({
+			// 			'bug': bug,
+			// 			'start': start,
+			// 			'end': end
+			// 		});
+			// 	}
 
-				var startOfTimeData = [];
+			// 	var startOfTimeData = [];
 
-				// Turn the data into a bunch of durations
-				startOfTimeData.push({
-					'time': moment.duration(betterClockData[0].start.diff(startOfDay)).asMinutes(),
-					'bug': ''
-				});
+			// 	// Turn the data into a bunch of durations
+			// 	startOfTimeData.push({
+			// 		'time': moment.duration(betterClockData[0].start.diff(startOfDay)).asMinutes(),
+			// 		'bug': ''
+			// 	});
 
-				for (var i = 0; i < betterClockData.length; i++) {
-					startOfTimeData.push({
-						'time': moment.duration(betterClockData[i].end.diff(betterClockData[i].start)).asMinutes(),
-						'bug': betterClockData[i].bug
-					});
+			// 	for (var i = 0; i < betterClockData.length; i++) {
+			// 		startOfTimeData.push({
+			// 			'time': moment.duration(betterClockData[i].end.diff(betterClockData[i].start)).asMinutes(),
+			// 			'bug': betterClockData[i].bug
+			// 		});
 
-					// Calculate the down time between this time entry and the next and add it.
-					if (i < betterClockData.length - 1) {
-						startOfTimeData.push({
-							'time': moment.duration(betterClockData[i + 1].start.diff(betterClockData[i].end)).asMinutes(),
-							'bug': ''
-						});
-					}
-				}
+			// 		// Calculate the down time between this time entry and the next and add it.
+			// 		if (i < betterClockData.length - 1) {
+			// 			startOfTimeData.push({
+			// 				'time': moment.duration(betterClockData[i + 1].start.diff(betterClockData[i].end)).asMinutes(),
+			// 				'bug': ''
+			// 			});
+			// 		}
+			// 	}
 
-				startOfTimeData.push({
-					'time': moment.duration(endOfDay.diff(betterClockData[betterClockData.length - 1].end)).asMinutes(),
-					'bug': ''
-				});
+			// 	startOfTimeData.push({
+			// 		'time': moment.duration(endOfDay.diff(betterClockData[betterClockData.length - 1].end)).asMinutes(),
+			// 		'bug': ''
+			// 	});
 
-				donut.clear();
-				donut.updateTwentyFour(startOfTimeData);
-			},
+			// 	donut.clear();
+			// 	donut.updateTwentyFour(startOfTimeData);
+			// },
 			// sumDurations: function (intervals) {
 			// 	// This method assumes that the intervals array objects have durations
 			// 	var sum = moment.duration(0, 'minutes');
@@ -772,7 +772,7 @@
 					// Need to update getters on store
 				//	this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
 
-					this.prepareClockData(this.timeIntervals, this.twentyFourHourDonut);
+					this.twentyFourHourDonut.updateTwentyFour(this.timeIntervals);
 				}
 			}
 		}
