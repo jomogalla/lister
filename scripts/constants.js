@@ -51,7 +51,10 @@ const constants = {
 		type: 'eight',
 		legend: {
 			display: false
-		}
+		},
+		tooltips: {
+			enabled: false
+	   }
 	},
 	twentyFourHourDonutData: {
 		labels: [
@@ -67,9 +70,13 @@ const constants = {
 	},
 	twentyFourHourDonutOptions: {
 		type: 'twentyFour',
+		cutoutPercentage: 0,
 		legend: {
 			display: false
-		}
+		},
+		tooltips: {
+			enabled: false
+	   }
 	},
 	weeklyBarChartData: {
 		labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],

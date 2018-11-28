@@ -129,6 +129,7 @@
 				link.setAttribute('download', filename);
 				link.click();
 			},
+
 			formatTimeIntervalsForCSV: function (timeIntervals) {
 				var formattedIntervals = [];
 

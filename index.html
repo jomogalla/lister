@@ -44,7 +44,7 @@
 <body>
 	<div id="app" v-cloak>
 		<!-- CONTROLS -->
-		<div class="control-bar" v-show="hasToken">
+		<div class="control-bar hover-hide" v-show="hasToken">
 			<button class="button case-control">
 				<span v-show="currentPerson.ixBugWorkingOn > 0">
 					<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn}}</span>
@@ -59,7 +59,7 @@
 				<canvas id="chartone"></canvas>
 				<div class="eight-hour-text centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
 			</div>
-			<div class="clock-wrapper">
+			<div class="clock-wrapper hover-icon">
 				<canvas id="chartclock"></canvas>
 			</div>
 			<div class="nav pagination-controls no-select left-text">
@@ -71,7 +71,7 @@
 
 		</div>
 		<div class="info-bar" v-show="hasToken">
-			<a v-on:click.prevent="showSettings" class="red" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
+			<a v-on:click.prevent="showSettings" class="red hover-hide" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
 			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 		</div>
 		<!-- END CONTROLS -->
@@ -166,8 +166,9 @@
 						<div v-show="settingsView" class="settings-view">
 							<div class="settings-container">
 								<label for="invert-styles" class="pointer">
-									<i class="fa fa-check-circle-o fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
-									<i class="fa fa-circle-o fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
+									<i class="fas fa-check-circle fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
+									<i class="fas fa-circle fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
+									<!-- <i class="fas fa-circle"></i> -->
 									Invert Colors
 								</label>
 								
@@ -388,28 +389,28 @@
 			
 			<!-- TIMESHEET VIEW -->
 			<div class="time-wrapper eight columns">
-				<div class="row pagination-controls">
-					<span class="four columns">
-						<span v-show="dayToShow.day() !== 1">
+				<div class="row pagination-controls hover-hide">
+					<div class="four columns">
+						<div v-show="dayToShow.day() !== 1">
 							<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-						</span>
-						<span v-show="dayToShow.day() === 1">
-								<button class="paginate button button-bar" v-on:click="skipToFriday">Friday</button>
-								<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
-						</span>
-					</span>
-					<span class="four columns">
+						</div>
+						<div v-show="dayToShow.day() === 1">
+							<button class="paginate button button-bar left" v-on:click="skipToFriday">Friday</button>
+							<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+						</div>
+					</div>
+					<div class="four columns centered-text">
 						<button class="paginate button button-bar" v-on:click="showToday">Today</button>
-					</span>
-					<span class="four columns right-text">
-						<span v-show="dayToShow.day() !== 5">
+					</div>
+					<div class="four columns right-text">
+						<div v-show="dayToShow.day() !== 5">
 							<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-						</span>
-						<span v-show="dayToShow.day() === 5">
+						</div>
+						<div v-show="dayToShow.day() === 5">
 							<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-							<button class="paginate button button-bar" v-on:click="skipToMonday">Monday</button>
-						</span>
-					</span>
+							<button class="paginate button button-bar right" v-on:click="skipToMonday">Monday</button>
+						</div>
+					</div>
 				</div>
 				<table class="u-full-width no-overflow" v-show="hasToken">
 					<thead>

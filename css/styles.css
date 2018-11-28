@@ -31,21 +31,34 @@
 }
 
 .button-bar {
-    width: 50%;
+    /* width: 50%; */
     margin: 0;
 
     border-top-right-radius: 0;
     border-top-left-radius: 0; 
+    
 }
 
-.button-bar:first-child:not(:only-child) {
+.button-bar.right {
+    padding-left: 2rem;
+}
+
+.button-bar.left {
+    padding-right: 2rem;
+}
+
+.button-bar:focus {
+    color: #808080;
+}
+
+/* .button-bar:first-child:not(:only-child) {
     border-bottom-right-radius: 0;
     margin-right: -0.6rem;
 }
 
 .button-bar:last-child:not(:only-child) {
     border-bottom-left-radius: 0;
-}
+} */
 .red {
     color: #AD4D32;
 }
@@ -107,6 +120,11 @@ body.invert {
 
 [v-cloak] {
     display: none;
+}
+
+.hover-hide:not(:hover){
+    opacity: 0.5;
+    transition: opacity 0.3s;
 }
 
 .hover-icon, 
@@ -240,7 +258,7 @@ a:hover {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;    
+    z-index: 100;  
 }
 
 .nav {
@@ -287,15 +305,16 @@ a:hover {
     right: 0;
     left: 0;
 
-    background-color: #f6f6f6;
+    /* background-color: #f3f0ec; */
+    background-color: #e4e3e1;
     opacity: 0;
 
     z-index: -100;
 
-    transition: opacity 0.2s;
+    transition: opacity 0.1s linear;
 }
 #loader-background.show-loader {
-    opacity: 1
+    opacity: 1;
 }
 
 .case-control i {
@@ -371,6 +390,7 @@ a:hover {
 .pagination-controls button {
     border-color: transparent;
     color: #c1c1c1;
+    
 
     padding: 0;
     outline: none;
@@ -382,7 +402,7 @@ a:hover {
 
 .pagination-controls button:hover {
     border-color: transparent;
-    background-color: #f6f6f6;
+    /* background-color: #f6f6f6; */
 }
 
 
