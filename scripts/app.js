@@ -604,7 +604,7 @@
 			},
 			goToNextPayPeriod: function () {
 				let dates = this.getPayPeriodRange(this.$_currentPayPeriod);
-				this.getPayPeriod(dates[1].add(11, "days"));
+				this.getPayPeriod(dates[1].add(1, "days"));
 
 			},
 			handlePayPeriodRequest: function (response) {
