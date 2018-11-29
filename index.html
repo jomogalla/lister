@@ -182,11 +182,11 @@
 							<span class="gray small"> {{workdays}} day pay period</span>
 							<div class="chart-stuff">
 								
-								<!-- TODO allow for paging Periods -->
-								<!--<div class="pagination-controls no-select">
-									<button v-on:click="goToPreviousTimePeriod()" class="paginate button">Previous Time Period</button>
-									<button v-on:click="goToNextTimePeriod()" class="paginate button">Next Time Period</button>
-								</div>-->
+								<div class="pagination-controls no-select">
+									<button v-on:click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
+									|
+									<button v-on:click="goToNextPayPeriod()" class="paginate button">Next Pay Period</button>
+								</div>
 	
 								<div class="timesheet-chart-wrapper">
 									<canvas id="timesheet-chart"></canvas>
@@ -229,7 +229,10 @@
 						<!-- METRICS VIEW -->
 						<div class="metrics-wrapper" v-show="metricsView">
 							<h5 v-text="metricsTitle"></h5>
-							<span>{{metricsTotalHours}} Hours Total</span>
+							<span>{{metricsTotalHours}} Hours Week</span>
+							<div>{{metricsYtdHours}} Hours YTD</div>
+							<div>{{ytdWeekAverage}} Weekly Avg. YTD</div>
+							<div>{{ytdDailyAverage}} Daily Avg. YTD</div>
 							<div class="pagination-controls no-select">
 								<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
 								<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
@@ -238,6 +241,8 @@
 							<div class="metrics-chart-wrapper">
 								<canvas id="metrics-chart"></canvas>
 							</div>
+				
+							
 						</div>
 						<!-- END METRICS VIEW-->
 						

@@ -52,7 +52,8 @@
 			// Metrics
 			metricsTitle: "",
 			metricsTotalHours: 0,
-
+			metricsYtdHours: 0,
+			metricsYtdDays: [],
 			// Login
 			username: '',
 			password: '',
@@ -61,6 +62,14 @@
 			// Donuts - Remove from data 
 			eightHourDonut: null,
 			twentyFourHourDonut: null,
+		},
+		computed: {
+			ytdWeekAverage: function() {
+				return (this.metricsYtdHours / moment(this.$_currentMetricDate).isoWeek()).toFixed(2);
+			},
+			ytdDailyAverage: function() {
+				return (this.metricsYtdHours / this.metricsYtdDays.length).toFixed(2);
+			}
 		},
 		watch: {
 			timeWorked: function (newTimeWorked) {
@@ -75,7 +84,7 @@
 			// Private properties
 			this.$_bar = new utilities.bar('#metrics-chart', constants.weeklyBarChartData, constants.weeklyBarChartOptions);
 			this.$_currentMetricDate = moment();
-			
+			this.$_currentPayPeriod = moment(); 
 			//timesheet chart
 			this.$_timesheetBar = new utilities.bar('#timesheet-chart', constants.payPeriodBarChartData, constants.weeklyBarChartOptions);
 
@@ -546,9 +555,7 @@
 
 				this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 			},
-			getPayPeriod: function (dayInPayPeriod) {
-				this.downloadReady = false;
-
+			getPayPeriodRange: function(dayInPayPeriod) {
 				// if the date <= 15, startTime = 1st & endTime = 15th
 				// otherwise, startTime = 16th & endTime = last day of month
 				if (dayInPayPeriod.date() <= 15) {
@@ -558,7 +565,14 @@
 					var startTime = new moment(dayInPayPeriod).date(16).startOf('day');
 					var endTime = new moment(dayInPayPeriod).endOf('month');
 				}
-
+				return [startTime, endTime];
+			},
+			getPayPeriod: function(dayInPayPeriod) {
+				this.downloadReady = false;
+				var times = this.getPayPeriodRange(dayInPayPeriod);
+				this.$_currentPayPeriod = times[0].clone();
+				var startTime = times[0];
+				var endTime = times[1];
 				this.workdays = this.getWorkdaysForPeriod(startTime, endTime);
 
 				// TODO - Update variable name workdaysSoFar
@@ -583,6 +597,15 @@
 
 				utilities.loader.start();
 				utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
+			},
+			goToPreviousPayPeriod: function () {
+				let dates = this.getPayPeriodRange(this.$_currentPayPeriod);
+				this.getPayPeriod(dates[0].subtract(1, "days"));
+			},
+			goToNextPayPeriod: function () {
+				let dates = this.getPayPeriodRange(this.$_currentPayPeriod);
+				this.getPayPeriod(dates[1].add(1, "days"));
+
 			},
 			handlePayPeriodRequest: function (response) {
 				this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
@@ -657,7 +680,8 @@
 			//METRICS
 			getMetrics: function (targetDate) {
 				this.$_currentMetricDate = targetDate.clone();
-
+				
+				var startYear = targetDate.clone().startOf('year');
 				var startTime = targetDate.clone().startOf('week');
 				var endTime = targetDate.clone().endOf('week');
 				var dFormat = "M.DD";
@@ -670,20 +694,41 @@
 					"dtStart": startTime.toJSON(),
 					"dtEnd": endTime.toJSON()
 				};
+				var listIntervalsForYtd = {
+					"cmd": "listIntervals",
+					"token": utilities.authenticator.getToken(),
+					"dtStart": startYear.toJSON(),
+					"dtEnd": endTime.toJSON()
+				};
 
 				var vm = this;
 				utilities.loader.start();
 				utilities.api(listIntervalsForDate).then(function (response) {
-					var intervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
-					utilities.loader.stop();
-
-					var intervalData = utilities.chartHelper.getProcessedData(intervals, startTime, endTime);
-					vm.metricsTotalHours = intervalData.totalHours;
-
-					vm.$_bar.updateData(intervalData.hoursPerDay);
-				});
-
-			},
+						var intervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
+						utilities.loader.stop();
+	
+						var intervalData = utilities.chartHelper.getProcessedData(intervals, startTime, endTime);
+						vm.metricsTotalHours = intervalData.totalHours;
+	
+						vm.$_bar.updateData(intervalData.hoursPerDay);
+					});
+					
+				utilities.loader.start();
+				utilities.api(listIntervalsForYtd).then(function (response) {
+						var ytdIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
+						utilities.loader.stop();
+	
+						var intervalData = utilities.chartHelper.getProcessedData(ytdIntervals, startYear, endTime);
+						console.log(intervalData);
+						vm.metricsYtdHours = intervalData.totalHours;
+						vm.metricsYtdDays = intervalData.hoursPerDay.filter(function (day) {
+							if(day === "0.00") {
+								return false;
+							}
+							return true;
+						});
+					});
+				},
 
 			goToPreviousWeekMetrics: function() {
 				var targetDate = this.$_currentMetricDate.clone().subtract(1, "w");
