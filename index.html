@@ -94,57 +94,7 @@
 						<!-- END SEARCH VIEW -->
 
 						<!-- PAY PERIOD VIEW -->
-						<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
-							<div class="u-cf"></div>
-							<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
-								<span class="u-pull-right gray">&nbsp;|&nbsp;{{ workedDuration.asHours() }} h </span>
-								<span class="u-pull-right">{{ payPeriodTotal | humanize }}</span>
-							</h4>
-							<span class="gray small"> {{workdays}} day pay period</span>
-							<div class="chart-stuff">
-								
-								<div class="pagination-controls no-select">
-									<button v-on:click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
-									|
-									<button v-on:click="goToNextPayPeriod()" class="paginate button">Next Pay Period</button>
-								</div>
-	
-								<div class="timesheet-chart-wrapper">
-									<canvas id="timesheet-chart"></canvas>
-								</div>
-							</div>
-							<table class="u-full-width" v-show="hasToken">
-								<thead>
-									<tr>
-										<th width="10%"> Day </th>
-										<th width="10%"> Start </th>
-										<th width="10%"> End </th>
-										<th width="10%"> Duration </th>
-										<th width="10%"> Case </th>
-										<th width="50%"> Title </th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr v-for="interval of payPeriodIntervals" v-bind:class="{'green-bg': !interval.dtEnd}">
-										<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
-										<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
-										<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
-										<td> {{ interval.duration | humanize }} </td>
-										<td>
-											{{ interval.ixBug }}
-										</td>
-										<td>{{ interval.sTitle }}</td>
-									</tr>
-								</tbody>
-							</table>
-							<div class="gray"> 
-									<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
-							</div>
-							<div v-show="downloadReady" class="hidden-controls gray">
-								<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
-							</div>
-
-						</div>
+						<pay-period></pay-period>
 						<!-- END PAY PERIOD VIEW-->
 
 						<!-- METRICS VIEW -->
@@ -465,6 +415,60 @@
 		</div>
 	</script>
 
+	<script type="text/x-template" id="pay-period-template">
+		<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
+			<div class="u-cf"></div>
+			<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
+				<span class="u-pull-right gray">&nbsp;|&nbsp;{{ workedDuration.asHours() }} h </span>
+				<span class="u-pull-right">{{ payPeriodTotal | humanize }}</span>
+			</h4>
+			<span class="gray small"> {{workdays}} day pay period</span>
+			<div class="chart-stuff">
+				
+				<div class="pagination-controls no-select">
+					<button v-on:click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
+					|
+					<button v-on:click="goToNextPayPeriod()" class="paginate button">Next Pay Period</button>
+				</div>
+
+				<div class="timesheet-chart-wrapper">
+					<canvas id="timesheet-chart"></canvas>
+				</div>
+			</div>
+			<table class="u-full-width">
+				<thead>
+					<tr>
+						<th width="10%"> Day </th>
+						<th width="10%"> Start </th>
+						<th width="10%"> End </th>
+						<th width="10%"> Duration </th>
+						<th width="10%"> Case </th>
+						<th width="50%"> Title </th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="interval of payPeriodIntervals" v-bind:class="{'green-bg': !interval.dtEnd}">
+						<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
+						<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
+						<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
+						<td> {{ interval.duration | humanize }} </td>
+						<td>
+							{{ interval.ixBug }}
+						</td>
+						<td>{{ interval.sTitle }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="gray"> 
+					<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
+			</div>
+			<div v-show="downloadReady" class="hidden-controls gray">
+				<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
+			</div>
+
+		</div>
+	</script>
+
 
 	<!-- END TEMPLATES -->
 
@@ -519,6 +523,7 @@
 	<script type="text/javascript" src="scripts/components/case.component.js"></script>
 	<script type="text/javascript" src="scripts/components/starred-cases.component.js"></script>
 	<script type="text/javascript" src="scripts/components/metrics.component.js"></script>
+	<script type="text/javascript" src="scripts/components/pay-period.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>
