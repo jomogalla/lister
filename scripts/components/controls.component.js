@@ -1,12 +1,10 @@
 var mapState = Vuex.mapState;
 
 Vue.component('controls', {
-	template: '#controls-template',
 	computed: mapState({
-		starredCasesView: state => state.ui.starredCasesView,
 		currentPerson: state => state.controls.currentPerson,
-		timeWorked() { return this.$store.getters.timeWorked; },
 		hasToken: state => state.hasToken,
+		timeWorked() { return this.$store.getters.timeWorked; },
 		listView: state => state.ui.listView,
 		caseView: state => state.ui.caseView,
 		searchView: state => state.ui.searchView,
@@ -36,5 +34,6 @@ Vue.component('controls', {
 		stopWork() {
 			this.$store.dispatch('stopWork');
 		}
-	}
+	},
+	template: '#controls-template'
 });

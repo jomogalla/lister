@@ -82,10 +82,6 @@
 				// Refresh the charts every second
 				setInterval(function () { self.refresher() }, 1000);
 			},
-			/////////   UI Methods   /////////
-			invertColors: function () {
-				store.commit('invertColors');
-			},
 			refresher: function () {
 				if (utilities.authenticator.hasToken()) {
 					// Need to update getters on store

@@ -73,27 +73,7 @@
 						<!-- END METRICS VIEW-->
 						
 						<!-- Settings -->
-						<div v-show="settingsView" class="settings-view">
-							<div class="settings-container">
-								<label for="invert-styles" class="pointer">
-									<i class="fas fa-check-circle fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
-									<i class="fas fa-circle fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
-									<!-- <i class="fas fa-circle"></i> -->
-									Invert Colors
-								</label>
-								
-								<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors(!stylesInverted)" style="display: none">
-							</div> 
-							<div class="settings-container">
-								<button v-on:click.prevent="clearToken()">
-									<i class="fa fa-trash fa-lg"></i>
-									Clear Token
-<!-- <a v-on:click.prevent="clearToken()" class="red" title="Clear your token"><i class="fa fa-times-circle hover-icon"></i></a> -->
-								</button>
-							</div>
-						</div>
-						
-						
+						<settings></settings>
 						<!-- Home  -->
 
 						<!-- END HOME VIEW -->
@@ -474,6 +454,26 @@
 		</div>
 	</script>
 
+	<script type="text/x-template" id="settings-template">
+		<div v-show="settingsView" class="settings-view">
+			<div class="settings-container">
+				<label for="invert-styles" class="pointer">
+					<i class="fas fa-check-circle fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
+					<i class="fas fa-circle fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
+					<!-- <i class="fas fa-circle"></i> -->
+					Invert Colors
+				</label>
+				<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors(!stylesInverted)" style="display: none">
+			</div> 
+			<div class="settings-container">
+				<button v-on:click.prevent="clearToken()">
+					<i class="fa fa-trash fa-lg"></i>
+					Clear Token
+				</button>
+			</div>
+		</div>
+	</script>
+
 
 	<!-- END TEMPLATES -->
 
@@ -489,7 +489,7 @@
 	<script type="text/javascript" src="scripts/thirdparty/Chart.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/lodash.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vuex.min.js" type="module"></script>
-	<script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
 
 	<!-- My Scripts -->
 	<script type="text/javascript" src="scripts/constants.js"></script>
@@ -530,6 +530,7 @@
 	<script type="text/javascript" src="scripts/components/metrics.component.js"></script>
 	<script type="text/javascript" src="scripts/components/pay-period.component.js"></script>
 	<script type="text/javascript" src="scripts/components/controls.component.js"></script>
+	<script type="text/javascript" src="scripts/components/settings.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>
