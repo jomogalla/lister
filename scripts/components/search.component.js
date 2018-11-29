@@ -9,7 +9,6 @@ Vue.component('search', {
 		};
 	},
 	computed: mapState({
-	//	token: state => state.token,
 		hasToken: state => state.hasToken,
 		searchView: state => state.ui.searchView,
 		fogbugzLinkUrl() {

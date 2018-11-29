@@ -148,23 +148,7 @@
 						<!-- END PAY PERIOD VIEW-->
 
 						<!-- METRICS VIEW -->
-						<div class="metrics-wrapper" v-show="metricsView">
-							<h5 v-text="metricsTitle"></h5>
-							<span>{{metricsTotalHours}} Hours Week</span>
-							<div>{{metricsYtdHours}} Hours YTD</div>
-							<div>{{ytdWeekAverage}} Weekly Avg. YTD</div>
-							<div>{{ytdDailyAverage}} Daily Avg. YTD</div>
-							<div class="pagination-controls no-select">
-								<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
-								<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
-							</div>
-
-							<div class="metrics-chart-wrapper">
-								<canvas id="metrics-chart"></canvas>
-							</div>
-				
-							
-						</div>
+						<metrics></metrics>
 						<!-- END METRICS VIEW-->
 						
 						<!-- Settings -->
@@ -300,8 +284,26 @@
 				<i>{{searchResults.totalHits}} results, limited to top 50</i>
 			</h5>
 			<h5 class="italic gray centered-text" v-show="searchQuery && !searchResults.count && searchResults.count === 0">
-					<i>no search results</i>
-				</h5>
+				<i>no search results</i>
+			</h5>
+		</div>
+	</script>
+
+	<script type="text/template" id="metrics-template">
+		<div class="metrics-wrapper" v-show="metricsView">
+			<h5 v-text="metricsTitle"></h5>
+			<span>{{metricsTotalHours}} Hours Week</span>
+			<div>{{metricsYtdHours}} Hours YTD</div>
+			<div>{{ytdWeekAverage}} Weekly Avg. YTD</div>
+			<div>{{ytdDailyAverage}} Daily Avg. YTD</div>
+			<div class="pagination-controls no-select">
+				<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
+				<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
+			</div>
+
+			<div class="metrics-chart-wrapper">
+				<canvas id="metrics-chart"></canvas>
+			</div>
 		</div>
 	</script>
 
@@ -516,6 +518,7 @@
 	<script type="text/javascript" src="scripts/components/home.component.js"></script>
 	<script type="text/javascript" src="scripts/components/case.component.js"></script>
 	<script type="text/javascript" src="scripts/components/starred-cases.component.js"></script>
+	<script type="text/javascript" src="scripts/components/metrics.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>
