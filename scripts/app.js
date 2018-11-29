@@ -8,7 +8,6 @@
 		el: '#app',
 		store,
 		data: {
-			// Donuts - Remove from data 
 			eightHourDonut: null,
 			twentyFourHourDonut: null,
 		},
@@ -83,77 +82,7 @@
 				// Refresh the charts every second
 				setInterval(function () { self.refresher() }, 1000);
 			},
-			clearToken: function () {
-				utilities.authenticator.clearToken();
-				window.location.reload();
-			},
-
-			/////////    HTTP Methods     /////////
-			setActiveCase: function (ixBug) {
-				store.commit('setCurrentCaseId', ixBug);
-			},
-			startWork: function (caseId) {
-				var startWork = {
-					"cmd": "startWork",
-					"token": utilities.authenticator.getToken(),
-					"ixBug": caseId
-				};
-
-				utilities.loader.start();
-				utilities.api(startWork).then(this.handleStartWorkRequest);
-
-				store.commit('setCurrentCaseId', caseId);
-			},
-			handleStartWorkRequest: function () {
-				store.dispatch('getPerson');
-				this.$store.dispatch('getTimeSheet', this.dayToShow)
-			},
-			stopWork: function () {
-				var stopWork = {
-					"cmd": "stopWork",
-					"token": utilities.authenticator.getToken()
-				};
-
-				utilities.loader.start();
-				utilities.api(stopWork).then(this.handleResponse);
-			},
-			handleResponse: function () {
-				utilities.loader.stop();
-				store.dispatch('getPerson');
-				
-				this.$store.dispatch('getTimeSheet', this.dayToShow)
-				this.setActiveCase();
-			},
-			handleErrorRequest: function (response) {				
-				var errors = response.responseJSON.errors;
-
-				for(var i = 0; i < errors.length; i++) {
-					utilities.notifier.addMessage(errors[i].message);
-				}
-				
-				utilities.loader.stop();
-			},
-			
-
 			/////////   UI Methods   /////////
-			showList: function () {
-				store.commit('showList')
-			},
-			showSearch: function () {
-				store.commit('showSearch');
-			},
-			showCase: function (caseNumber) {
-				store.dispatch('getAndShowCase', caseNumber);
-			},
-			showPayPeriod: function () {
-				store.commit('showPayPeriod');
-			},
-			showSettings: function () {
-				store.commit('showSettings');
-			},
-			toggleMetrics: function () {
-				store.commit('showMetrics')
-			},
 			invertColors: function () {
 				store.commit('invertColors');
 			},

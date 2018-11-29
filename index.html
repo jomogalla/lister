@@ -44,36 +44,7 @@
 <body>
 	<div id="app" v-cloak>
 		<!-- CONTROLS -->
-		<div class="control-bar hover-hide" v-show="hasToken">
-			<button class="button case-control">
-				<span v-show="currentPerson.ixBugWorkingOn > 0">
-					<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn}}</span>
-					<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon a-little" aria-hidden="true"></i>
-				</span>
-				<span v-show="currentPerson.ixBugWorkingOn <= 0" class="not-workin">
-					off the clock
-				</span>
-			</button>
-		
-			<div class="chart-wrapper">
-				<canvas id="chartone"></canvas>
-				<div class="eight-hour-text centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
-			</div>
-			<div class="clock-wrapper hover-icon">
-				<canvas id="chartclock"></canvas>
-			</div>
-			<div class="nav pagination-controls no-select left-text">
-				<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
-				<button class="button u-full-width left-text" v-on:click.prevent="showSearch" v-bind:class="{ 'active': searchView }">Search</button>
-				<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
-				<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
-			</div>
-
-		</div>
-		<div class="info-bar" v-show="hasToken">
-			<a v-on:click.prevent="showSettings" class="red hover-hide" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
-			<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
-		</div>
+		<controls></controls>
 		<!-- END CONTROLS -->
 
 		<div class="main-content">
@@ -465,7 +436,41 @@
 			<div v-show="downloadReady" class="hidden-controls gray">
 				<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 			</div>
+		</div>
+	</script>
 
+	<script type="text/x-template" id="controls-template">
+		<div class="sidebar">
+			<div class="control-bar hover-hide" v-show="hasToken">
+				<button class="button case-control">
+					<span v-show="currentPerson.ixBugWorkingOn > 0">
+						<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn}}</span>
+						<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon a-little" aria-hidden="true"></i>
+					</span>
+					<span v-show="currentPerson.ixBugWorkingOn <= 0" class="not-workin">
+						off the clock
+					</span>
+				</button>
+			
+				<div class="chart-wrapper">
+					<canvas id="chartone"></canvas>
+					<div class="eight-hour-text centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
+				</div>
+				<div class="clock-wrapper hover-icon">
+					<canvas id="chartclock"></canvas>
+				</div>
+				<div class="nav pagination-controls no-select left-text">
+					<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
+					<button class="button u-full-width left-text" v-on:click.prevent="showSearch" v-bind:class="{ 'active': searchView }">Search</button>
+					<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
+					<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
+				</div>
+
+			</div>
+			<div class="info-bar" v-show="hasToken">
+				<a v-on:click.prevent="showSettings" class="red hover-hide" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
+				<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
+			</div>
 		</div>
 	</script>
 
@@ -524,6 +529,7 @@
 	<script type="text/javascript" src="scripts/components/starred-cases.component.js"></script>
 	<script type="text/javascript" src="scripts/components/metrics.component.js"></script>
 	<script type="text/javascript" src="scripts/components/pay-period.component.js"></script>
+	<script type="text/javascript" src="scripts/components/controls.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>

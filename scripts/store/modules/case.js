@@ -5,9 +5,6 @@ const caseModule = {			//Rename this module plz
 		starredCases: []
 	},
 	mutations: {
-		setPerson(state, person) {
-			state.currentPerson = person;
-		},
 		setCurrentViewedCaseId(state, caseId) {
 			state.currentViewedCaseId = caseId;
 		},
