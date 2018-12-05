@@ -46,6 +46,10 @@
 	<div class="notifier red">
 		<span id="notifier"></span>
 	</div>
+
+
+
+
 	<!-- TEMPLATES -->
 	<!-- CASE LINKS TEMPLATE -->
 	<script type="text/x-template" id="case-links-template">
@@ -58,6 +62,7 @@
 			<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 		</span>
 	</script>
+	<!-- END CASE LINKS TEMPLATE -->
 
 	<!-- LOGIN TEMPLATE -->
 	<script type="text/x-template" id="login-template">
@@ -104,6 +109,7 @@
 			</form>
 		</div>
 	</script>
+	<!-- END LOGIN TEMPLATE -->
 
 	<!-- SEARCH TEMPLATE -->
 	<script type="text/x-template" id="search-template">
@@ -148,7 +154,9 @@
 			</h5>
 		</div>
 	</script>
+	<!-- END SEARCH TEMPLATE -->
 
+	<!-- METRICS TEMPLATE -->
 	<script type="text/template" id="metrics-template">
 		<div class="metrics-wrapper" v-show="metricsView">
 			<h5 v-text="metricsTitle"></h5>
@@ -166,6 +174,7 @@
 			</div>
 		</div>
 	</script>
+	<!-- END METRICS TEMPLATE -->
 
 	<!-- ADD INTERVAL TEMPLATE -->
 	<script type="text/x-template" id="add-interval-template">
@@ -189,6 +198,7 @@
 			</form>
 		</div>
 	</script>
+	<!-- END ADD INTERVAL TEMPLATE -->
 
 	<!-- CASE TEMPLATE -->
 	<script type="text/x-template" id="case-template">
@@ -209,6 +219,7 @@
 			</div>
 		</div>
 	</script>
+	<!-- END CASE TEMPLATE -->
 
 	<!-- STARRED CASES TEMPLATE -->
 	<script type="text/x-template" id="starred-cases-template">
@@ -229,6 +240,7 @@
 			</table>
 		</div>
 	</script>
+	<!-- END STARRED CASES TEMPLATE -->
 
 	<!-- HOME TEMPLATE -->
 	<script type="text/x-template" id="home-template">
@@ -324,7 +336,9 @@
 			<!-- END CASE VIEW -->
 		</div>
 	</script>
+	<!-- END HOME TEMPLATE -->
 
+	<!-- PAY PERIOD TEMPLATE -->
 	<script type="text/x-template" id="pay-period-template">
 		<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
 			<div class="u-cf"></div>
@@ -377,7 +391,9 @@
 			</div>
 		</div>
 	</script>
+	<!-- END PAY PERIOD TEMPLATE -->
 
+	<!-- CONTROLS TEMPLATE -->
 	<script type="text/x-template" id="controls-template">
 		<div class="sidebar">
 			<div class="control-bar hover-hide" v-show="hasToken">
@@ -412,14 +428,15 @@
 			</div>
 		</div>
 	</script>
+	<!-- END CONTROLS TEMPLATE -->
 
+	<!-- SETTINGS TEMPLATE -->
 	<script type="text/x-template" id="settings-template">
 		<div v-show="settingsView" class="settings-view">
 			<div class="settings-container">
 				<label for="invert-styles" class="pointer">
 					<i class="fas fa-check-circle fa-lg" v-show="stylesInverted" aria-hidden="true"></i>
 					<i class="fas fa-circle fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
-					<!-- <i class="fas fa-circle"></i> -->
 					Invert Colors
 				</label>
 				<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors(!stylesInverted)" style="display: none">
@@ -432,14 +449,11 @@
 			</div>
 		</div>
 	</script>
-
-
+	<!-- END SETTINGS TEMPLATE -->
 	<!-- END TEMPLATES -->
-
 	
 
-	<!-- Javascript
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<!-- Javascript ––––––––––––––––––––––––––––––––––––––––––––––––––-->
 	<!-- Third Party -->
 	<script type="text/javascript" src="scripts/thirdparty/jquery.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/moment.min.js"></script>
@@ -448,7 +462,7 @@
 	<script type="text/javascript" src="scripts/thirdparty/Chart.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/lodash.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vuex.min.js" type="module"></script>
-	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script>
 
 	<!-- My Scripts -->
 	<script type="text/javascript" src="scripts/constants.js"></script>
