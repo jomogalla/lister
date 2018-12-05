@@ -1,7 +1,8 @@
 const timeModule = {
 	state: {
 		dayToShow: moment(),
-		intervals: {}
+		intervals: {},
+		getterTripper: false
 	},
 	getters: {
 		timeWorked(state) {
@@ -26,6 +27,13 @@ const timeModule = {
 				timeWorked = timeWorked.add(duration);
 			}
 
+			// This is here to force an update of the getter.
+			// We need timeworked to be updated every ~minute
+			// The underlying data does not change, but the result does
+			// Because the data remains the same, this getter never updates
+			// Other options would be a mutation that updates a timeWorked state that could be called
+			state.getterTripper = state.getterTripper;
+
 			return timeWorked;
 		}
 	},
@@ -35,6 +43,11 @@ const timeModule = {
 		},
 		updateTimeIntervals(state, timeIntervals) {
 			state.intervals = timeIntervals;
+		},
+		triggerRefreshForTimeWorked(state) {
+			// Might not be the best design decision
+			// Flipping this boolean will force an update of the getters its in
+			state.getterTripper = !state.getterTripper;
 		}
 	},
 	actions: {
@@ -88,11 +101,6 @@ const timeModule = {
 				var responseObject = typeof response === 'object' ? response.data : JSON.parse(response).data;
 				store.commit('updateTimeIntervals', responseObject.intervals)
 				utilities.loader.stop();
-	
-
-				//context.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
-	
-				//this.prepareClockData(this.timeIntervals.intervals, this.twentyFourHourDonut);
 			});
 		}
 	}

@@ -6,6 +6,7 @@ const constants = {
 	externalLinkSuffix: '.fogbugz.com/f/cases/',
 	requestType: 'POST',
 	contentType: 'text/plain',
+	refreshUIInterval: 60 * 1000,
 	// COLORS
 	yellow: '#FFCE56',
 	red: '#FF6384',

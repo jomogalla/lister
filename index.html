@@ -43,43 +43,19 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <body>
 	<div id="app" v-cloak>
-		<!-- CONTROLS -->
 		<controls></controls>
-		<!-- END CONTROLS -->
-
 		<div class="main-content">
 			<div class="container">
-				<!-- LOGIN VIEW -->
 				<login></login>
-				<!-- END LOGIN VIEW -->
-
-				<!-- EVERYTHING -->
 				<div class="everything-else" v-show="hasToken">
 					<div class="row">		
-						<!-- HOME VIEW -->
-						<home></home>
-						<!-- END HOME VIEW -->
-						
-						<!-- SEARCH VIEW -->
+						<home></home>		
 						<search></search>
-						<!-- END SEARCH VIEW -->
-
-						<!-- PAY PERIOD VIEW -->
 						<pay-period></pay-period>
-						<!-- END PAY PERIOD VIEW-->
-
-						<!-- METRICS VIEW -->
 						<metrics></metrics>
-						<!-- END METRICS VIEW-->
-						
-						<!-- Settings -->
 						<settings></settings>
-						<!-- Home  -->
-
-						<!-- END HOME VIEW -->
 					</div>				
 				</div>
-				<!-- END EVERYTHING CONTAINER-->
 			</div>
 		</div>
 	</div>

@@ -9,11 +9,11 @@ const uiModule = {
 		settingsView: false,
 		starredCasesView: true,
 		// Misc UI Stuff
-		stylesInverted: null
+		stylesInverted: JSON.parse(utilities.storage.load('stylesInverted'))
 	},
 	mutations: {
 		initializeUI: function(state) {
-			state.stylesInverted = JSON.parse(utilities.storage.load('stylesInverted'));
+			store.commit('syncInvertedClasses');
 		},
 		showList: function (state) {
 			state.listView = true;
@@ -83,9 +83,18 @@ const uiModule = {
 		},
 		invertColors: function(state) {
 			state.stylesInverted = !state.stylesInverted;
+			store.commit('syncInvertedClasses');
 
 			utilities.storage.save('stylesInverted', state.stylesInverted);
+		},
+		syncInvertedClasses: function(state) {
+			if(state.stylesInverted) { 
+				document.body.classList.add('invert') 
+			} else {
+				document.body.classList.remove('invert');
+			}
 		}
+		
     },
     actions: {
         getAndShowCase: function (context, caseNumber) {
