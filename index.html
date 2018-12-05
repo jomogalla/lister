@@ -1,26 +1,16 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Basic Page Needs
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<!-- Basic Page Needs ––––––––––––––––––––––––––––––––––––––––––––––––––-->
 	<meta charset="utf-8">
 	<title>&lt; time &gt;</title>
 	<meta name="description" content="Making your miserable life with fogbugz a little better.">
 	<meta name="author" content="Jason Domogalla">
 
-
-	<!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<!-- Mobile Specific Metas  ––––––––––––––––––––––––––––––––––––––––––––––––––-->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-	<!-- Font
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<!-- There doesn't seem to be anything here -->
-
-
-	<!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<!-- CSS ––––––––––––––––––––––––––––––––––––––––––––––––––-->
 	<!-- third party  -->
  	<link rel="stylesheet" href="css/thirdparty/normalize.css">
 	<link rel="stylesheet" href="css/thirdparty/pikaday.css">
@@ -31,22 +21,15 @@
 	<!-- homegrown -->
 	<link rel="stylesheet" href="css/styles.css">
 
-
-
-	<!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<!-- Favicon ––––––––––––––––––––––––––––––––––––––––––––––––––-->
 	<link rel="icon" type="image/png" href="images/empty.png">
-
-
 </head>
-	<!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <body>
 	<div id="app" v-cloak>
 		<controls></controls>
 		<div class="main-content">
 			<div class="container">
-				<login></login>
+				<login v-on:initialize="initializeApp"></login>
 				<div class="everything-else" v-show="hasToken">
 					<div class="row">		
 						<home></home>		
@@ -510,7 +493,6 @@
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>
-
 
 	<script type="text/javascript">
 		window['moment-range'].extendMoment(moment);

@@ -83,7 +83,6 @@ const timeModule = {
 		},
 		getTimeSheet: function (context, date) {
 			// Set DayToShow
-			//this.dayToShow = moment(date);
 			context.commit('updateDayToShow', moment(date));
 
 			var startTime = moment(date).startOf('day');

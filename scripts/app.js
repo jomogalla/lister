@@ -25,7 +25,7 @@
 				this.eightHourDonut.updateEight(minutesWorked);
 			}
 		},
-		mounted: function () {
+		mounted() {
 			store.commit('initializeUI');
 
 			// If we have a token, load it up
@@ -34,7 +34,8 @@
 			}
 		},
 		methods: {
-			initializeApp: function () {
+			initializeApp() {
+				debugger;
 				// Setup tokens
 				store.commit('setToken', true);
 
@@ -56,7 +57,7 @@
 				// Refresh the charts every second
 				setInterval(() => { this.refresher() }, constants.refreshUIInterval);
 			},
-			refresher: function () {
+			refresher() {
 				if (this.hasToken) {
 					// Need to update getters on store
 				//	this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);

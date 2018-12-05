@@ -35,10 +35,8 @@ Vue.component('login', {
 				utilities.authenticator.addToken(token);
 				
 				store.commit('setToken', token);
-				//this.hasToken = true;
 
-				// THIS IS BROKEN
-				this.initializeApp();
+				this.$emit('initialize');
 			}
 		},
 		logon: function () {	// NOT SUPPORTED
