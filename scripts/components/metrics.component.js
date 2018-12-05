@@ -1,9 +1,8 @@
 var mapState = Vuex.mapState;
 
 Vue.component('metrics', {
-	data: function() {
+	data() {
 		return {
-			// Metrics - Should go in component
 			metricsTitle: "",
 			metricsTotalHours: 0,
 			metricsYtdHours: 0,
@@ -32,7 +31,7 @@ Vue.component('metrics', {
 		this.$_bar = new utilities.bar('#metrics-chart', constants.weeklyBarChartData, constants.weeklyBarChartOptions);
 	},
 	methods: {
-		getMetrics: function (targetDate) {
+		getMetrics(targetDate) {
 			this.metricsDate = targetDate.clone();
 			
 			var startYear = targetDate.clone().startOf('year');
@@ -82,12 +81,12 @@ Vue.component('metrics', {
 				});
 			});
 		},
-		goToPreviousWeekMetrics: function() {
+		goToPreviousWeekMetrics() {
 			var targetDate = this.metricsDate.clone().subtract(1, "w");
 			this.getMetrics(targetDate);
 		},
 
-		goToNextWeekMetrics: function() {
+		goToNextWeekMetrics() {
 			var targetDate = this.metricsDate.clone().add(1, "w");
 			this.getMetrics(targetDate);
 		},

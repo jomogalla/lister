@@ -1,12 +1,6 @@
 var mapState = Vuex.mapState;
 
 Vue.component('starred-cases', {
-	template: '#starred-cases-template',
-	data: function() {
-		return {
-
-		};
-	},
 	computed: mapState({
 		starredCasesView: state => state.ui.starredCasesView,
 		starredCases: state => state.case.starredCases,
@@ -15,8 +9,9 @@ Vue.component('starred-cases', {
 		}
 	}),
 	methods: {
-		showCase: function (caseNumber) {
-			store.dispatch('getAndShowCase', caseNumber);
+		showCase(caseNumber) {
+			this.$store.dispatch('getAndShowCase', caseNumber);
 		},
-	}
+	},
+	template: '#starred-cases-template',
 });

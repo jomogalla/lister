@@ -6,12 +6,12 @@ Vue.component('settings', {
 		stylesInverted: state => state.ui.stylesInverted
 	}),
 	methods: {
-		clearToken: function () {
+		clearToken() {
 			utilities.authenticator.clearToken();
 			window.location.reload();
 		},
-		invertColors: function () {
-			store.commit('invertColors');
+		invertColors() {
+			this.$store.commit('invertColors');
 		}
 	},
 	template: '#settings-template'

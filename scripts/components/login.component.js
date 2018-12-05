@@ -1,11 +1,7 @@
 var mapState = Vuex.mapState;
 
 Vue.component('login', {
-	template: '#login-template',
-	props: [
-
-	],
-	data: function() {
+	data() {
 		return {
 			username: '',
 			password: '',
@@ -17,7 +13,7 @@ Vue.component('login', {
 		hasToken: state => state.hasToken,
 	}),
 	methods: {
-		addToken: function () {
+		addToken() {
 			var checkToken = {
 				"cmd": "logon",
 				"token": this.token,
@@ -25,22 +21,25 @@ Vue.component('login', {
 
 			utilities.authenticator.addSubDomain(this.subdomain)
 			utilities.loader.start();
-			utilities.api(checkToken).then(this.handleAddToken, function(response) { store.commit('handleErrorRequest', response)} );
+			utilities.api(checkToken).then(this.handleAddToken, (response) => { 
+				this.$store.commit('handleErrorRequest', response)
+			});
 
 		},
-		handleAddToken: function (response) {
+		handleAddToken(response) {
 			var token = response.data.token;
 
 			if (token) {
 				utilities.authenticator.addToken(token);
 				
-				store.commit('setToken', token);
+				this.$store.commit('setToken', token);
 
 				this.$emit('initialize');
 			}
 		},
-		logon: function () {	// NOT SUPPORTED
+		logon() {	// NOT SUPPORTED
 			utilities.authenticator.logon(this.username, this.password);
 		},
-	}
+	},
+	template: '#login-template',
 });

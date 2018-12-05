@@ -35,7 +35,6 @@
 		},
 		methods: {
 			initializeApp() {
-				debugger;
 				// Setup tokens
 				store.commit('setToken', true);
 

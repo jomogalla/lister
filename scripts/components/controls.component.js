@@ -14,22 +14,22 @@ Vue.component('controls', {
 	}),
 	methods: {
 		showList() {
-			store.commit('showList')
+			this.$store.commit('showList')
 		},
 		showSearch() {
-			store.commit('showSearch');
+			this.$store.commit('showSearch');
 		},
 		showCase(caseNumber) {
-			store.dispatch('getAndShowCase', caseNumber);
+			this.$store.dispatch('getAndShowCase', caseNumber);
 		},
 		showPayPeriod() {
-			store.commit('showPayPeriod');
+			this.$store.commit('showPayPeriod');
 		},
 		showSettings() {
-			store.commit('showSettings');
+			this.$store.commit('showSettings');
 		},
 		toggleMetrics() {
-			store.commit('showMetrics')
+			this.$store.commit('showMetrics')
 		},
 		stopWork() {
 			this.$store.dispatch('stopWork');

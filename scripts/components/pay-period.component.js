@@ -1,7 +1,7 @@
 var mapState = Vuex.mapState;
 
 Vue.component('pay-period', {
-	data: function() {
+	data() {
 		return {
 			workdays: 0,
 			workdaysSoFar: 0,
@@ -16,12 +16,11 @@ Vue.component('pay-period', {
 	computed: mapState({
 		payPeriodView: state => state.ui.payPeriodView,
 		dayToShow: state => state.time.dayToShow,
-		fogbugzLinkUrl() {
-			return utilities.authenticator.getFogBugzLinkUrl();
-		}
+		currentPerson: state => state.controls.currentPerson,
+		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzLinkUrl(); }
 	}),
 	watch: {
-		payPeriodView: function(val) {
+		payPeriodView(val) {
 			if(val) { 
 				// Move this to router if that ever happens
 				this.getPayPeriod(this.dayToShow);
@@ -36,7 +35,7 @@ Vue.component('pay-period', {
 	},
 	methods: {
 		// Move this to utilities
-		downloadCSV: function (args) {
+		downloadCSV(args) {
 			var data, filename, link;
 			var csv = utilities.convertArrayOfObjectsToCSV({
 				data: this.formatTimeIntervalsForCSV(this.payPeriodIntervals)
@@ -62,7 +61,7 @@ Vue.component('pay-period', {
 			link.click();
 		},
 
-		formatTimeIntervalsForCSV: function (timeIntervals) {
+		formatTimeIntervalsForCSV(timeIntervals) {
 			var formattedIntervals = [];
 
 			// TODO - Get the project for each case???
@@ -82,7 +81,7 @@ Vue.component('pay-period', {
 
 			return formattedIntervals;
 		},
-		getPayPeriodRange: function(dayInPayPeriod) {
+		getPayPeriodRange(dayInPayPeriod) {
 			// if the date <= 15, startTime = 1st & endTime = 15th
 			// otherwise, startTime = 16th & endTime = last day of month
 			if (dayInPayPeriod.date() <= 15) {
@@ -94,7 +93,7 @@ Vue.component('pay-period', {
 			}
 			return [startTime, endTime];
 		},
-		getPayPeriod: function(dayInPayPeriod) {
+		getPayPeriod(dayInPayPeriod) {
 			this.downloadReady = false;
 			var times = this.getPayPeriodRange(dayInPayPeriod);
 			this.$_currentPayPeriod = times[0].clone();
@@ -125,7 +124,7 @@ Vue.component('pay-period', {
 			utilities.loader.start();
 			utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
 		},
-		goToPreviousPayPeriod: function () {
+		goToPreviousPayPeriod() {
 			let dates = this.getPayPeriodRange(this.$_currentPayPeriod);
 			this.getPayPeriod(dates[0].subtract(1, "days"));
 		},
@@ -134,7 +133,7 @@ Vue.component('pay-period', {
 			this.getPayPeriod(dates[1].add(1, "days"));
 
 		},
-		handlePayPeriodRequest: function (response) {
+		handlePayPeriodRequest(response) {
 			this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
 			this.payPeriodIntervals = utilities.dataPreparation.addDurations(this.payPeriodIntervals);
 			this.payPeriodTotal = utilities.dataPreparation.sumDurations(this.payPeriodIntervals);
@@ -175,7 +174,7 @@ Vue.component('pay-period', {
 			utilities.loader.start();
 			utilities.api(search).then(this.handleAddPayPeriodProjects);
 		},
-		handleAddPayPeriodProjects: function (response) {
+		handleAddPayPeriodProjects(response) {
 			utilities.loader.stop();
 			var self = this;
 			var caseToProjectMap = response.data.cases;

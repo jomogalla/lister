@@ -1,12 +1,6 @@
 var mapState = Vuex.mapState;
 
 Vue.component('case', {
-	template: '#case-template',
-	data: function() {
-		return {
-
-		};
-	},
 	computed: mapState({
 		currentCase: state => state.case.currentCase,
 		currentCaseId: state => state.controls.currentCaseId,
@@ -16,16 +10,17 @@ Vue.component('case', {
 		}
 	}),
 	methods: {
-		updateCaseById: function (caseId) {
+		updateCaseById(caseId) {
 			if (caseId === this.currentCase.ixBug) { return; }
 
-			store.dispatch('getCaseByNumber', caseId);
+			this.$store.dispatch('getCaseByNumber', caseId);
 		},
-		startWork: function (caseId) {
+		startWork(caseId) {
 			this.$store.dispatch('startWork', caseId);
 		},
-		stopWork: function () { 
+		stopWork() { 
 			this.$store.dispatch('stopWork');
 		}
-	}
+	},
+	template: '#case-template',
 });

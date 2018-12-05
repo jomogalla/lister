@@ -34,49 +34,49 @@ Vue.component('home', {
 			utilities.loader.start();
 			utilities.api(search).then(this.handleSearchRequest);
 		},
-		handleSearchRequest: function (response) {
+		handleSearchRequest(response) {
 			this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 			utilities.loader.stop();
 		},
-		showCase: function (caseNumber) {
-			store.dispatch('getAndShowCase', caseNumber);
+		showCase(caseNumber) {
+			this.$store.dispatch('getAndShowCase', caseNumber);
 		},
-		showPreviousDay: function () {
+		showPreviousDay () {
 			let previousDay = this.dayToShow.subtract(1, 'days');
 			this.$store.dispatch('getTimeSheet', previousDay)
 		},
-		showNextDay: function () {
+		showNextDay() {
 			let nextDay = this.dayToShow.add(1, 'days');
 			this.$store.dispatch('getTimeSheet', nextDay)
 		},
-		skipToMonday: function () {
+		skipToMonday() {
 			let monday = this.dayToShow.add(3, 'days');
 			this.$store.dispatch('getTimeSheet', monday)
 		},
-		skipToFriday: function () {
+		skipToFriday() {
 			let friday = this.dayToShow.subtract(3, 'days');
 			this.$store.dispatch('getTimeSheet', friday);
 		},
-		showToday: function () {
+		showToday() {
 			var today = new moment();
 
 			if (!today.isSame(this.dayToShow, 'day')) {
 				this.showDay();
 			}
 		},
-		showDay: function (day) {
+		showDay(day) {
 			let momentDay = new moment(day);
 
 			this.$store.dispatch('getTimeSheet', momentDay);
 		},
-		showStarredCases: function () {
-			store.commit('showStarredCases');
+		showStarredCases() {
+			this.$store.commit('showStarredCases');
 		},
-		hideStarredCases: function () {
-			store.commit('hideStarredCases');
+		hideStarredCases() {
+			this.$store.commit('hideStarredCases');
 		},
 		// Clear time works by adding time to a case, then deleting the interval we just created.
-		clearTime: function(dtStart, dtEnd) {
+		clearTime(dtStart, dtEnd) {
 			if(dtStart._isAMomentObject) {
 				dtStart = dtStart.toISOString();	
 			}
@@ -95,10 +95,10 @@ Vue.component('home', {
 			utilities.loader.start();
 			utilities.api(addInterval).then(this.handleClearTimeRequest);
 		},
-		handleClearTimeRequest: function(response) {
+		handleClearTimeRequest(response) {
 			this.deleteInterval(response.data.interval.ixInterval)
 		},
-		deleteInterval: function (timeIntervalId) {
+		deleteInterval(timeIntervalId) {
 			var deleteInterval = {
 				"cmd": "deleteInterval",
 				"ixInterval": timeIntervalId,
@@ -108,12 +108,12 @@ Vue.component('home', {
 			utilities.loader.start();
 			utilities.api(deleteInterval).then(this.handleDeleteInterval, this.handleErrorRequest);
 		},
-		handleDeleteInterval: function (response) {
+		handleDeleteInterval(response) {
 			utilities.loader.stop();
 
 			this.$store.dispatch('getTimeSheet', this.dayToShow)
 		},
-		editInterval: function (ixInterval, dtStart, dtEnd) {
+		editInterval(ixInterval, dtStart, dtEnd) {
 			var editInterval = {
 				"cmd": "editInterval",
 				"token": utilities.authenticator.getToken(),
@@ -130,11 +130,11 @@ Vue.component('home', {
 			utilities.loader.start();
 			utilities.api(editInterval).then(this.handleEditIntervalRequest, this.handleErrorRequest);
 		},
-		handleEditIntervalRequest: function (response) {
+		handleEditIntervalRequest(response) {
 			utilities.loader.stop();
 			this.$store.dispatch('getTimeSheet', this.dayToShow)
 		},
-		addInterval: function (ixBug, dtStart, dtEnd) {
+		addInterval(ixBug, dtStart, dtEnd) {
 			if(dtStart._isAMomentObject) {
 				dtStart = dtStart.toISOString();	
 			}
@@ -154,26 +154,26 @@ Vue.component('home', {
 			utilities.loader.start();
 			utilities.api(addInterval).then(this.handleAddIntervalRequest, this.handleErrorRequest);
 		},
-		handleAddIntervalRequest: function(response) {
+		handleAddIntervalRequest(response) {
 			utilities.loader.stop();
 			this.$store.dispatch('getTimeSheet', this.dayToShow)
 		},
-		resetCurrentCaseId: function () {
+		resetCurrentCaseId() {
 			if (this.currentCase.ixBug !== this.currentViewedCaseId) {
 				this.currentViewedCaseId = this.currentCase.ixBug;
 			}
 		},
-		updateCaseById: function (event) {
+		updateCaseById(event) {
 			let caseId = event.target.value;
 
 			if (!caseId || caseId === this.currentCase.ixBug) { return; }
 
-			store.dispatch('getAndShowCase', caseId);
+			this.$store.dispatch('getAndShowCase', caseId);
 		},
-		startWork: function (caseId) {
+		startWork(caseId) {
 			this.$store.dispatch('startWork', caseId);
 		},
-		stopWork: function () { 
+		stopWork() { 
 			this.$store.dispatch('stopWork');
 		}
 	}

@@ -1,8 +1,7 @@
 var mapState = Vuex.mapState;
 
 Vue.component('search', {
-	template: '#search-template',
-	data: function() {
+	data() {
 		return {
 			searchQuery: '',
 			searchResults: {}
@@ -11,12 +10,10 @@ Vue.component('search', {
 	computed: mapState({
 		hasToken: state => state.hasToken,
 		searchView: state => state.ui.searchView,
-		fogbugzLinkUrl() {
-			return utilities.authenticator.getFogBugzLinkUrl();
-		}
+		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzLinkUrl(); }
 	}),
 	methods: {
-		search: function () {
+		search() {
 			var search = {
 				"cmd": "search",
 				"token": utilities.authenticator.getToken(),
@@ -28,12 +25,13 @@ Vue.component('search', {
 			utilities.loader.start();
 			utilities.api(search).then(this.handleSearchRequest);
 		},
-		handleSearchRequest: function (response) {
+		handleSearchRequest(response) {
 			this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 			utilities.loader.stop();
 		},
-		showCase: function (caseNumber) {
-			store.dispatch('getAndShowCase', caseNumber);
+		showCase(caseNumber) {
+			this.$store.dispatch('getAndShowCase', caseNumber);
 		},
-	}
+	},
+	template: '#search-template',
 });

@@ -1,11 +1,10 @@
 // First Draft input-date. needs updates & to be configurable
 
 Vue.component('input-date', {
-	template: '<input type="text" class="date-picker hidden-input" v-model="dayPicked" id="date-picker">',
 	props: [
 		'datestuff'
 	],
-	data: function () {
+	data() {
 		return {
 			pikaday: null,
 			dayPicked: null
@@ -18,7 +17,7 @@ Vue.component('input-date', {
 
 		}
 	},
-	mounted: function () {
+	mounted() {
 		var self = this;
 
 		this.dayPicked = moment(this.datestuff);
@@ -34,12 +33,13 @@ Vue.component('input-date', {
 		this.pikaday = new Pikaday (pikadayConfig);
 	},
 	methods: {
-		dateSelected: function(currentDate) {
+		dateSelected(currentDate) {
 			this.updateDayPicked(currentDate);
 			this.$emit('datepicked', currentDate);
 		},
-		updateDayPicked: function (day) {
+		updateDayPicked(day) {
 			this.dayPicked = moment(day).format('dddd MM.DD');
 		}
-	}
+	},
+	template: '<input type="text" class="date-picker hidden-input" v-model="dayPicked" id="date-picker">',
 });
