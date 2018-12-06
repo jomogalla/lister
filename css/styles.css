@@ -31,7 +31,6 @@
 }
 
 .button-bar {
-    /* width: 50%; */
     margin: 0;
 
     border-top-right-radius: 0;
@@ -51,14 +50,6 @@
     color: #808080;
 }
 
-/* .button-bar:first-child:not(:only-child) {
-    border-bottom-right-radius: 0;
-    margin-right: -0.6rem;
-}
-
-.button-bar:last-child:not(:only-child) {
-    border-bottom-left-radius: 0;
-} */
 .red {
     color: #AD4D32;
 }
@@ -111,7 +102,6 @@ body.invert {
     border-bottom: #aaa solid 2px;
 }
 
-/* todo - rename */
 .no-padding td {
     padding: 0;
 
@@ -123,7 +113,7 @@ body.invert {
 }
 
 .hover-hide:not(:hover){
-    opacity: 0.5;
+    opacity: 0.6;
     transition: opacity 0.3s;
 }
 
