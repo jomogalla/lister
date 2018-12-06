@@ -29,7 +29,7 @@
 		<controls></controls>
 		<div class="main-content">
 			<div class="container">
-				<login v-on:initialize="initializeApp"></login>
+				<login @initialize="initializeApp"></login>
 				<div class="everything-else" v-show="hasToken">
 					<div class="row">		
 						<home></home>		
@@ -53,10 +53,10 @@
 	<!-- CASE LINKS TEMPLATE -->
 	<script type="text/x-template" id="case-links-template">
 		<span class="case-links">
-			<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
-			<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
-			<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
-			<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
+			<a @click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
+			<i v-show="currentCaseId !== interval.ixBug" @click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+			<i v-show="currentCaseId === interval.ixBug" @click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+			<i v-show="interval.dtEnd" @click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 			&nbsp;
 			<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 		</span>
@@ -66,7 +66,7 @@
 	<!-- LOGIN TEMPLATE -->
 	<script type="text/x-template" id="login-template">
 		<div class="login buffer" v-show="!hasToken">
-			<form v-on:submit.prevent="addToken">
+			<form @submit.prevent="addToken">
 				<div class="row">
 					<div class="one column">&nbsp;</div>
 					<div class="ten columns">
@@ -88,7 +88,7 @@
 						</div>
 					</div>
 					<div class="two columns">&nbsp;</div>
-					<div class="four columns" v-bind:class="{ 'half-hidden': hasToken }">
+					<div class="four columns" :class="{ 'half-hidden': hasToken }">
 						<div class="">
 							<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
 						</div>
@@ -112,7 +112,7 @@
 	<!-- SEARCH TEMPLATE -->
 	<script type="text/x-template" id="search-template">
 		<div class="search-wrapper twelve columns" v-show="searchView">
-			<form class="row" v-on:submit.prevent="search">
+			<form class="row" @submit.prevent="search">
 				<h5 class="nine columns border-bottom">
 					<input v-model="searchQuery" name="searchQuery" class="u-full-width hidden-input" type="text" placeholder="query">
 				</h5>
@@ -133,9 +133,9 @@
 				</thead>
 				<tbody>
 					<tr v-for="fcase of searchResults.cases">
-						<td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
+						<td><i class="fa fa-play-circle" @click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
 						<td>
-							<a v-on:click.prevent="showCase(fcase.ixBug)">{{ fcase.ixBug }}</a>
+							<a @click.prevent="showCase(fcase.ixBug)">{{ fcase.ixBug }}</a>
 							<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
 						</td>
 						<td>{{ fcase.sTitle }}</td>
@@ -162,8 +162,8 @@
 			<div>{{ ytdWeekAverage }} Weekly Avg. YTD</div>
 			<div>{{ ytdDailyAverage }} Daily Avg. YTD</div>
 			<div class="pagination-controls no-select">
-				<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
-				<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
+				<button @click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
+				<button @click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
 			</div>
 			<div class="metrics-chart-wrapper">
 				<canvas id="metrics-chart"></canvas>
@@ -176,20 +176,20 @@
 	<script type="text/x-template" id="add-interval-template">
 		<div class="add-form">
 			<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
-				<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
-				<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+				<i class="fa fa-plus-circle green block" @click="showAddForm" :class="{ 'light-gray': !showingAddForm}"></i>
+				<i class="fa fa-minus-circle red" @click="showRemoveForm" :class="{ 'light-gray': !showingRemoveForm}"></i>
 			</div>
-			<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
-				<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
-				<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+			<form v-show="showingAddForm" @submit.prevent="addInterval">
+				<input v-model="bug" placeholder="case #" class="hidden-input case" :class="{ 'invalid': caseInvalid }">
+				<input v-model="start" class="hidden-input time" placeholder="start" :class="{ 'invalid': startInvalid }"></input-time>
 				&#x27F6;
-				<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+				<input v-model="end" class="hidden-input time" placeholder="end" :class="{ 'invalid': endInvalid }"></input-time>
 				<button class="button" type="submit">Add Time</button>
 			</form>
-			<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
-				<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+			<form v-show="showingRemoveForm" @submit.prevent="clearTime">
+				<input v-model="start" class="hidden-input time" placeholder="start" :class="{ 'invalid': startInvalid }"></input-time>
 				&#x27F6;
-				<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+				<input v-model="end" class="hidden-input time" placeholder="end" :class="{ 'invalid': endInvalid }"></input-time>
 				<button class="button dark-red" type="submit">Clear Time</button>
 			</form>
 		</div>
@@ -202,8 +202,8 @@
 			<h5 v-show="currentCase.ixBug" class="case-title">
 				{{ currentCase.sTitle }}
 				<span class="u-pull-right">
-					<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
-					<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
+					<i v-show="currentCaseId !== currentCase.ixBug" @click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
+					<i v-show="currentCaseId === currentCase.ixBug" @click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
 					<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
 						<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
 					</a>
@@ -226,7 +226,7 @@
 				<tbody>
 					<tr v-for="bug in starredCases">
 						<td>
-							<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{ bug.ixBug }}</a>
+							<a @click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{ bug.ixBug }}</a>
 							<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
 								<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
 							</a></td>
@@ -244,19 +244,19 @@
 			<!-- HOME HEADER -->
 			<div class="tabs row">
 				<!-- Timesheet Header-->
-				<h5 class="eight columns margin-bottom-0" v-bind:class="{ 'active': listView }">
-					<input-date v-bind:datestuff="dayToShow" v-on:datepicked="showDay"/></input-date>
+				<h5 class="eight columns margin-bottom-0" :class="{ 'active': listView }">
+					<input-date :datestuff="dayToShow" @datepicked="showDay"/></input-date>
 				</h5>
 				<!-- Case Header -->
-				<h5 class="four columns" v-bind:class="{ 'active': caseView }">
+				<h5 class="four columns" :class="{ 'active': caseView }">
 					<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
 					<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
 							:value="currentViewedCaseId" 
-							v-on:keyup.enter="updateCaseById" 
-							v-on:blur="resetCurrentCaseId()" 
-							v-on:click="hideStarredCases"
-							v-bind:class="{ 'light-gray': starredCasesView }"/>
-					<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
+							@keyup.enter="updateCaseById" 
+							@blur="resetCurrentCaseId()" 
+							@click="hideStarredCases"
+							:class="{ 'light-gray': starredCasesView }"/>
+					<i class="fa fa-star u-pull-right gray" @click="showStarredCases" :class="{ 'light-gray': !starredCasesView }"></i>
 				</h5>
 			</div>
 			<!-- END HOME HEADER -->
@@ -266,23 +266,23 @@
 				<div class="row pagination-controls hover-hide">
 					<div class="four columns">
 						<div v-show="dayToShow.day() !== 1">
-							<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+							<button class="paginate button button-bar" @click="showPreviousDay">Previous Day</button>
 						</div>
 						<div v-show="dayToShow.day() === 1">
-							<button class="paginate button button-bar left" v-on:click="skipToFriday">Friday</button>
-							<button class="paginate button button-bar" v-on:click="showPreviousDay">Previous Day</button>
+							<button class="paginate button button-bar left" @click="skipToFriday">Friday</button>
+							<button class="paginate button button-bar" @click="showPreviousDay">Previous Day</button>
 						</div>
 					</div>
 					<div class="four columns centered-text">
-						<button class="paginate button button-bar" v-on:click="showToday">Today</button>
+						<button class="paginate button button-bar" @click="showToday">Today</button>
 					</div>
 					<div class="four columns right-text">
 						<div v-show="dayToShow.day() !== 5">
-							<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
+							<button class="paginate button button-bar" @click="showNextDay">Next Day</button>
 						</div>
 						<div v-show="dayToShow.day() === 5">
-							<button class="paginate button button-bar" v-on:click="showNextDay">Next Day</button>
-							<button class="paginate button button-bar right" v-on:click="skipToMonday">Monday</button>
+							<button class="paginate button button-bar" @click="showNextDay">Next Day</button>
+							<button class="paginate button button-bar right" @click="skipToMonday">Monday</button>
 						</div>
 					</div>
 				</div>
@@ -297,14 +297,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="interval of timeIntervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
+						<tr v-for="interval of timeIntervals" class="no-padding hover-row" :class="{'green-bg': !interval.dtEnd}" list :key="interval.ixInterval">
 							<td>
-								<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
+								<a @click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
 							</td>
 							<td class="controls">
-								<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
-								<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
-								<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
+								<i v-show="currentCaseId !== interval.ixBug" @click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
+								<i v-show="currentCaseId === interval.ixBug" @click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
+								<i v-show="interval.dtEnd" @click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 								&nbsp;
 								<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 							</td>
@@ -312,15 +312,15 @@
 								{{ interval.sTitle }}
 							</td>
 							<td class="split-date">
-								<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
+								<input-time v-model="interval.dtStart" :intervalid="interval.ixInterval" @intervalchanged="editInterval" :isdtstart="true"></input-time>
 							</td>
 							<td class="split-date">
-								<input-time v-model="interval.dtEnd" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval"></input-time>
+								<input-time v-model="interval.dtEnd" :intervalid="interval.ixInterval" @intervalchanged="editInterval"></input-time>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
+				<add-interval :currentdate="dayToShow" @addinterval="addInterval" @cleartime="clearTime"></add-interval>
 			</div>
 			<!-- END TIMESHEET VIEW -->
 			
@@ -345,9 +345,9 @@
 			<span class="gray small"> {{ workdays }} day pay period</span>
 			<div class="chart-stuff">
 				<div class="pagination-controls no-select">
-					<button v-on:click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
+					<button @click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
 					|
-					<button v-on:click="goToNextPayPeriod()" class="paginate button">Next Pay Period</button>
+					<button @click="goToNextPayPeriod()" class="paginate button">Next Pay Period</button>
 				</div>
 				<div class="timesheet-chart-wrapper">
 					<canvas id="timesheet-chart"></canvas>
@@ -365,7 +365,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="interval of payPeriodIntervals" v-bind:class="{'green-bg': !interval.dtEnd}">
+					<tr v-for="interval of payPeriodIntervals" :class="{'green-bg': !interval.dtEnd}">
 						<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
 						<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
 						<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
@@ -379,7 +379,7 @@
 				<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
 			</div> -->
 			<div v-show="downloadReady" class="hidden-controls gray">
-				<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
+				<a @click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 			</div>
 		</div>
 	</script>
@@ -391,8 +391,8 @@
 			<div class="control-bar hover-hide" v-show="hasToken">
 				<button class="button case-control">
 					<span v-show="currentPerson.ixBugWorkingOn > 0">
-						<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn }}</span>
-						<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon a-little" aria-hidden="true"></i>
+						<span @click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn }}</span>
+						<i @click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon a-little" aria-hidden="true"></i>
 					</span>
 					<span v-show="currentPerson.ixBugWorkingOn <= 0" class="not-workin">
 						off the clock
@@ -406,14 +406,14 @@
 					<canvas id="chartclock"></canvas>
 				</div>
 				<div class="nav pagination-controls no-select left-text">
-					<button class="button u-full-width left-text" v-on:click.prevent="showList" v-bind:class="{ 'active': listView || caseView }">Home</button>
-					<button class="button u-full-width left-text" v-on:click.prevent="showSearch" v-bind:class="{ 'active': searchView }">Search</button>
-					<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
-					<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
+					<button class="button u-full-width left-text" @click.prevent="showList" :class="{ 'active': listView || caseView }">Home</button>
+					<button class="button u-full-width left-text" @click.prevent="showSearch" :class="{ 'active': searchView }">Search</button>
+					<button class="button u-full-width left-text" @click="toggleMetrics()" :class="{ 'active': metricsView }">Metrics</button>
+					<button class="button u-full-width left-text" @click.prevent="showPayPeriod" :class="{ 'active': payPeriodView }">Pay Period</button>
 				</div>
 			</div>
 			<div class="info-bar" v-show="hasToken">
-				<a v-on:click.prevent="showSettings" class="red hover-hide" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
+				<a @click.prevent="showSettings" class="red hover-hide" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
 				<span id="loader" class="centered-text"><i class="fa fa-asterisk fa-spin fa-fw fa-2x"></i></span>
 			</div>
 		</div>
@@ -429,10 +429,10 @@
 					<i class="fas fa-circle fa-lg" v-show="!stylesInverted" aria-hidden="true"></i>
 					Invert Colors
 				</label>
-				<input type="checkbox" id="invert-styles" v-bind:model="stylesInverted" v-on:click="invertColors(!stylesInverted)" style="display: none">
+				<input type="checkbox" id="invert-styles" :model="stylesInverted" @click="invertColors(!stylesInverted)" style="display: none">
 			</div> 
 			<div class="settings-container">
-				<button v-on:click.prevent="clearToken()">
+				<button @click.prevent="clearToken()">
 					<i class="fa fa-trash fa-lg"></i>
 					Clear Token
 				</button>
