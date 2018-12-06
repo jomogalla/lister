@@ -47,10 +47,9 @@
 		<span id="notifier"></span>
 	</div>
 
-
-
-
-	<!-- TEMPLATES -->
+	<!----------------------------------->
+	<!------------ TEMPLATES ------------>
+	<!----------------------------------->
 	<!-- CASE LINKS TEMPLATE -->
 	<script type="text/x-template" id="case-links-template">
 		<span class="case-links">
@@ -89,7 +88,6 @@
 						</div>
 					</div>
 					<div class="two columns">&nbsp;</div>
-
 					<div class="four columns" v-bind:class="{ 'half-hidden': hasToken }">
 						<div class="">
 							<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
@@ -124,7 +122,6 @@
 					</button>
 				</div>
 			</form>
-
 			<table class="u-full-width" v-show="hasToken">
 				<thead>
 					<tr>
@@ -168,7 +165,6 @@
 				<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
 				<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
 			</div>
-
 			<div class="metrics-chart-wrapper">
 				<canvas id="metrics-chart"></canvas>
 			</div>
@@ -180,8 +176,8 @@
 	<script type="text/x-template" id="add-interval-template">
 		<div class="add-form">
 			<div class="u-pull-left" v-show="showingAddForm || showingRemoveForm">
-					<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
-					<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
+				<i class="fa fa-plus-circle green block" v-on:click="showAddForm" v-bind:class="{ 'light-gray': !showingAddForm}"></i>
+				<i class="fa fa-minus-circle red" v-on:click="showRemoveForm" v-bind:class="{ 'light-gray': !showingRemoveForm}"></i>
 			</div>
 			<form v-show="showingAddForm" v-on:submit.prevent="addInterval">
 				<input v-model="bug" placeholder="case #" class="hidden-input case" v-bind:class="{ 'invalid': caseInvalid }">
@@ -191,10 +187,10 @@
 				<button class="button" type="submit">Add Time</button>
 			</form>
 			<form v-show="showingRemoveForm" v-on:submit.prevent="clearTime">
-					<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
-					&#x27F6;
-					<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
-					<button class="button dark-red" type="submit">Clear Time</button>
+				<input v-model="start" class="hidden-input time" placeholder="start" v-bind:class="{ 'invalid': startInvalid }"></input-time>
+				&#x27F6;
+				<input v-model="end" class="hidden-input time" placeholder="end" v-bind:class="{ 'invalid': endInvalid }"></input-time>
+				<button class="button dark-red" type="submit">Clear Time</button>
 			</form>
 		</div>
 	</script>
@@ -260,7 +256,6 @@
 							v-on:blur="resetCurrentCaseId()" 
 							v-on:click="hideStarredCases"
 							v-bind:class="{ 'light-gray': starredCasesView }"/>
-							
 					<i class="fa fa-star u-pull-right gray" v-on:click="showStarredCases" v-bind:class="{ 'light-gray': !starredCasesView }"></i>
 				</h5>
 			</div>
@@ -313,7 +308,9 @@
 								&nbsp;
 								<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 							</td>
-							<td class="overflow-popover"> {{ interval.sTitle }}</td>
+							<td class="overflow-popover"> 
+								{{ interval.sTitle }}
+							</td>
 							<td class="split-date">
 								<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
 							</td>
@@ -326,7 +323,6 @@
 				<add-interval v-bind:currentdate="dayToShow" v-on:addinterval="addInterval" v-on:cleartime="clearTime"></add-interval>
 			</div>
 			<!-- END TIMESHEET VIEW -->
-			
 			
 			<!-- CASE VIEW -->
 			<div class="case-wrapper four columns" v-show="listView || caseView">
@@ -348,13 +344,11 @@
 			</h4>
 			<span class="gray small"> {{ workdays }} day pay period</span>
 			<div class="chart-stuff">
-				
 				<div class="pagination-controls no-select">
 					<button v-on:click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
 					|
 					<button v-on:click="goToNextPayPeriod()" class="paginate button">Next Pay Period</button>
 				</div>
-
 				<div class="timesheet-chart-wrapper">
 					<canvas id="timesheet-chart"></canvas>
 				</div>
@@ -376,16 +370,14 @@
 						<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
 						<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
 						<td> {{ interval.duration | humanizeDuration }} </td>
-						<td>
-							{{ interval.ixBug }}
-						</td>
+						<td> {{ interval.ixBug }} </td>
 						<td>{{ interval.sTitle }}</td>
 					</tr>
 				</tbody>
 			</table>
-			<div class="gray"> 
-					<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
-			</div>
+			<!-- <div class="gray"> 
+				<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
+			</div> -->
 			<div v-show="downloadReady" class="hidden-controls gray">
 				<a v-on:click.prevent="downloadCSV({ filename: 'stock-data.csv' })">download</a>
 			</div>
@@ -399,14 +391,13 @@
 			<div class="control-bar hover-hide" v-show="hasToken">
 				<button class="button case-control">
 					<span v-show="currentPerson.ixBugWorkingOn > 0">
-						<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn}}</span>
+						<span v-on:click.prevent="showCase(currentPerson.ixBugWorkingOn)">{{ currentPerson.ixBugWorkingOn }}</span>
 						<i v-on:click="stopWork()" v-show="currentPerson.ixBugWorkingOn > 0" class="fa fa-stop-circle red hover-icon a-little" aria-hidden="true"></i>
 					</span>
 					<span v-show="currentPerson.ixBugWorkingOn <= 0" class="not-workin">
 						off the clock
 					</span>
 				</button>
-			
 				<div class="chart-wrapper">
 					<canvas id="chartone"></canvas>
 					<div class="eight-hour-text centered-text" v-show="hasToken">{{ timeWorked | humanizeDuration }}</div>
@@ -420,7 +411,6 @@
 					<button class="button u-full-width left-text" v-on:click="toggleMetrics()" v-bind:class="{ 'active': metricsView }">Metrics</button>
 					<button class="button u-full-width left-text" v-on:click.prevent="showPayPeriod" v-bind:class="{ 'active': payPeriodView }">Pay Period</button>
 				</div>
-
 			</div>
 			<div class="info-bar" v-show="hasToken">
 				<a v-on:click.prevent="showSettings" class="red hover-hide" title="Settings"><i class="fa fa-wrench hover-icon"></i></a>
