@@ -54,7 +54,7 @@
 	<!-- CASE LINKS TEMPLATE -->
 	<script type="text/x-template" id="case-links-template">
 		<span class="case-links">
-			<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
+			<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
 			<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
 			<i v-show="currentCaseId === interval.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
 			<i v-show="interval.dtEnd" v-on:click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
@@ -138,16 +138,16 @@
 					<tr v-for="fcase of searchResults.cases">
 						<td><i class="fa fa-play-circle" v-on:click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
 						<td>
-							<a v-on:click.prevent="showCase(fcase.ixBug)">{{fcase.ixBug}}</a>
+							<a v-on:click.prevent="showCase(fcase.ixBug)">{{ fcase.ixBug }}</a>
 							<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
 						</td>
-						<td>{{fcase.sTitle}}</td>
-						<td>{{fcase.sStatus}}</td>
+						<td>{{ fcase.sTitle }}</td>
+						<td>{{ fcase.sStatus }}</td>
 					</tr>
 				</tbody>
 			</table>
 			<h5 class="italic gray centered-text" v-show="searchResults.cases && searchResults.cases.length === 50">
-				<i>{{searchResults.totalHits}} results, limited to top 50</i>
+				<i>{{ searchResults.totalHits }} results, limited to top 50</i>
 			</h5>
 			<h5 class="italic gray centered-text" v-show="searchQuery && !searchResults.count && searchResults.count === 0">
 				<i>no search results</i>
@@ -160,10 +160,10 @@
 	<script type="text/template" id="metrics-template">
 		<div class="metrics-wrapper" v-show="metricsView">
 			<h5 v-text="metricsTitle"></h5>
-			<span>{{metricsTotalHours}} Hours Week</span>
-			<div>{{metricsYtdHours}} Hours YTD</div>
-			<div>{{ytdWeekAverage}} Weekly Avg. YTD</div>
-			<div>{{ytdDailyAverage}} Daily Avg. YTD</div>
+			<span>{{ metricsTotalHours }} Hours Week</span>
+			<div>{{ metricsYtdHours }} Hours YTD</div>
+			<div>{{ ytdWeekAverage }} Weekly Avg. YTD</div>
+			<div>{{ ytdDailyAverage }} Daily Avg. YTD</div>
 			<div class="pagination-controls no-select">
 				<button v-on:click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
 				<button v-on:click="goToNextWeekMetrics()" class="paginate button">Next Week</button>
@@ -204,7 +204,7 @@
 	<script type="text/x-template" id="case-template">
 		<div v-show="!starredCasesView">
 			<h5 v-show="currentCase.ixBug" class="case-title">
-				{{currentCase.sTitle}}
+				{{ currentCase.sTitle }}
 				<span class="u-pull-right">
 					<i v-show="currentCaseId !== currentCase.ixBug" v-on:click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
 					<i v-show="currentCaseId === currentCase.ixBug" v-on:click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
@@ -230,11 +230,11 @@
 				<tbody>
 					<tr v-for="bug in starredCases">
 						<td>
-							<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{bug.ixBug}}</a>
+							<a v-on:click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{ bug.ixBug }}</a>
 							<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
 								<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
 							</a></td>
-						<td>{{bug.sTitle}}</td>
+						<td>{{ bug.sTitle }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -304,7 +304,7 @@
 					<tbody>
 						<tr v-for="interval of timeIntervals" class="no-padding hover-row" v-bind:class="{'green-bg': !interval.dtEnd}" list v-bind:key="interval.ixInterval">
 							<td>
-								<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{interval.ixBug}}</a>
+								<a v-on:click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
 							</td>
 							<td class="controls">
 								<i v-show="currentCaseId !== interval.ixBug" v-on:click="startWork(interval.ixBug)" class="fa fa-play-circle fa-lg green  hover-icon" aria-hidden="true"></i>
@@ -313,7 +313,7 @@
 								&nbsp;
 								<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
 							</td>
-							<td class="overflow-popover"> {{interval.sTitle}}</td>
+							<td class="overflow-popover"> {{ interval.sTitle }}</td>
 							<td class="split-date">
 								<input-time v-model="interval.dtStart" v-bind:intervalid="interval.ixInterval" v-on:intervalchanged="editInterval" v-bind:isdtstart="true"></input-time>
 							</td>
@@ -342,11 +342,11 @@
 	<script type="text/x-template" id="pay-period-template">
 		<div class="pay-period-wrapper twelve columns" v-show="payPeriodView">
 			<div class="u-cf"></div>
-			<h4> {{payPeriodStartDate | formatDate('MMMM D')}} - {{payPeriodEndDate | formatDate('D')}}
+			<h4> {{ payPeriodStartDate | formatDate('MMMM D') }} - {{ payPeriodEndDate | formatDate('D') }}
 				<span class="u-pull-right gray">&nbsp;|&nbsp;{{ workedDuration.asHours() }} h </span>
-				<span class="u-pull-right">{{ payPeriodTotal | humanize }}</span>
+				<span class="u-pull-right">{{ payPeriodTotal | humanizeDuration }}</span>
 			</h4>
-			<span class="gray small"> {{workdays}} day pay period</span>
+			<span class="gray small"> {{ workdays }} day pay period</span>
 			<div class="chart-stuff">
 				
 				<div class="pagination-controls no-select">
@@ -375,7 +375,7 @@
 						<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
 						<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
 						<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
-						<td> {{ interval.duration | humanize }} </td>
+						<td> {{ interval.duration | humanizeDuration }} </td>
 						<td>
 							{{ interval.ixBug }}
 						</td>
@@ -409,7 +409,7 @@
 			
 				<div class="chart-wrapper">
 					<canvas id="chartone"></canvas>
-					<div class="eight-hour-text centered-text" v-show="hasToken">{{timeWorked | humanize}}</div>
+					<div class="eight-hour-text centered-text" v-show="hasToken">{{ timeWorked | humanizeDuration }}</div>
 				</div>
 				<div class="clock-wrapper hover-icon">
 					<canvas id="chartclock"></canvas>
