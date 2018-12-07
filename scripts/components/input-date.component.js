@@ -14,7 +14,6 @@ Vue.component('input-date', {
 		datestuff: function (date) {
 			this.updateDayPicked(date);
 			this.pikaday.gotoDate(moment(date));
-
 		}
 	},
 	mounted() {

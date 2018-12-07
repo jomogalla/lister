@@ -85,7 +85,6 @@ Vue.component('metrics', {
 			var targetDate = this.metricsDate.clone().subtract(1, "w");
 			this.getMetrics(targetDate);
 		},
-
 		goToNextWeekMetrics() {
 			var targetDate = this.metricsDate.clone().add(1, "w");
 			this.getMetrics(targetDate);

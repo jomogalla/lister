@@ -29,7 +29,7 @@ Vue.component('pay-period', {
 	},
 	mounted() {
 		this.$_currentPayPeriod = moment(); 
-		//timesheet chart
+		// timesheet chart
 		this.$_timesheetBar = new utilities.bar('#timesheet-chart', constants.payPeriodBarChartData, constants.weeklyBarChartOptions);
 
 	},

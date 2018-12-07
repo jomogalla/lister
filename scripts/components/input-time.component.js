@@ -34,7 +34,6 @@ Vue.component('input-time', {
 			} else {
 				this.$emit('intervalchanged', this.intervalid, null, formattedValue.toISOString());
 			}
-
 		}
 	},
 	template: '<input type=text ref="input" class="date-picker hidden-input" v-bind:value="displayValue" v-on:change="updateTimePicked($event.target.value)">',

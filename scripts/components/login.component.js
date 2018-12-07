@@ -24,7 +24,6 @@ Vue.component('login', {
 			utilities.api(checkToken).then(this.handleAddToken, (response) => { 
 				this.$store.commit('handleErrorRequest', response)
 			});
-
 		},
 		handleAddToken(response) {
 			var token = response.data.token;
