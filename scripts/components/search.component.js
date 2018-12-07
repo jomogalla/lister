@@ -10,7 +10,7 @@ Vue.component('search', {
 	computed: mapState({
 		hasToken: state => state.hasToken,
 		searchView: state => state.ui.searchView,
-		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzLinkUrl(); }
+		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzCasePrefix(); }
 	}),
 	methods: {
 		search() {

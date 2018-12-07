@@ -5,9 +5,8 @@ Vue.component('case', {
 		currentCase: state => state.case.currentCase,
 		currentCaseId: state => state.controls.currentCaseId,
 		starredCasesView: state => state.ui.starredCasesView,
-		fogbugzLinkUrl() {
-			return utilities.authenticator.getFogBugzLinkUrl();
-		}
+		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzCasePrefix(); },
+		currentCaseEvents() { return store.getters.currentCaseEventsFormatted }
 	}),
 	methods: {
 		updateCaseById(caseId) {
@@ -23,4 +22,4 @@ Vue.component('case', {
 		}
 	},
 	template: '#case-template',
-});
+}); 

@@ -19,6 +19,22 @@ const caseModule = {			//Rename this module plz
 			state.starredCases = cases;
 		}
 	},
+	getters: {
+		currentCaseEventsFormatted(state) {
+			if(!state.currentCase || !state.currentCase.events) { return [] };
+
+			let events = state.currentCase.events;
+
+			for(var i = 0; i < events.length; i++) {
+				if(events[i].sHtml.indexOf('<img') > -1) {
+					let replacedString = events[i].sHtml.replace('src="', 'src="' + utilities.authenticator.getFogBugzLinkUrl() );
+					events[i].sHtml = replacedString;
+				}
+			}
+
+			return events;
+		}
+	},
 	actions: {
 		getStarredCases(context) {
 			var listCases = {
@@ -57,8 +73,6 @@ const caseModule = {			//Rename this module plz
 				utilities.loader.stop();
 				var responseObject = typeof response === 'object' ? response.data.cases[0] : JSON.parse(response).data.cases[0];
 	
-
-
 				// Check to make sure we have a case
 				if (response.data.totalHits !== 0) {
 					context.commit('setCurrentCase', responseObject);

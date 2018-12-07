@@ -17,7 +17,7 @@ Vue.component('pay-period', {
 		payPeriodView: state => state.ui.payPeriodView,
 		dayToShow: state => state.time.dayToShow,
 		currentPerson: state => state.controls.currentPerson,
-		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzLinkUrl(); }
+		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzCasePrefix(); }
 	}),
 	watch: {
 		payPeriodView(val) {

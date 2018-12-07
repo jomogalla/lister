@@ -17,9 +17,7 @@ Vue.component('home', {
 		currentCaseId: state => state.controls.currentCaseId,
 		timeIntervals: state => state.time.intervals,
 		starredCasesView: state => state.ui.starredCasesView,
-		fogbugzLinkUrl() {
-			return utilities.authenticator.getFogBugzLinkUrl();
-		}
+		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzCasePrefix(); }
 	}),
 	methods: {
 		search: function () {

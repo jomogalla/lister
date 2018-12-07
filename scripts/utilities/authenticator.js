@@ -44,6 +44,12 @@ utilities.authenticator = {
         this.subDomain = subDomain;
         utilities.storage.save('subDomain', subDomain);
     },
+    getFogBugzCasePrefix: function() {
+        return constants.httpsUrlPrefix 
+                + utilities.authenticator.getSubDomain() 
+                + constants.externalLinkSuffix 
+                + constants.caseSuffix;
+    },
     getFogBugzLinkUrl: function() {
         return constants.httpsUrlPrefix + utilities.authenticator.getSubDomain() + constants.externalLinkSuffix;
     },

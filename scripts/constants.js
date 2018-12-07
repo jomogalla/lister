@@ -3,7 +3,8 @@ const constants = {
 	// HTTP
 	httpsUrlPrefix: 'https://',
 	apiUrlSuffix: '.fogbugz.com/f/api/0/jsonapi',
-	externalLinkSuffix: '.fogbugz.com/f/cases/',
+	externalLinkSuffix: '.fogbugz.com/',
+	caseSuffix: 'f/cases/',
 	requestType: 'POST',
 	contentType: 'text/plain',
 	refreshUIInterval: 60 * 1000,
