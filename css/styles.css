@@ -323,7 +323,6 @@ a:hover {
     right: 0;
     left: 0;
 
-    /* background-color: #f3f0ec; */
     background-color: #f1f0ed;
     opacity: 0;
 
@@ -421,7 +420,6 @@ a:hover {
 
 .pagination-controls button:hover {
     border-color: transparent;
-    /* background-color: #f6f6f6; */
 }
 
 
@@ -451,7 +449,6 @@ a:hover {
 
 /* Add Form */
 .add-form {
-    /* text-align: center; */
     position: fixed;
     bottom: 0;
     display: inline-block;
@@ -596,10 +593,7 @@ a:hover {
 }
 
 .metrics-chart-wrapper {
-    /* max-width: 100%;
-    min-width: 50rem; */
     width: 62vw;
-    /* height: 10vh; */
 }
 
 .link-wrapper a{
