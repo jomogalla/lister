@@ -4,6 +4,8 @@ Vue.component('metrics', {
 	data() {
 		return {
 			metricsTitle: "",
+			startTime: "",
+			endTime: "",
 			metricsTotalHours: 0,
 			metricsYtdHours: 0,
 			metricsYtdDays: [],
@@ -39,7 +41,8 @@ Vue.component('metrics', {
 			var endTime = targetDate.clone().endOf('week');
 			var dFormat = "M.DD";
 
-			this.metricsTitle = "Hours for " + startTime.format(dFormat) + " to " + endTime.format(dFormat);
+			this.startTime = startTime;
+			this.endTime = endTime;
 
 			var listIntervalsForDate = {
 				"cmd": "listIntervals",

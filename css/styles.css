@@ -108,6 +108,10 @@ body.invert {
     padding: 5px 1px;
 }
 
+.margin-left {
+    margin-left: 20px;
+}
+
 [v-cloak] {
     display: none;
 }
@@ -115,6 +119,26 @@ body.invert {
 .hover-hide:not(:hover){
     opacity: 0.6;
     transition: opacity 0.3s;
+}
+
+@keyframes NAME-YOUR-ANIMATION {
+    0% { 
+        transform: translateX(-20px);
+    }
+    50% {
+        transform: translateX(50px) translateY(-5px);
+    }
+    100% { 
+        transform:  translateX(50px);
+    }
+}
+
+.moto-icon {
+    font-size: 2rem;
+}
+
+.moto-icon:hover {
+    animation: NAME-YOUR-ANIMATION 2s infinite;
 }
 
 .hover-icon, 
@@ -190,6 +214,10 @@ i.block {
 
 .pointer {
     cursor: pointer;
+}
+
+.no-margin-bottom {
+    margin-bottom: 0 !important;
 }
 
 /* ----------------------------------
@@ -384,6 +412,7 @@ a:hover {
 
     padding: 0;
     outline: none;
+    border: none;
 }
 
 .pagination-controls button:focus {
@@ -542,7 +571,9 @@ a:hover {
     line-height: 1;
 }
 
-.pay-period-wrapper h4 {
+
+
+.pay-period-wrapper h5 {
     margin-bottom: 0;
 }
 
@@ -559,12 +590,16 @@ a:hover {
                Metrics
 -------------------------------------*/
 .metrics-wrapper h5 {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
+    border-bottom: 2px solid #aaaaaa;
+    
 }
 
-
-.metrics-wrapper button {
-	margin: 0px 20px 0px 0px;
+.metrics-chart-wrapper {
+    /* max-width: 100%;
+    min-width: 50rem; */
+    width: 62vw;
+    /* height: 10vh; */
 }
 
 .link-wrapper a{
