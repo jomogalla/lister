@@ -9,7 +9,7 @@
 	});
 
 	// Turns a duration into hours & minutes
-	Vue.filter('humanize', function (value) {
+	Vue.filter('humanizeDuration', function (value) {
 		if (!value) return '';
 
 		if(moment.duration(value).asHours() > 24 ) {

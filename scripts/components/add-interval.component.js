@@ -1,13 +1,11 @@
 // TODO
 // After user inputs a crappy date, use moment to update the view to show what will actually b submitted
-
 Vue.component('add-interval', {
-	template: '#add-interval-template',
 	props: [
 		'value',
 		'currentdate'
 	],
-	data: function() {
+	data() {
 		return {
 			bug: null,
 			start: null,
@@ -20,7 +18,7 @@ Vue.component('add-interval', {
 		};
 	},
 	computed: {
-		displayValue: function () {
+		displayValue() {
 			if(this.value) {
 				return moment(this.value).format('hh:mma');	
 			} else {
@@ -29,7 +27,7 @@ Vue.component('add-interval', {
 		}
 	},
 	methods: {
-		addInterval: function () {
+		addInterval() {
 			var timeFormat = 'h:mma';
 
 			// Validate Inputs
@@ -64,7 +62,7 @@ Vue.component('add-interval', {
 			this.$emit('addinterval', this.bug, startMoment, endMoment);
 		},
 
-		clearTime: function () {
+		clearTime() {
 			var timeFormat = 'h:mma';
 
 			// Validate Inputs
@@ -88,28 +86,27 @@ Vue.component('add-interval', {
 			}
 
 			// Change Moments to the day we are looking at
-
 			this.setCorrectDates(startMoment);
 			this.setCorrectDates(endMoment);
 
 			this.$emit('cleartime', startMoment, endMoment);
 		},
 
-		setCorrectDates: function(date) {
+		setCorrectDates(date) {
 			date.set('year', this.currentdate.year());
 			date.set('month', this.currentdate.month());
 			date.set('date', this.currentdate.date());
 		},
 
-		showAddForm: function() {
+		showAddForm() {
 			this.showingAddForm = true;
 			this.showingRemoveForm = false;
 		},
-		showRemoveForm: function() {
+		showRemoveForm() {
 			this.showingAddForm = false;
 			this.showingRemoveForm = true;
 		},
-		hideForms: function() {
+		hideForms() {
 			//Clear out stuff
 			this.start = null;
 			this.end = null;
@@ -121,5 +118,6 @@ Vue.component('add-interval', {
 			this.showingAddForm = false;
 			this.showingRemoveForm = false;
 		}
-	}
+	},
+	template: '#add-interval-template',
 });
