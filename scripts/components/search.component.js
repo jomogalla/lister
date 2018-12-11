@@ -32,6 +32,9 @@ Vue.component('search', {
 		showCase(caseNumber) {
 			this.$store.dispatch('getAndShowCase', caseNumber);
 		},
+		startWork(caseId) {
+			this.$store.dispatch('startWork', caseId);
+		},
 	},
 	template: '#search-template',
 });
