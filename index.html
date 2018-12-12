@@ -159,8 +159,8 @@
 		<div class="metrics-wrapper" v-show="metricsView">
 			<h5>
 				{{ startTime | formatDate('MMMM D') }} -
-				<span v-show=""> {{ endTime | formatDate('MMM') }} </span>  
-				{{ endTime | formatDate('D,  YYYY') }}
+				<span v-show="!metricsInOneMonth"> {{ endTime | formatDate('MMMM') }} </span>  
+				{{ endTime | formatDate('D') }}
 			</h5>
 			<div class="pagination-controls no-select hover-hide u-pull-right">
 				<button @click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>

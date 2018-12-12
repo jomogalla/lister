@@ -14,16 +14,19 @@ Vue.component('metrics', {
 	},
 	computed: mapState({
 		metricsView: state => state.ui.metricsView,
-		ytdWeekAverage: function() {
+		ytdWeekAverage() {
 			return (this.metricsYtdHours / moment(this.metricsDate).isoWeek()).toFixed(2);
 		},
-		ytdDailyAverage: function() {
+		ytdDailyAverage() {
 			return (this.metricsYtdHours / this.metricsYtdDays.length).toFixed(2);
+		},
+		metricsInOneMonth() {
+			return moment(this.endTime).isSame(this.startTime, 'month');
 		}
 	}),
 	watch: {
 		// If ever using a router, put this in navigation guards, or on mounted
-		metricsView: function(val) {
+		metricsView(val) {
 			if(this.metricsView) {
 				this.getMetrics(moment());
 			}
