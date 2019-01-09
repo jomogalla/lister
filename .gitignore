@@ -384,3 +384,6 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 
+dist/main.js
+package-lock.json
+package-lock.json
