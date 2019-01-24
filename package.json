@@ -1,11 +1,26 @@
 {
 	"version": "1.0.0",
 	"name": "ASP.NET",
+	"scripts": {
+		"build": "webpack --config webpack.config.dev.js",
+		"dev": "webpack-dev-server --config webpack.config.dev.js"
+	},
 	"private": true,
-	"devDependencies": {},
+	"devDependencies": {
+		"css-loader": "^2.1.0",
+		"html-webpack-plugin": "^3.2.0",
+		"vue-loader": "^15.5.1",
+		"vue-style-loader": "^4.1.2",
+		"vue-template-compiler": "^2.5.21",
+		"webpack": "^4.28.1",
+		"webpack-cli": "^3.2.1",
+		"webpack-dev-server": "^3.1.14"
+	},
 	"dependencies": {
 		"lodash": "^4.17.4",
 		"moment": "^2.20.1",
-		"moment-range": "^3.1.0"
+		"moment-range": "^3.1.0",
+		"vue": "^2.5.21",
+		"vue-router": "^3.0.2"
 	}
 }
