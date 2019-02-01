@@ -98,7 +98,9 @@ const timeModule = {
 			utilities.loader.start();
 			utilities.api(listIntervalsForDate).then(function(response) {
 				var responseObject = typeof response === 'object' ? response.data : JSON.parse(response).data;
-				store.commit('updateTimeIntervals', responseObject.intervals)
+				context.commit('updateTimeIntervals', responseObject.intervals);
+				context.dispatch('refreshUI');
+				
 				utilities.loader.stop();
 			});
 		}
