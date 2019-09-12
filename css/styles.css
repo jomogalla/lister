@@ -561,6 +561,40 @@ a:hover {
 -------------------------------------*/
 /* There doesn't seem to be anything here*/
 
+/* ----------------------------------
+               Modal
+-------------------------------------*/
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+    z-index: 1000;
+}
+
+.modal-mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    opacity: 0.7;
+}
+
+.modal-body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-buttons {
+    margin-top: 2rem;
+}
+
 
 /* ----------------------------------
                Settings

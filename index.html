@@ -191,7 +191,7 @@
 				<i class="fa fa-plus-circle green block" @click="showAddForm" :class="{ 'light-gray': !showingAddForm}"></i>
 				<i class="fa fa-minus-circle red" @click="showRemoveForm" :class="{ 'light-gray': !showingRemoveForm}"></i>
 			</div>
-			<form v-show="showingAddForm" @submit.prevent="addInterval">
+			<form v-show="showingAddForm" @submit.prevent="maybeAddInterval">
 				<input v-model="bug" placeholder="case #" class="hidden-input case" :class="{ 'invalid': caseInvalid }">
 				<input v-model="start" class="hidden-input time" placeholder="start" :class="{ 'invalid': startInvalid }"></input-time>
 				&#x27F6;
@@ -204,6 +204,10 @@
 				<input v-model="end" class="hidden-input time" placeholder="end" :class="{ 'invalid': endInvalid }"></input-time>
 				<button class="button dark-red" type="submit">Clear Time</button>
 			</form>
+			<modal 	ref="overwriteTimeModal" 
+					message="The time you are entering will overwrite time sheet entries. </br> Are you sure you want to continue?" 
+					v-on:accepted="addInterval()">
+			</modal>
 		</div>
 	</script>
 	<!-- END ADD INTERVAL TEMPLATE -->
@@ -454,6 +458,23 @@
 		</div>
 	</script>
 	<!-- END SETTINGS TEMPLATE -->
+
+	<!-- MODAL TEMPLATE -->
+	<script type="text/x-template" id="modal-template">
+		<div class="modal-wrapper" v-show="modalOpen">
+			<div class="modal-mask" @click="decline()"></div>
+			<div class="modal-body">
+				<div class="modal-message" v-html="message"></div>
+				<div class="modal-buttons">
+					<button @click="decline()">{{declineMessage}}</button>
+					<button @click="accept()">{{acceptMessage}}</button>
+				</div>
+			</div>
+		</div>
+	</script>
+	<!-- END MODAL TEMPLATE -->
+
+
 	<!-- END TEMPLATES -->
 	
 
@@ -509,6 +530,7 @@
 	<script type="text/javascript" src="scripts/components/pay-period.component.js"></script>
 	<script type="text/javascript" src="scripts/components/controls.component.js"></script>
 	<script type="text/javascript" src="scripts/components/settings.component.js"></script>
+	<script type="text/javascript" src="scripts/components/modal.component.js"></script>
 	
 	<!-- The App -->
 	<script type="text/javascript" src="scripts/app.js"></script>
