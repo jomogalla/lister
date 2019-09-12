@@ -1,7 +1,7 @@
 const timeModule = {
 	state: {
 		dayToShow: moment(),
-		intervals: {},
+		intervals: [],
 		getterTripper: false
 	},
 	getters: {
@@ -44,6 +44,9 @@ const timeModule = {
 		updateTimeIntervals(state, timeIntervals) {
 			state.intervals = timeIntervals;
 		},
+		clearTimeIntervals(state) {
+			state.intervals = [];
+		},
 		triggerRefreshForTimeWorked(state) {
 			// Might not be the best design decision
 			// Flipping this boolean will force an update of the getters its in
@@ -59,12 +62,21 @@ const timeModule = {
 			};
 
 			utilities.loader.start();
-			utilities.api(startWork).then(function() {
-				context.dispatch('getPerson');
-				context.dispatch('getTimeSheet', this.dayToShow)
+			var request = utilities.api(startWork);
+			
+			request.always(function() {
+				utilities.loader.stop();				
 			});
 
-			context.commit('setCurrentCaseId', caseId);
+			request.done(function () {
+				context.dispatch('getPerson');
+				context.dispatch('getTimeSheet', this.dayToShow);
+				context.commit('setCurrentCaseId', caseId);
+			});
+
+			request.fail(function (error) {
+				utilities.notifier.addMessage(error.responseJSON.errors[0].message)
+			});
 		},
 		stopWork(context) {
 			var stopWork = {
@@ -94,12 +106,13 @@ const timeModule = {
 				"dtStart": startTime.toJSON(),
 				"dtEnd": endTime.toJSON()
 			};
-
+			context.commit('clearTimeIntervals');
 			utilities.loader.start();
 			utilities.api(listIntervalsForDate).then(function(response) {
-				var responseObject = typeof response === 'object' ? response.data : JSON.parse(response).data;
-				store.commit('updateTimeIntervals', responseObject.intervals)
 				utilities.loader.stop();
+				var responseObject = typeof response === 'object' ? response.data : JSON.parse(response).data;
+				context.commit('updateTimeIntervals', responseObject.intervals);
+				context.dispatch('refreshUI');
 			});
 		}
 	}

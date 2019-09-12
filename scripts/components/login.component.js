@@ -21,11 +21,15 @@ Vue.component('login', {
 
 			utilities.authenticator.addSubDomain(this.subdomain)
 			utilities.loader.start();
-			utilities.api(checkToken).then(this.handleAddToken, (response) => { 
-				this.$store.commit('handleErrorRequest', response)
-			});
+			utilities.api(checkToken).then(this.handleAddToken, 
+				(response) => { 
+					utilities.loader.stop();
+					this.$store.commit('handleErrorRequest', response)
+				}
+			);
 		},
 		handleAddToken(response) {
+			utilities.loader.stop();
 			var token = response.data.token;
 
 			if (token) {

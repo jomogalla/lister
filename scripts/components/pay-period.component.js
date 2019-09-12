@@ -5,7 +5,7 @@ Vue.component('pay-period', {
 		return {
 			workdays: 0,
 			workdaysSoFar: 0,
-			payPeriodIntervals: {},
+			payPeriodIntervals: [],
 			payPeriodTotal: moment.duration(0, 'minutes'),
 			workedDuration: moment.duration(0, 'days'),
 			payPeriodStartDate: null,
@@ -121,6 +121,7 @@ Vue.component('pay-period', {
 				"dtEnd": endTime.toJSON()
 			};
 
+			this.payPeriodIntervals = [];
 			utilities.loader.start();
 			utilities.api(listIntervalsForDate).then(this.handlePayPeriodRequest);
 		},
@@ -134,6 +135,7 @@ Vue.component('pay-period', {
 
 		},
 		handlePayPeriodRequest(response) {
+			utilities.loader.stop();
 			this.payPeriodIntervals = typeof response === 'object' ? response.data.intervals : JSON.parse(response).data.intervals;
 			this.payPeriodIntervals = utilities.dataPreparation.addDurations(this.payPeriodIntervals);
 			this.payPeriodTotal = utilities.dataPreparation.sumDurations(this.payPeriodIntervals);
@@ -147,7 +149,6 @@ Vue.component('pay-period', {
 			this.$_timesheetBar.updateData(intervalData.hoursPerDay);
 
 			this.addPayPeriodProjects(this.payPeriodIntervals);
-			utilities.loader.stop();
 		},
 		addPayPeriodProjects(intervals) {
 			if(!intervals.length) { return; }

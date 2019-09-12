@@ -2,10 +2,6 @@ var mapState = Vuex.mapState;
 
 Vue.component('home', {
 	template: '#home-template',
-	data: function() {
-		return {
-		};
-	},
 	computed: mapState({
 	//	token: state => state.token,
 		hasToken: state => state.hasToken,
@@ -20,7 +16,7 @@ Vue.component('home', {
 		fogbugzLinkUrl() { return utilities.authenticator.getFogBugzCasePrefix(); }
 	}),
 	methods: {
-		search: function () {
+		search() {
 			var search = {
 				"cmd": "search",
 				"token": utilities.authenticator.getToken(),
@@ -35,6 +31,9 @@ Vue.component('home', {
 		handleSearchRequest(response) {
 			this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 			utilities.loader.stop();
+		},
+		quickStartCase() {
+			this.$store.dispatch('createCase');
 		},
 		showCase(caseNumber) {
 			this.$store.dispatch('getAndShowCase', caseNumber);
@@ -94,6 +93,7 @@ Vue.component('home', {
 			utilities.api(addInterval).then(this.handleClearTimeRequest);
 		},
 		handleClearTimeRequest(response) {
+			utilities.loader.stop();
 			this.deleteInterval(response.data.interval.ixInterval)
 		},
 		deleteInterval(timeIntervalId) {
@@ -108,7 +108,6 @@ Vue.component('home', {
 		},
 		handleDeleteInterval(response) {
 			utilities.loader.stop();
-
 			this.$store.dispatch('getTimeSheet', this.dayToShow)
 		},
 		editInterval(ixInterval, dtStart, dtEnd) {
@@ -173,6 +172,9 @@ Vue.component('home', {
 		},
 		stopWork() { 
 			this.$store.dispatch('stopWork');
+		},
+		handleErrorRequest(response) {
+			this.$store.commit('handleErrorRequest', response);
 		}
 	}
 });

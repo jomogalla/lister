@@ -8,10 +8,12 @@ utilities.notifier =  {
 
         // Adding the button here is gross... Fix it
         notifier.innerHTML =  message + ' <i class="fa fa-times-circle" onclick="utilities.notifier.clearMessage()"></i>';
+        notifier.parentElement.style.display = 'block';
     },
     clearMessage: function(messageId) {
         var notifier = document.getElementById('notifier');
         notifier.innerHTML =  '';
+        notifier.parentElement.style.display = 'none';
     }
 };
 

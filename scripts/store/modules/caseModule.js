@@ -26,7 +26,7 @@ const caseModule = {			//Rename this module plz
 			let events = state.currentCase.events;
 
 			for(var i = 0; i < events.length; i++) {
-				if(events[i].sHtml.indexOf('<img') > -1) {
+				if(events[i].sHtml && events[i].sHtml.indexOf('<img') > -1) {
 					let replacedString = events[i].sHtml.replace('src="', 'src="' + utilities.authenticator.getFogBugzLinkUrl() );
 					events[i].sHtml = replacedString;
 				}
@@ -36,6 +36,18 @@ const caseModule = {			//Rename this module plz
 		}
 	},
 	actions: {
+		createCase(context) {
+			var createCase = {
+				"cmd": "new",
+			};
+
+			utilities.loader.start();
+			utilities.api(listCases).then(function(response) {
+				utilities.loader.stop();
+				let cases = response.data.cases;
+
+			});
+		},		
 		getStarredCases(context) {
 			var listCases = {
 				"cmd": "listCases",
