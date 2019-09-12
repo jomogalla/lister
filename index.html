@@ -70,7 +70,10 @@
 				<div class="row">
 					<div class="one column">&nbsp;</div>
 					<div class="ten columns">
-						<input v-model="subdomain" class="button u-full-width" type="text" placeholder="fogbugz subdomain" required>
+						<input v-model="subdomain" class="button u-full-width subdomain-input" type="text" placeholder="fogbugz subdomain" required>
+						<div class="subdomain-wrapper gray">
+							https://<span class="subdomain dark-gray"> subdomain </span>.fogbugz.com
+						</div>
 					</div>
 					<div class="one column">&nbsp;</div>
 				</div>

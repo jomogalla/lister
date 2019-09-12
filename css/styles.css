@@ -391,8 +391,31 @@ a:hover {
 /* ----------------------------------
                 Login 
 -------------------------------------*/
-/* There doesn't seem to be anything here*/
+.subdomain-wrapper {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fafafa;
+    padding: 1rem;
+    font-size: 1.6rem;
+    font-style: italic;
+    display: none;
+    z-index: -1;
+    border: 1px solid #d3f5ff;
+    border-radius: 0.5rem;
+    margin-top: -1.2rem;
+}
 
+.subdomain {
+    font-size: 1.8rem;
+    font-style: normal;
+    background-color: #eeeeee;
+    letter-spacing: 1.5px;
+}
+
+.subdomain-input:focus + .subdomain-wrapper {
+    display: block;
+}
 
 
 
