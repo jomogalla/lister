@@ -563,12 +563,18 @@ a:hover {
 /* ----------------------------------
             Pay Period
 -------------------------------------*/
+.pay-period-wrapper {
+    padding-bottom: 3rem;
+}
+
 .pay-period-wrapper td {
     padding: 4px 15px;
     line-height: 1;
 }
 
-
+.pay-period-days {
+    line-height: 38px;
+}
 
 .pay-period-wrapper h5 {
     margin-bottom: 0;
