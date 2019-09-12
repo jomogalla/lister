@@ -31,21 +31,25 @@
 }
 
 .button-bar {
-    width: 50%;
     margin: 0;
 
     border-top-right-radius: 0;
     border-top-left-radius: 0; 
+    
 }
 
-.button-bar:first-child:not(:only-child) {
-    border-bottom-right-radius: 0;
-    margin-right: -0.6rem;
+.button-bar.right {
+    padding-left: 2rem;
 }
 
-.button-bar:last-child:not(:only-child) {
-    border-bottom-left-radius: 0;
+.button-bar.left {
+    padding-right: 2rem;
 }
+
+.button-bar:focus {
+    color: #808080;
+}
+
 .red {
     color: #AD4D32;
 }
@@ -98,15 +102,43 @@ body.invert {
     border-bottom: #aaa solid 2px;
 }
 
-/* todo - rename */
 .no-padding td {
     padding: 0;
 
     padding: 5px 1px;
 }
 
+.margin-left {
+    margin-left: 20px;
+}
+
 [v-cloak] {
     display: none;
+}
+
+.hover-hide:not(:hover){
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+@keyframes NAME-YOUR-ANIMATION {
+    0% { 
+        transform: translateX(-20px);
+    }
+    50% {
+        transform: translateX(50px) translateY(-5px);
+    }
+    100% { 
+        transform:  translateX(50px);
+    }
+}
+
+.moto-icon {
+    font-size: 2rem;
+}
+
+.moto-icon:hover {
+    animation: NAME-YOUR-ANIMATION 2s infinite;
 }
 
 .hover-icon, 
@@ -184,6 +216,18 @@ i.block {
     cursor: pointer;
 }
 
+.no-margin-bottom {
+    margin-bottom: 0 !important;
+}
+
+.list-enter-active, .list-leave-active {
+    transition: all 0.05s;
+}
+.list-enter, .list-leave-to {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+}
+
 /* ----------------------------------
                General  
 -------------------------------------*/
@@ -240,7 +284,7 @@ a:hover {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;    
+    z-index: 100;  
 }
 
 .nav {
@@ -263,6 +307,7 @@ a:hover {
 
 .control-bar .pagination-controls .active {
     color: #333333;
+    font-size: 1.2rem;
 }
 
 .control-bar .pagination-controls button:focus {
@@ -287,15 +332,15 @@ a:hover {
     right: 0;
     left: 0;
 
-    background-color: #f6f6f6;
+    background-color: #f1f0ed;
     opacity: 0;
 
     z-index: -100;
 
-    transition: opacity 0.2s;
+    transition: opacity 0.1s linear;
 }
 #loader-background.show-loader {
-    opacity: 1
+    opacity: 1;
 }
 
 .case-control i {
@@ -341,8 +386,11 @@ a:hover {
 
 
 .notifier {
+    display: none;
     position: fixed;
-    bottom: 0;
+    padding: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
     right: 0;
     left: 0;
     text-align: center;
@@ -355,8 +403,32 @@ a:hover {
 /* ----------------------------------
                 Login 
 -------------------------------------*/
-/* There doesn't seem to be anything here*/
 
+.login.buffer {
+    margin-top: 15rem;
+}
+
+.subdomain-wrapper {
+    position: absolute;
+    top: -0.6rem;
+    left: 91rem;
+    padding: 1rem;
+    font-size: 1.6rem;
+    font-style: italic;
+    display: none;
+    z-index: -1;
+}
+
+.subdomain {
+    font-size: 1.8rem;
+    font-style: normal;
+    background-color: #eeeeee;
+    letter-spacing: 1.5px;
+}
+
+.subdomain-input:focus + .subdomain-wrapper {
+    display: block;
+}
 
 
 
@@ -371,9 +443,11 @@ a:hover {
 .pagination-controls button {
     border-color: transparent;
     color: #c1c1c1;
+    
 
     padding: 0;
     outline: none;
+    border: none;
 }
 
 .pagination-controls button:focus {
@@ -382,7 +456,6 @@ a:hover {
 
 .pagination-controls button:hover {
     border-color: transparent;
-    background-color: #f6f6f6;
 }
 
 
@@ -412,7 +485,6 @@ a:hover {
 
 /* Add Form */
 .add-form {
-    /* text-align: center; */
     position: fixed;
     bottom: 0;
     display: inline-block;
@@ -494,10 +566,57 @@ a:hover {
     margin-bottom: 0;
 }
 
+.starred-cases-header {
+    font-size: 1.6rem;
+}
+
+.quick-search::placeholder {
+    color: #e2e2e2;
+    font-size: 1.6rem;
+}
+
+.quick-search:focus::placeholder {
+    color: #808080;
+}
+
 /* ----------------------------------
                Search
 -------------------------------------*/
 /* There doesn't seem to be anything here*/
+
+/* ----------------------------------
+               Modal
+-------------------------------------*/
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+    z-index: 1000;
+}
+
+.modal-mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    opacity: 0.7;
+}
+
+.modal-body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-buttons {
+    margin-top: 2rem;
+}
 
 
 /* ----------------------------------
@@ -527,12 +646,20 @@ a:hover {
 /* ----------------------------------
             Pay Period
 -------------------------------------*/
+.pay-period-wrapper {
+    padding-bottom: 3rem;
+}
+
 .pay-period-wrapper td {
     padding: 4px 15px;
     line-height: 1;
 }
 
-.pay-period-wrapper h4 {
+.pay-period-days {
+    line-height: 38px;
+}
+
+.pay-period-wrapper h5 {
     margin-bottom: 0;
 }
 
@@ -549,12 +676,13 @@ a:hover {
                Metrics
 -------------------------------------*/
 .metrics-wrapper h5 {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
+    border-bottom: 2px solid #aaaaaa;
+    
 }
 
-
-.metrics-wrapper button {
-	margin: 0px 20px 0px 0px;
+.metrics-chart-wrapper {
+    width: 62vw;
 }
 
 .link-wrapper a{

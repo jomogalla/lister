@@ -1,13 +1,11 @@
 // TODO
 // After user inputs a crappy date, use moment to update the view to show what will actually b submitted
-
 Vue.component('add-interval', {
-	template: '#add-interval-template',
 	props: [
 		'value',
 		'currentdate'
 	],
-	data: function() {
+	data() {
 		return {
 			bug: null,
 			start: null,
@@ -16,22 +14,33 @@ Vue.component('add-interval', {
 			startInvalid: false,
 			endInvalid: false,
 			showingAddForm: true,
-			showingRemoveForm: false
+			showingRemoveForm: false,
+			timeFormat: 'h:mma',
 		};
 	},
 	computed: {
-		displayValue: function () {
+		displayValue() {
 			if(this.value) {
 				return moment(this.value).format('hh:mma');	
 			} else {
 				return "";
 			}
+		},
+		intervals() {
+			return this.$store.state.time.intervals;
 		}
 	},
 	methods: {
-		addInterval: function () {
-			var timeFormat = 'h:mma';
+		maybeAddInterval() {
+			var newTimeWillOverwrite = this.doTimeRangesOverlap();
 
+			if(newTimeWillOverwrite) {
+				this.$refs.overwriteTimeModal.open();
+			} else {
+				this.addInterval();
+			}
+		},
+		addInterval() {
 			// Validate Inputs
 			this.caseInvalid = false;
 			this.startInvalid = false;
@@ -41,8 +50,8 @@ Vue.component('add-interval', {
 				this.caseInvalid = true;
 			}
 
-			var startMoment = moment(this.start, timeFormat);
-			var endMoment = moment(this.end, timeFormat);
+			var startMoment = moment(this.start, this.timeFormat);
+			var endMoment = moment(this.end, this.timeFormat);
 
 			if(!startMoment.isValid()) {
 				this.startInvalid = true;
@@ -64,7 +73,7 @@ Vue.component('add-interval', {
 			this.$emit('addinterval', this.bug, startMoment, endMoment);
 		},
 
-		clearTime: function () {
+		clearTime() {
 			var timeFormat = 'h:mma';
 
 			// Validate Inputs
@@ -88,28 +97,47 @@ Vue.component('add-interval', {
 			}
 
 			// Change Moments to the day we are looking at
-
 			this.setCorrectDates(startMoment);
 			this.setCorrectDates(endMoment);
 
 			this.$emit('cleartime', startMoment, endMoment);
 		},
 
-		setCorrectDates: function(date) {
+		setCorrectDates(date) {
 			date.set('year', this.currentdate.year());
 			date.set('month', this.currentdate.month());
 			date.set('date', this.currentdate.date());
 		},
+		doTimeRangesOverlap() {
+			var yaTheyOverlap = false;
 
-		showAddForm: function() {
+			var startMoment = moment(this.start, this.timeFormat);
+			var endMoment = moment(this.end, this.timeFormat);
+
+			this.setCorrectDates(startMoment);
+			this.setCorrectDates(endMoment);
+
+			var timeEntryRange = moment.range(startMoment, endMoment);
+
+			this.intervals.forEach(function (interval) {
+				var currentRange = moment.range(interval.dtStart, interval.dtEnd)
+
+				if(timeEntryRange.overlaps(currentRange)) {
+					yaTheyOverlap = true;
+				}
+			});
+
+			return yaTheyOverlap;
+		},
+		showAddForm() {
 			this.showingAddForm = true;
 			this.showingRemoveForm = false;
 		},
-		showRemoveForm: function() {
+		showRemoveForm() {
 			this.showingAddForm = false;
 			this.showingRemoveForm = true;
 		},
-		hideForms: function() {
+		hideForms() {
 			//Clear out stuff
 			this.start = null;
 			this.end = null;
@@ -121,5 +149,6 @@ Vue.component('add-interval', {
 			this.showingAddForm = false;
 			this.showingRemoveForm = false;
 		}
-	}
+	},
+	template: '#add-interval-template',
 });

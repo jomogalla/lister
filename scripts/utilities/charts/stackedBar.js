@@ -1,9 +1,9 @@
 var utilities = utilities || {};
-utilities.donut = function (id, data, options, updateFunction) {
+utilities.bar = function (id, data, options, updateFunction) {
 	var ctx = $(id);
 	
 	this.chart = new Chart(ctx, {
-		type: 'doughnut',
+		type: 'bar',
 		data: data,
 		options: options
 	});

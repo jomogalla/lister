@@ -3,9 +3,11 @@ const constants = {
 	// HTTP
 	httpsUrlPrefix: 'https://',
 	apiUrlSuffix: '.fogbugz.com/f/api/0/jsonapi',
-	externalLinkSuffix: '.fogbugz.com/f/cases/',
+	externalLinkSuffix: '.fogbugz.com/',
+	caseSuffix: 'f/cases/',
 	requestType: 'POST',
 	contentType: 'text/plain',
+	refreshUIInterval: 60 * 1000,
 	// COLORS
 	yellow: '#FFCE56',
 	red: '#FF6384',
@@ -51,7 +53,10 @@ const constants = {
 		type: 'eight',
 		legend: {
 			display: false
-		}
+		},
+		tooltips: {
+			enabled: false
+	   }
 	},
 	twentyFourHourDonutData: {
 		labels: [
@@ -67,9 +72,13 @@ const constants = {
 	},
 	twentyFourHourDonutOptions: {
 		type: 'twentyFour',
+		cutoutPercentage: 0,
 		legend: {
 			display: false
-		}
+		},
+		tooltips: {
+			enabled: false
+	   }
 	},
 	weeklyBarChartData: {
 		labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
