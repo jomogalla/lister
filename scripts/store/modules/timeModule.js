@@ -59,12 +59,21 @@ const timeModule = {
 			};
 
 			utilities.loader.start();
-			utilities.api(startWork).then(function() {
-				context.dispatch('getPerson');
-				context.dispatch('getTimeSheet', this.dayToShow)
+			var request = utilities.api(startWork);
+			
+			request.always(function() {
+				utilities.loader.stop();				
 			});
 
-			context.commit('setCurrentCaseId', caseId);
+			request.done(function () {
+				context.dispatch('getPerson');
+				context.dispatch('getTimeSheet', this.dayToShow);
+				context.commit('setCurrentCaseId', caseId);
+			});
+
+			request.fail(function (error) {
+				utilities.notifier.addMessage(error.responseJSON.errors[0].message)
+			});
 		},
 		stopWork(context) {
 			var stopWork = {

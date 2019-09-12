@@ -377,8 +377,11 @@ a:hover {
 
 
 .notifier {
+    display: none;
     position: fixed;
-    bottom: 0;
+    padding: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
     right: 0;
     left: 0;
     text-align: center;

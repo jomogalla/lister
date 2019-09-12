@@ -5,6 +5,6 @@ utilities.api = function (requestObject) {
         type: constants.requestType,
         data: JSON.stringify(requestObject),
         contentType: constants.contentType,
-    })
+    });
 };
 
