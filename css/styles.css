@@ -220,6 +220,14 @@ i.block {
     margin-bottom: 0 !important;
 }
 
+.list-enter-active, .list-leave-active {
+    transition: all 0.05s;
+}
+.list-enter, .list-leave-to {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+}
+
 /* ----------------------------------
                General  
 -------------------------------------*/
@@ -299,6 +307,7 @@ a:hover {
 
 .control-bar .pagination-controls .active {
     color: #333333;
+    font-size: 1.2rem;
 }
 
 .control-bar .pagination-controls button:focus {
@@ -394,19 +403,20 @@ a:hover {
 /* ----------------------------------
                 Login 
 -------------------------------------*/
+
+.login.buffer {
+    margin-top: 15rem;
+}
+
 .subdomain-wrapper {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fafafa;
+    top: -0.6rem;
+    left: 91rem;
     padding: 1rem;
     font-size: 1.6rem;
     font-style: italic;
     display: none;
     z-index: -1;
-    border: 1px solid #d3f5ff;
-    border-radius: 0.5rem;
-    margin-top: -1.2rem;
 }
 
 .subdomain {
@@ -554,6 +564,19 @@ a:hover {
 
 .starred-cases hr {
     margin-bottom: 0;
+}
+
+.starred-cases-header {
+    font-size: 1.6rem;
+}
+
+.quick-search::placeholder {
+    color: #e2e2e2;
+    font-size: 1.6rem;
+}
+
+.quick-search:focus::placeholder {
+    color: #808080;
 }
 
 /* ----------------------------------

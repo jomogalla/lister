@@ -1,7 +1,7 @@
 const timeModule = {
 	state: {
 		dayToShow: moment(),
-		intervals: {},
+		intervals: [],
 		getterTripper: false
 	},
 	getters: {
@@ -43,6 +43,9 @@ const timeModule = {
 		},
 		updateTimeIntervals(state, timeIntervals) {
 			state.intervals = timeIntervals;
+		},
+		clearTimeIntervals(state) {
+			state.intervals = [];
 		},
 		triggerRefreshForTimeWorked(state) {
 			// Might not be the best design decision
@@ -103,14 +106,13 @@ const timeModule = {
 				"dtStart": startTime.toJSON(),
 				"dtEnd": endTime.toJSON()
 			};
-
+			context.commit('clearTimeIntervals');
 			utilities.loader.start();
 			utilities.api(listIntervalsForDate).then(function(response) {
+				utilities.loader.stop();
 				var responseObject = typeof response === 'object' ? response.data : JSON.parse(response).data;
 				context.commit('updateTimeIntervals', responseObject.intervals);
 				context.dispatch('refreshUI');
-				
-				utilities.loader.stop();
 			});
 		}
 	}

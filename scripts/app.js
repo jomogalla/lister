@@ -44,8 +44,8 @@
 			refresher() {
 				if (this.hasToken) {
 					// Need to update getters on store
-				//	this.timeWorked = this.calculateTimeWorked(this.timeIntervals.intervals);
 					this.$store.dispatch('refreshUI');
+					this.$store.dispatch('getPerson');
 				}
 			}
 		}

@@ -68,8 +68,8 @@
 		<div class="login buffer" v-show="!hasToken">
 			<form @submit.prevent="addToken">
 				<div class="row">
-					<div class="one column">&nbsp;</div>
-					<div class="ten columns">
+					<div class="four columns">&nbsp;</div>
+					<div class="four columns">
 						<input v-model="subdomain" class="button u-full-width subdomain-input" type="text" placeholder="fogbugz subdomain" required>
 						<div class="subdomain-wrapper gray">
 							https://<span class="subdomain dark-gray"> subdomain </span>.fogbugz.com
@@ -78,7 +78,7 @@
 					<div class="one column">&nbsp;</div>
 				</div>
 				<div class="row">
-					<div class="one column">&nbsp;</div>
+					<!-- <div class="one column">&nbsp;</div>
 					<div class="four columns non-functioning">
 						<div class="">
 							<input v-model="username" class="button u-full-width" type="text" placeholder="username" disabled>
@@ -89,8 +89,8 @@
 						<div class="">
 							<button class="button-primary u-full-width" disabled>Logon</button>
 						</div>
-					</div>
-					<div class="two columns">&nbsp;</div>
+					</div> -->
+					<div class="four columns">&nbsp;</div>
 					<div class="four columns" :class="{ 'half-hidden': hasToken }">
 						<div class="">
 							<input v-model="token" :disabled="hasToken" name="token" class="button u-full-width" type="text" placeholder="api token" required>
@@ -239,8 +239,8 @@
 			<h5 class="case-title"> Starred Cases</h5>
 			<hr>
 			<table class="u-full-width no-overflow">
-				<tbody>
-					<tr v-for="bug in starredCases">
+				<transition-group name="list" tag="tbody">
+					<tr v-for="bug in starredCases" :key="bug.ixBug" class="list-item">
 						<td>
 							<a @click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{ bug.ixBug }}</a>
 							<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
@@ -248,7 +248,7 @@
 							</a></td>
 						<td>{{ bug.sTitle }}</td>
 					</tr>
-				</tbody>
+				</transition-group>
 			</table>
 		</div>
 	</script>
@@ -262,17 +262,18 @@
 				<!-- Timesheet Header-->
 				<h5 class="eight columns margin-bottom-0" :class="{ 'active': listView }">
 					<input-date :datestuff="dayToShow" @datepicked="showDay"/></input-date>
+					<!-- <i class="fas fa-fighter-jet u-pull-right hover-icon gray" v-on:click="quickStartCase"></i> -->
 				</h5>
 				<!-- Case Header -->
 				<h5 class="four columns" :class="{ 'active': caseView }">
 					<!-- ON ENTER - Find a case; ON BLUR - Update to current case;  -->
-					<input 	placeholder="¯\_(ツ)_/¯" class="hidden-input"
+					<input 	placeholder="quick search" class="quick-search hidden-input"
 							:value="currentViewedCaseId" 
 							@keyup.enter="updateCaseById" 
 							@blur="resetCurrentCaseId()" 
 							@click="hideStarredCases"
 							:class="{ 'light-gray': starredCasesView }"/>
-					<i class="fa fa-star u-pull-right gray" @click="showStarredCases" :class="{ 'light-gray': !starredCasesView }"></i>
+					<i class="fa fa-star u-pull-right gray hover-icon" @click="showStarredCases" :class="{ 'light-gray': !starredCasesView }"></i>
 				</h5>
 			</div>
 			<!-- END HOME HEADER -->
@@ -307,12 +308,12 @@
 						<tr>
 							<th width="5%">Case</th>
 							<th width="10%">&nbsp;&nbsp;&nbsp;</th>
-							<th width="71%">Title</th>
-							<th width="7%">Start</th>
-							<th width="7%">End</th>
+							<th width="55%">Title</th>
+							<th width="15%">Start</th>
+							<th width="15%">End</th>
 						</tr>
 					</thead>
-					<tbody>
+					<transition-group name="list" tag="tbody">
 						<tr v-for="interval of timeIntervals" class="no-padding hover-row" :class="{'green-bg': !interval.dtEnd}" list :key="interval.ixInterval">
 							<td>
 								<a @click.prevent="showCase(interval.ixBug)" class="hover-icon a-little">{{ interval.ixBug }}</a>
@@ -337,7 +338,7 @@
 								<input-time v-model="interval.dtEnd" :intervalid="interval.ixInterval" @intervalchanged="editInterval"></input-time>
 							</td>
 						</tr>
-					</tbody>
+					</transition-group>
 				</table>
 				<add-interval :currentdate="dayToShow" @addinterval="addInterval" @cleartime="clearTime"></add-interval>
 			</div>
@@ -382,8 +383,8 @@
 						<th width="50%"> Title </th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr v-for="interval of payPeriodIntervals" :class="{'green-bg': !interval.dtEnd}">
+				<transition-group name="list" tag="tbody">
+					<tr v-for="interval of payPeriodIntervals" :class="{'green-bg': !interval.dtEnd}" :key="interval.ixInterval">
 						<td> {{ interval.dtStart | formatDate('ddd D') }} </td>
 						<td> {{ interval.dtStart | formatDate('hh:mm a') }} </td>
 						<td> {{ interval.dtEnd | formatDate('hh:mm a') }} </td>
@@ -391,7 +392,7 @@
 						<td> {{ interval.ixBug }} </td>
 						<td>{{ interval.sTitle }}</td>
 					</tr>
-				</tbody>
+				</transition-group>
 			</table>
 			<!-- <div class="gray"> 
 				<i>* to change pay periods: change the date on the homescreen to a date in your desired pay period, then return.</i> 
@@ -487,8 +488,8 @@
 	<script type="text/javascript" src="scripts/thirdparty/Chart.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/lodash.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vuex.min.js" type="module"></script>
-	<!-- <script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script> -->
-	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
+	<script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script>
+	<!-- <script type="text/javascript" src="scripts/thirdparty/vue.js"></script> -->
 
 	<!-- My Scripts -->
 	<script type="text/javascript" src="scripts/constants.js"></script>

@@ -21,6 +21,7 @@ const controlsModule = {			//Rename this module plz
 
 			utilities.loader.start();
 			utilities.api(viewPerson).then(function(response) {
+				utilities.loader.stop();
 				var currentPerson = typeof response === 'object' ? response.data.person : JSON.parse(response).data.person;
 				context.commit('setPerson', currentPerson);
 			});

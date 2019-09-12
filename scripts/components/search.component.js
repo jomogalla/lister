@@ -26,8 +26,8 @@ Vue.component('search', {
 			utilities.api(search).then(this.handleSearchRequest);
 		},
 		handleSearchRequest(response) {
-			this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 			utilities.loader.stop();
+			this.searchResults = typeof response === 'object' ? response.data : JSON.parse(response).data;
 		},
 		showCase(caseNumber) {
 			this.$store.dispatch('getAndShowCase', caseNumber);
