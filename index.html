@@ -58,7 +58,7 @@
 			<i v-show="currentCaseId === interval.ixBug" @click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon" aria-hidden="true"></i>
 			<i v-show="interval.dtEnd" @click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 			&nbsp;
-			<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i></a> 
+			<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank"><i class="fas fa-external-link-alt fa-small hover-icon" aria-hidden="true"></i></a> 
 		</span>
 	</script>
 	<!-- END CASE LINKS TEMPLATE -->
@@ -140,7 +140,7 @@
 						<td><i class="fa fa-play-circle" @click.prevent="startWork(fcase.ixBug)" aria-hidden="true"></i> </td>
 						<td>
 							<a @click.prevent="showCase(fcase.ixBug)">{{ fcase.ixBug }}</a>
-							<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+							<a :href="fogbugzLinkUrl + fcase.ixBug" target="_blank"><i class="fas fa-external-link-alt hover-icon" aria-hidden="true"></i></a>
 						</td>
 						<td>{{ fcase.sTitle }}</td>
 						<td>{{ fcase.sStatus }}</td>
@@ -165,18 +165,18 @@
 				<span v-show="!metricsInOneMonth"> {{ endTime | formatDate('MMMM') }} </span>  
 				{{ endTime | formatDate('D') }}
 			</h5>
-			<div class="pagination-controls no-select hover-hide u-pull-right">
+			<div class="pagination-controls no-select hover-hide">
 				<button @click="goToPreviousWeekMetrics()" class="paginate button">Previous Week</button>
 				<button @click="goToNextWeekMetrics()" class="paginate button margin-left">Next Week</button>
+			</div>
+			<div class="metrics-chart-wrapper">
+				<canvas id="metrics-chart"></canvas>
 			</div>
 			<div class="metrics-data-wrapper">
 				<div>{{ metricsTotalHours }} Hours Week</div>
 				<div>{{ metricsYtdHours }} Hours YTD</div>
 				<div>{{ ytdWeekAverage }} Weekly Avg. YTD</div>
 				<div>{{ ytdDailyAverage }} Daily Avg. YTD</div>
-			</div>
-			<div class="metrics-chart-wrapper">
-				<canvas id="metrics-chart"></canvas>
 			</div>
 
 
@@ -217,7 +217,7 @@
 					<i v-show="currentCaseId !== currentCase.ixBug" @click="startWork(currentCase.ixBug)" class="fa fa-play-circle fa-lg green hover-icon a-little hover-fade" aria-hidden="true"></i>
 					<i v-show="currentCaseId === currentCase.ixBug" @click="stopWork()" class="fa fa-stop-circle fa-lg red hover-icon a-little hover-fade" aria-hidden="true"></i>
 					<a :href="fogbugzLinkUrl + currentCase.ixBug" target="_blank">
-						<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+						<i class="fas fa-external-link-alt smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
 					</a>
 				</span>
 			</h5>
@@ -240,7 +240,7 @@
 						<td>
 							<a @click.prevent="showCase(bug.ixBug)" class="hover-icon a-little">{{ bug.ixBug }}</a>
 							<a :href="fogbugzLinkUrl + bug.ixBug" target="_blank">
-								<i class="fa fa-external-link smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
+								<i class="fas fa-external-link-alt smaller-font hover-icon a-little hover-fade" aria-hidden="true"></i>
 							</a></td>
 						<td>{{ bug.sTitle }}</td>
 					</tr>
@@ -319,7 +319,7 @@
 								<i v-show="interval.dtEnd" @click="deleteInterval(interval.ixInterval)" class="fa fa-trash fa-lg red hover-icon" aria-hidden="true"></i>
 								&nbsp;
 								<a :href="fogbugzLinkUrl + interval.ixBug" target="_blank">
-									<!-- <i class="fa fa-external-link fa-small hover-icon" aria-hidden="true"></i> -->
+									<!-- <i class="fas fa-external-link-alt fa-small hover-icon" aria-hidden="true"></i> -->
 									<i class="fas fa-external-link-alt hover-icon"></i>
 								</a> 
 							</td>
@@ -357,11 +357,11 @@
 				<span class="u-pull-right gray">&nbsp;|&nbsp;{{ workedDuration.asHours() }} h </span>
 				<span class="u-pull-right">{{ payPeriodTotal | humanizeDuration }}</span>
 			</h5>
-			<span class="gray small"> {{ workdays }} day pay period</span>
-			<div class="pagination-controls no-select u-pull-right hover-hide">
-					<button @click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
-					<button @click="goToNextPayPeriod()" class="paginate button margin-left">Next Pay Period</button>
-				</div>
+			<span class="pay-period-days gray u-pull-right"> {{ workdays }} day pay period</span>
+			<div class="pagination-controls no-select hover-hide">
+				<button @click="goToPreviousPayPeriod()" class="paginate button">Previous Pay Period</button>
+				<button @click="goToNextPayPeriod()" class="paginate button margin-left">Next Pay Period</button>
+			</div>
 			<div class="chart-stuff">
 				<div class="timesheet-chart-wrapper">
 					<canvas id="timesheet-chart"></canvas>
@@ -466,7 +466,8 @@
 	<script type="text/javascript" src="scripts/thirdparty/Chart.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/lodash.min.js"></script>
 	<script type="text/javascript" src="scripts/thirdparty/vuex.min.js" type="module"></script>
-	<script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script>
+	<!-- <script type="text/javascript" src="scripts/thirdparty/vue.min.js"></script> -->
+	<script type="text/javascript" src="scripts/thirdparty/vue.js"></script>
 
 	<!-- My Scripts -->
 	<script type="text/javascript" src="scripts/constants.js"></script>

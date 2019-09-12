@@ -9,11 +9,19 @@ const uiModule = {
 		settingsView: false,
 		starredCasesView: true,
 		// Misc UI Stuff
-		stylesInverted: JSON.parse(utilities.storage.load('stylesInverted'))
+		stylesInverted: JSON.parse(utilities.storage.load('stylesInverted')),
+		eightHourDonut: null,
+		twentyFourHourDonut: null,
 	},
 	mutations: {
 		initializeUI: function(state) {
 			store.commit('syncInvertedClasses');
+
+			// Make Eight Hour Donut
+			state.eightHourDonut = new utilities.donut('#chartone', constants.eightHourDonutData, constants.eightHourDonutOptions);
+
+			//Make 24 hour donut
+			state.twentyFourHourDonut = new utilities.donut('#chartclock', constants.twentyFourHourDonutData, constants.twentyFourHourDonutOptions);
 		},
 		showList: function (state) {
 			state.listView = true;
@@ -102,5 +110,12 @@ const uiModule = {
             context.commit('showCase', caseNumber);
             context.dispatch('getCaseByNumber', caseNumber);
 		},
+		refreshUI: function(context) {
+			context.commit('triggerRefreshForTimeWorked');
+			var minutesWorked = Math.floor(context.getters.timeWorked.asMinutes());
+			context.state.eightHourDonut.updateEight(minutesWorked);
+
+			context.state.twentyFourHourDonut.updateTwentyFour(context.rootState.time.intervals);
+		}
     }
 }

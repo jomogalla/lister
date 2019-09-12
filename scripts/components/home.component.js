@@ -173,6 +173,9 @@ Vue.component('home', {
 		},
 		stopWork() { 
 			this.$store.dispatch('stopWork');
+		},
+		handleErrorRequest(response) {
+			this.$store.commit('handleErrorRequest', response);
 		}
 	}
 });
